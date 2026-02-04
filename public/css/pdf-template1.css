@@ -1,0 +1,84 @@
+.wrapper {
+    margin-top: 40px;
+    font-size: 11px;
+    padding: 50px;
+    max-width: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.wrapper table {
+    padding-top: 100px;
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+}
+
+.resume-content td:nth-child(1) {
+    display: inline-block;
+    margin-top: 0;
+    padding-right: 20px;
+    border-right: solid rgba(86, 86, 88, 0.2) 1px;
+}
+
+table tr td .section-head {
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 2px;
+    background-color: rgba(158, 159, 170, 0.36);
+}
+
+table tr td .text {
+    display: inline-block;
+    margin-left:30px;
+}
+
+.resume-name td h3 {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.resume-name td span {
+    display: block;
+    margin-bottom: 70px;
+}
+
+.resume-content td .job-company {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.resume-content td .job-title {
+    display: inline-block;
+    font-size: 11px;
+}
+
+.resume-content td .job-period {
+    font-size: 11px;
+    display: inline-block;
+    /* color: rgba(64, 64, 64, 1);
+    font-weight: 500; */
+}
+
+.resume-content td .skill-tech {
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.resume-content td .school-degree {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.resume-content td .institution {
+    display: inline-block;
+    font-size: 11px;
+}
