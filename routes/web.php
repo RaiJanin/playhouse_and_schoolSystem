@@ -9,6 +9,8 @@ Route::get('/', function () {
 
 Route::prefix('playhouse')->group(function() {
     Route::get('/registration', function () { return view('pages.playhouse-registration'); })->name('playhouse.first');
+    Route::get('/otp', function () { return view('pages.playhouse-otp'); })->name('playhouse.otp');
+    Route::get('/parent-info', function () { return view('pages.playhouse-parent-info'); })->name('playhouse.parent');
 });
 
 Route::get('/reference', function () {

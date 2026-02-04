@@ -23,7 +23,7 @@
                 </small>
             </div>
         <div class="flex gap-2 justify-center mt-5 mb-5">
-            <button class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300" onclick="nextStep(1)">Next</button>
+            <button class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300" onclick="validateAndProceed()">Next</button>
         </div>
     </div>
 @endsection
