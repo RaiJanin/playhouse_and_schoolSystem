@@ -1,18 +1,33 @@
 @extends('layout.content')
 
+<style>
+    input::placeholder {
+        color: #6b7280 !important;
+        opacity: 1;
+    }
+    input::-webkit-input-placeholder {
+        color: #6b7280 !important;
+    }
+    input:-moz-placeholder {
+        color: #6b7280 !important;
+    }
+    input::-moz-placeholder {
+        color: #6b7280 !important;
+    }
+</style>
 
 @section('contents')
     <div class="step active" id="step1">
-        <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center"> Enter Your Phone Number</h2>
-        <p class="text-center text-gray-600 mb-5 font-semibold">
+        <h2 class="font-bold text-3xl text-gray-900 mb-2 text-center"> Enter Your Phone Number</h2>
+        <p class="text-center text-gray-800 text-lg mb-5 font-semibold">
             We'll send a verification code to your number
         </p>
         <div class="mb-5 px-5">
-            <label for="phone" class="mb-5 font-semibold text-gray-700">Phone Number <span class="text-red-600">*</span></label>
+            <label for="phone" class="mb-5 font-semibold text-base text-gray-900">Phone Number <span class="text-red-600">*</span></label>
             <input
                 type="tel" 
                 id="phone" 
-                class="w-full px-4 py-3 border-2 border-teal-500 shadow rounded-md font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"  
+                class="w-full px-4 py-3 bg-white border-2 border-gray-400 shadow rounded-md font-semibold text-gray-900 focus:outline-none focus:border-teal-500 focus:shadow-none transition-all duration-300"  
                 pattern="^(?:\+63|0)?9\d{9}$"
                 title="Philippine mobile number (e.g., 09171234567 or +639171234567)"
                 required
