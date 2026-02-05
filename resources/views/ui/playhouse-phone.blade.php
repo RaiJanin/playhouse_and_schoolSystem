@@ -9,7 +9,7 @@
         </p>
         <div class="mb-5 px-5">
             <label for="phone" class="mb-5 font-semibold text-gray-700">Phone Number <span class="text-red-600">*</span></label>
-                <input 
+                <input
                     type="tel" 
                     id="phone" 
                     class="w-full px-4 py-3 border-2 border-teal-500 shadow rounded-md font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"  
@@ -26,4 +26,34 @@
             <button class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300" onclick="validateAndProceed()">Next</button>
         </div>
     </div>
+@endsection
+
+@section('section-scripts')
+<script>
+function validateAndProceed() {
+    const phoneInput = document.getElementById('phone');
+    const phone = phoneInput.value.trim();
+    
+    // Remove spaces/dashes for validation
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    
+    // Philippine mobile pattern: +639XXXXXXXXX, 09XXXXXXXXX, or 9XXXXXXXXX
+    const phMobilePattern = /^(?:\+63|0)?9\d{9}$/;
+    
+    if (!cleanPhone) {
+        alert('Please enter your phone number');
+        phoneInput.focus();
+        return;
+    }
+    
+    if (!phMobilePattern.test(cleanPhone)) {
+        alert('Invalid Philippine mobile number!\n\nValid formats:\n• 09171234567\n• +639171234567\n• 9171234567');
+        phoneInput.focus();
+        return;
+    }
+    
+    // Redirect to OTP page
+    window.location.href = '{{ route("playhouse.otp") }}';
+}
+</script>
 @endsection
