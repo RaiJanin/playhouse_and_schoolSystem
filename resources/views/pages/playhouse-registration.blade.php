@@ -9,7 +9,7 @@
 
 @section('main-content')
     @include('components.backdrop')
-    <div class="container max-w-6xl mx-auto">
+    <div class="container max-w-4xl mx-auto">
         @include('ui.partials.header')
         @include('ui.partials.progress-bar', ['current' => 1])
         <div class="bg-teal-100 rounded-lg p-3 shadow-md">

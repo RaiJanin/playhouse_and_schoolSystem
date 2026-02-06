@@ -20,7 +20,7 @@
     <div class="step" id="step3">
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">Parent Information</h2>
         <p class="text-center text-gray-800 text-lg mb-6">Please provide your details</p>
-        <form class="space-y-4">
+        <div class="space-y-4">
             <div>
                 <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
                 <input type="text" id="parentName" class="w-full px-3 py-2 bg-white border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900 font-medium" placeholder="John" required />
@@ -45,7 +45,7 @@
                 <a href="{{ route('playhouse.otp') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors text-center">Back</a>
                 <button type="button" id="parentNext" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Next</button>
             </div>
-        </form>
+        </div>
     </div>
 @endsection
 

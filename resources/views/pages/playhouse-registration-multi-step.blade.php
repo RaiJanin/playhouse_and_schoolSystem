@@ -30,36 +30,38 @@
 
 @section('main-content')
     @include('components.backdrop')
-    <div class="container max-w-6xl mx-auto">
+    <div class="container max-w-4xl mx-auto">
         @include('ui.partials.header')
         @include('ui.partials.progress-bar')
-        <div class="bg-teal-100 rounded-lg p-3 shadow-md">
-            <form id="playhouse-registration-form" class="overflow-hidden">
-                <div class="overflow-hidden">
-                    <div class="step" id="step1">
-                        @include('ui.mockup.playhouse-phone')
+        <div class="opacity-100 z-10">
+            <div class="bg-gradient-to-r from-teal-100 to-teal-200 border border-gray-200 rounded-xl p-3 shadow">
+                <form id="playhouse-registration-form" class="overflow-hidden">
+                    <div class="overflow-hidden">
+                        <div class="step" id="step1" data-step='phone'>
+                            @include('ui.mockup.playhouse-phone')
+                        </div>
+                        <div class="step hidden" id="step2" data-step='otp'>
+                            @include('ui.mockup.playhouse-otp')
+                        </div>
+                        <div class="step hidden" id="step3" data-step='parent'>
+                            @include('ui.mockup.playhouse-parent')
+                        </div>
+                        <div class="step hidden" id="step4" data-step='children'>
+                            @include('ui.mockup.playhouse-children')
+                        </div>
+                        <div class="step hidden" id="step5" data-step='done'>
+                            @include('ui.mockup.playhouse-done-prompt')
+                        </div>
                     </div>
-                    <div class="step hidden" id="step2">
-                        @include('ui.mockup.playhouse-otp')
+                    <div class="flex items-center justify-center mb-3">
+                        <div class="flex space-x-4 mt-8">
+                            <button type="button" id="prev-btn" class="bg-gray-400 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-gray-300 focus:ring-2 focus:ring-offset-2 ring-gray-500 focus:text-gray-800 transition-all duration-300 hidden">Previous</button>
+                            <button type="button" id="next-btn" class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300">Next</button>
+                            <button type="submit" id="submit-btn" class="bg-cyan-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-cyan-500 focus:ring-2 focus:ring-offset-2 ring-cyan-500 transition-all duration-300 hidden">Submit</button>
+                        </div>
                     </div>
-                    <div class="step hidden" id="step3">
-                        @include('ui.mockup.playhouse-parent')
-                    </div>
-                    <div class="step hidden" id="step4">
-                        @include('ui.mockup.playhouse-children')
-                    </div>
-                    <div class="step hidden" id="step5">
-                        @include('ui.mockup.playhouse-done-prompt')
-                    </div>
-                </div>
-                <div class="flex items-center justify-center">
-                    <div class="flex space-x-4 mt-8">
-                        <button type="button" id="prev-btn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors hidden">Previous</button>
-                        <button type="button" id="next-btn" class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300">Next</button>
-                        <button type="submit" id="submit-btn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors hidden">Submit</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -149,30 +151,58 @@
 
                 currentStep = nextStepIndex;
 
-                updateStepInputs();
-
                 prevBtn.classList.toggle('hidden', currentStep === 0);
                 nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
             }, 300);
+
+        }
+
+        function getCurrentStepName() {
+            return steps[currentStep].dataset.step;
         }
 
         nextBtn.addEventListener('click', () => {
-            showSteps(currentStep + 1,'next')
-            if (currentStep + 1 === steps.lenght -1) populateSummary();
+            const currentForm = steps[currentStep];
+            const inputs = currentForm.querySelectorAll(
+                'input[required], select[required]'
+            );
+
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (input.id === 'phone') {
+                    if (!validatePhone(input)) {
+                        input.classList.remove('border-teal-500');
+                        input.classList.add('border-red-500');
+                        valid = false;
+                    } else {
+                        input.classList.remove('border-red-500');
+                    }
+                }
+                else {
+                    if (!input.checkValidity()) {
+                        input.classList.add('border-red-500');
+                        valid = false;
+                    } else {
+                        input.classList.remove('border-red-500');
+                    }
+                }
+            });
+
+            if(getCurrentStepName() === 'otp') {
+                if(!validateOtpInputs()) {
+                    valid = false;
+                }
+            }
+            
+            if(!valid)return;
+            if(currentStep < steps.length - 1) {
+                showSteps(currentStep + 1,'next');
+                if (currentStep + 1 === steps.length -1) populateSummary();
+            }
         });
         prevBtn.addEventListener('click', () => showSteps(currentStep - 1,'prev'));
-
-        //---- temporarily disables inactive steps, delete this when implementing strict validations
-        function updateStepInputs() {
-            steps.forEach((stepEl, index) => {
-                const inputs = stepEl.querySelectorAll('input, select, textarea');
-
-                inputs.forEach(input => {
-                    input.disabled = index !== currentStep;
-                });
-            });
-        }
 
         function populateSummary() {
             //--- display preview

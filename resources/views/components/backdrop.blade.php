@@ -1,7 +1,7 @@
-<div class="absolute opacity-15 inset-0 pointer-events-none">
+<div class="absolute opacity-10 inset-0 pointer-events-none">
     <!-- Balloon -->
-    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div class="absolute inset-0 bg-teal-500 opacity-100"></div>
+    <div class="fixed inset-0 transition-opacity z-0" aria-hidden="true">
+        <div class="absolute inset-0 bg-teal-200 opacity-100"></div>
     </div>
     <div
         class="absolute w-[80px] h-[100px] 
