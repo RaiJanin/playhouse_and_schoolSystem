@@ -28,8 +28,9 @@
                     <input type="text" id="otp3" maxlength="1" class="otp-input w-12 h-12 text-center text-xl font-bold bg-white border-2 border-gray-400 rounded-lg focus:border-teal-500 focus:outline-none transition-colors text-gray-900" />
                 </div>
                 <div class="flex space-x-4">
-                    <a href="{{ route('playhouse.phone') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors text-center">Back</a>
-                    <a href="{{ route('playhouse.parent') }}" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center">Next</a>
+                    <!-- Modified: standardized Previous/Next styling to match other steps (visual-only) -->
+                    <a href="{{ route('playhouse.phone') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 text-center">Previous</a>
+                    <button type="button" id="otpNext" class="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-center">Next</button>
                 </div>
             </form>
         </div>
@@ -40,6 +41,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const otpInputs = document.querySelectorAll('.otp-input');
+        const otpNextBtn = document.getElementById('otpNext');
 
         otpInputs.forEach((input, index) => {
             input.addEventListener('input', function() {
@@ -54,6 +56,26 @@
                 }
             });
         });
+
+        if (otpNextBtn) {
+            otpNextBtn.addEventListener('click', function() {
+                const otp1 = document.getElementById('otp1').value.trim();
+                const otp2 = document.getElementById('otp2').value.trim();
+                const otp3 = document.getElementById('otp3').value.trim();
+                const otp = otp1 + otp2 + otp3;
+
+                if (!otp1 || !otp2 || !otp3) {
+                    alert('Please enter all 3 OTP digits');
+                    return;
+                }
+
+                // Save to localStorage
+                localStorage.setItem('playhouse.otp', otp);
+
+                // Redirect to parent page
+                window.location.href = '{{ route("playhouse.parent") }}';
+            });
+        }
     });
 </script>
 @endsection

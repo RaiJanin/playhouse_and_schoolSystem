@@ -25,9 +25,6 @@
             @if(Route::is('playhouse.children'))
                 @include('ui.playhouse-children')
             @endif
-            @if(Route::is('playhouse.duration'))
-                @include('ui.playhouse-duration')
-            @endif
             @if(Route::is('playhouse.done'))
                 @include('ui.playhouse-done-prompt')
             @endif

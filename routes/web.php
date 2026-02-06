@@ -16,7 +16,6 @@ Route::prefix('playhouse/registration')->group(function() {
     Route::get('/otp', function () { return view('pages.playhouse-registration'); })->name('playhouse.otp');
     Route::get('/parent-info', function () { return view('pages.playhouse-registration'); })->name('playhouse.parent');
     Route::get('/children-info', function () { return view('pages.playhouse-registration'); })->name('playhouse.children');
-    Route::get('/duration', function () { return view('pages.playhouse-registration'); })->name('playhouse.duration');
     Route::get('/done', function () { return view('pages.playhouse-registration'); })->name('playhouse.done');
 });
 

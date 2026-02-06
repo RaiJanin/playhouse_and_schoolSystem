@@ -16,28 +16,29 @@
         <h2 class="text-3xl font-bold text-center text-slate-800 mb-2">Children Information</h2>
         <p class="text-center text-teal-600 font-medium mb-8">Add child details and select playtime duration</p>
 
+        <!-- Modified visuals: child input/select colors updated to brighter cyan for better visibility (bg-cyan-100 / border-cyan-500 / focus:ring-cyan-500) -->
         <div id="childrenForm" class="space-y-5">
             <div id="childrenContainer" class="space-y-6">
                 <div class="child-entry space-y-4">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
-                        <input type="text" class="w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" />
+                        <input type="text" class="child-first w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 transition-all duration-300" placeholder="Jane" />
                     </div>
                     
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
-                        <input type="text" class="w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" />
+                        <input type="text" class="child-last w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 transition-all duration-300" placeholder="Doe" />
                     </div>
 
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Birthday</label>
-                        <input type="date" class="w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" />
+                        <input type="date" class="child-bday w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 transition-all duration-300" />
                     </div>
 
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration</label>
                         <div class="relative">
-                            <select class="child-duration w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                            <select class="child-duration w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 transition-all duration-300 cursor-pointer appearance-none">
                                 <option value="1">1 Hour</option>
                                 <option value="2">2 Hours</option>
                                 <option value="3">3 Hours</option>
@@ -57,6 +58,13 @@
                     <i class="fa-solid fa-plus text-xs"></i> Add another child
                 </button>
             </div>
+            
+            <!-- Navigation buttons -->
+            <div class="mt-6 flex items-center justify-between">
+                <a href="{{ route('playhouse.parent') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">Previous</a>
+
+                <button type="button" id="childrenNext" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Next</button>
+            </div>
         </div>
     </div>
 @endsection
@@ -74,20 +82,20 @@ document.addEventListener('DOMContentLoaded', function() {
         entry.innerHTML = `
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">First Name</label>
-                <input type="text" class="child-first w-full px-4 py-3 bg-white border-2 border-teal-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700" placeholder="Jane" />
+                <input type="text" class="child-first w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700" placeholder="Jane" />
             </div>
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">Last Name</label>
-                <input type="text" class="child-last w-full px-4 py-3 bg-white border-2 border-teal-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700" placeholder="Doe" />
+                <input type="text" class="child-last w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700" placeholder="Doe" />
             </div>
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">Birthday</label>
-                <input type="date" class="child-bday w-full px-4 py-3 bg-white border-2 border-teal-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700" />
+                <input type="date" class="child-bday w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700" />
             </div>
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">Playtime Duration</label>
                 <div class="relative">
-                    <select class="child-duration w-full px-4 py-3 bg-white border-2 border-teal-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 appearance-none cursor-pointer">
+                    <select class="child-duration w-full px-4 py-3 bg-teal-50 border-2 border-teal-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 appearance-none cursor-pointer">
                         <option value="1">1 Hour - ₱500</option>
                         <option value="2">2 Hours - ₱800</option>
                         <option value="3">3 Hours - ₱1,100</option>
@@ -132,7 +140,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     nextBtn.addEventListener('click', () => {
-        window.location.href = '{{ route("playhouse.duration") }}';
+        // Collect all children entries
+        const entries = container.querySelectorAll('.child-entry');
+        const children = [];
+
+        entries.forEach((entry) => {
+            const firstName = entry.querySelector('.child-first')?.value.trim() || '';
+            const lastName = entry.querySelector('.child-last')?.value.trim() || '';
+            const bday = entry.querySelector('.child-bday')?.value.trim() || '';
+            const duration = entry.querySelector('.child-duration')?.value.trim() || '';
+
+            if (firstName || lastName) {
+                children.push({
+                    name: (firstName + ' ' + lastName).trim(),
+                    birthday: bday,
+                    duration: duration
+                });
+            }
+        });
+
+        if (children.length === 0) {
+            alert('Please add at least one child');
+            return;
+        }
+
+        // Save children to localStorage
+        localStorage.setItem('playhouse.children', JSON.stringify(children));
+        
+        // Get duration from first child for simplicity
+        const firstDuration = children[0]?.duration || '';
+        localStorage.setItem('playhouse.duration', firstDuration);
+
+        window.location.href = '{{ route("playhouse.done") }}';
     });
 });
 </script>

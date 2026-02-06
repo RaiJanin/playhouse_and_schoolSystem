@@ -42,8 +42,9 @@
                 <input type="date" id="parentBirthday" class="w-full px-3 py-2 bg-white border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900 font-medium" required />
             </div>
             <div class="flex space-x-4">
-                <a href="{{ route('playhouse.otp') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors text-center">Back</a>
-                <button type="button" id="parentNext" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Next</button>
+                <!-- Modified: standardized Previous/Next styling to match other steps (visual-only) -->
+                <a href="{{ route('playhouse.otp') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 text-center">Previous</a>
+                <button type="button" id="parentNext" class="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Next</button>
             </div>
         </div>
     </div>
@@ -70,6 +71,11 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please fill out all parent information fields.');
             return;
         }
+
+        // Save to localStorage
+        localStorage.setItem('playhouse.parentName', name);
+        localStorage.setItem('playhouse.parentLastName', lastName);
+        localStorage.setItem('playhouse.parentEmail', email);
 
         window.location.href = '{{ route("playhouse.children") }}';
     });
