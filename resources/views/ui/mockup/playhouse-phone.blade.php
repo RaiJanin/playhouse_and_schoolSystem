@@ -17,6 +17,7 @@
     <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
         Accepts: 09XXXXXXXXX, +639XXXXXXXXX, or 9XXXXXXXXX
     </small>
+    
 </div>
 <script>
     const phoneInput = document.getElementById('phone');

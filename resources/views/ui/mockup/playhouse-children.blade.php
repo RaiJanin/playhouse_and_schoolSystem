@@ -18,24 +18,19 @@
         <div id="childrenContainer" class="space-y-6">
             <div class="child-entry space-y-4">
                 <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
-                    <input type="text" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" />
-                </div>
-                
-                <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
-                    <input type="text" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" />
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Name</label>
+                    <input type="text" name="child[0][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
                 </div>
 
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Birthday</label>
-                    <input type="date" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" />
+                    <input type="date" name="child[0][birthday]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
                 </div>
 
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration</label>
                     <div class="relative">
-                        <select class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                        <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                             <option value="1">1 Hour</option>
                             <option value="2">2 Hours</option>
                             <option value="3">3 Hours</option>
@@ -64,29 +59,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('addChildBtn');
     const nextBtn = document.getElementById('childrenNext');
 
+    let childEntries = container.querySelectorAll('.child-entry').length || 1;
+
     function createChildEntry() {
+        // childEntries = container.querySelectorAll('.child-entry').length + 1;
         const entry = document.createElement('div');
         entry.className = 'child-entry space-y-4 pt-6 border-t border-gray-600 mt-6';
         entry.innerHTML = `
             <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
-                <input type="text" class="w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" />
-            </div>
-            
-            <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
-                <input type="text" class="w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" />
+                <label class="block text-base font-semibold text-gray-900 mb-2">Name</label>
+                <input type="text" name="child[${childEntries}][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
             </div>
 
             <div>
                 <label class="block text-base font-semibold text-gray-900 mb-2">Birthday</label>
-                <input type="date" class="w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" />
+                <input type="date" name="child[${childEntries}][birthday]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
             </div>
 
             <div>
                 <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration</label>
                 <div class="relative">
-                    <select class="child-duration w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                    <select name="child[${childEntries}][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                         <option value="1">1 Hour</option>
                         <option value="2">2 Hours</option>
                         <option value="3">3 Hours</option>
@@ -129,10 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
         container.appendChild(newEntry);
         newEntry.querySelector('.child-first').focus();
         updateRemoveButtons();
-    });
-
-    nextBtn.addEventListener('click', () => {
-        window.location.href = '{{ route("playhouse.duration") }}';
     });
 });
 </script>

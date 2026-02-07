@@ -242,7 +242,6 @@
             let valid = true;
             inputs.forEach(input => {
                 if (input.id === 'phone') {
-                    // Custom validation for phone
                     if (!validatePhone(input)) {
                         input.classList.add('border-red-500');
                         valid = false;

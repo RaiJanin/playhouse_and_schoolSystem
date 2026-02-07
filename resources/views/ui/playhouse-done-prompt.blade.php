@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg shadow-xl p-6">
+<div class="bg-teal-100 p-6">
 	<h1 class="text-2xl font-bold text-gray-900 mb-2">Play Now!</h1>
 	<p class="text-gray-600 mb-6">Please review your information before submitting.</p>
 
@@ -34,14 +34,13 @@
 
 	<div class="flex items-center mb-6">
 		<label class="inline-flex items-center text-sm text-gray-600">
-			<input id="agree-terms" type="checkbox" class="form-checkbox h-4 w-4 text-green-600" />
+			<input id="agree-terms" type="checkbox" class="form-checkbox h-4 w-4 text-green-600 bg-gray-400" />
 			<span class="ml-2">I agree to the terms and conditions.</span>
 		</label>
 	</div>
 
 	<div class="flex items-center justify-between">
 		<a href="{{ route('playhouse.children') }}" id="previous-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">Previous</a>
-
 		<button id="confirm-btn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-60" disabled>Confirm</button>
 	</div>
 </div>

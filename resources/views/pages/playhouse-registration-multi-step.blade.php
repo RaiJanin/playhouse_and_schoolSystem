@@ -57,7 +57,7 @@
                         <div class="flex space-x-4 mt-8">
                             <button type="button" id="prev-btn" class="bg-gray-400 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-gray-300 focus:ring-2 focus:ring-offset-2 ring-gray-500 focus:text-gray-800 transition-all duration-300 hidden">Previous</button>
                             <button type="button" id="next-btn" class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300">Next</button>
-                            <button type="submit" id="submit-btn" class="bg-cyan-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-cyan-500 focus:ring-2 focus:ring-offset-2 ring-cyan-500 transition-all duration-300 hidden">Submit</button>
+                            <button type="submit" id="submit-btn" class="bg-cyan-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-cyan-500 focus:ring-2 focus:ring-offset-2 ring-cyan-500 disabled:cursor-not-allowed disabled:bg-cyan-400 disabled:shadow-none transition-all duration-300 hidden" disabled>Submit</button>
                         </div>
                     </div>
                 </form>
@@ -205,7 +205,66 @@
         prevBtn.addEventListener('click', () => showSteps(currentStep - 1,'prev'));
 
         function populateSummary() {
-            //--- display preview
+            const summary = document.getElementById('summaryContainer');
+            const data = new FormData(document.getElementById('playhouse-registration-form'));
+            let parentEmail = data.get('parentEmail') ? `(${data.get('parentEmail')})` : '';
+            let childrenItems = '';
+
+            document.querySelectorAll('.child-entry').forEach((child, index) => {
+                const name = data.get(`child[${index}][name]`);
+                const birthday = data.get(`child[${index}][birthday]`) || '-';
+                const duration = data.get(`child[${index}][playDuration]`);
+
+                let durationDefs = duration === 'unlimited' ? 'Unlimited' : `${duration} hr`;
+
+                childrenItems += `
+                        <div class="bg-teal-50 border border-teal-200 rounded p-3">
+                            <p class="text-gray-900 font-semibold">${name} ${data.get('parentLastName')}</p>
+							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${birthday}</span></p>
+							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
+                        </div>
+                `;
+            });
+            
+            summary.innerHTML = `
+                    <div class="flex items-start border-b border-cyan-400 pb-3">
+                        <span class="font-semibold text-cyan-800 w-24">Phone:</span>
+                        <span class="text-gray-900 font-medium flex-1">${data.get('phone')}</span>
+                    </div>
+                    <div class="flex items-start border-b border-cyan-400 pb-3">
+                        <span class="font-semibold text-cyan-800 w-24">Parent:</span>
+                        <span class="text-gray-900 font-medium flex-1">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
+                    </div>
+                    <div class="flex items-start border-b border-cyan-400 pb-3">
+                        <span class="font-semibold text-cyan-800">Parent's Birthdate:</span>
+                        <span class="text-gray-900 font-medium flex-1"> ${data.get('parentBirthday') || '   - '}</span>
+                    </div>
+                    <div class="pb-3">
+                        <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
+                        <div id="summary-children-list" class="space-y-3 ml-2">
+                            ${childrenItems}
+                        </div>
+                    </div>
+            `;
+        }
+
+        let checkAgree = false;
+        const agree = document.getElementById('agree-terms');
+        const checkAgreeIcon = document.getElementById('check-agree-terms');
+        if(agree && submitBtn){
+            agree.addEventListener('click', () => {
+                checkAgree = !checkAgree;
+
+                if(checkAgree) {
+                    checkAgreeIcon.classList.remove('fa-square-xmark', 'text-red-500');
+                    checkAgreeIcon.classList.add('fa-square-check', 'text-green-500');
+                    submitBtn.disabled = false;
+                } else {
+                    checkAgreeIcon.classList.remove('fa-square-check', 'text-green-500');
+                    checkAgreeIcon.classList.add('fa-square-xmark', 'text-red-500');
+                    submitBtn.disabled = true;
+                }
+            });
         }
 
         document.getElementById('playhouse-registration-form').addEventListener('submit', (e) => {
