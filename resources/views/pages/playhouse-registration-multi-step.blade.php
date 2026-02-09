@@ -211,7 +211,8 @@
             let childrenItems = '';
 
             document.querySelectorAll('.child-entry').forEach((child, index) => {
-                const name = data.get(`child[${index}][name]`);
+                // const name = data.get(`child[${index}][name]`);
+                const name = child.querySelector('input[name*="[name]"]');
                 const birthday = data.get(`child[${index}][birthday]`) || '-';
                 const duration = data.get(`child[${index}][playDuration]`);
 

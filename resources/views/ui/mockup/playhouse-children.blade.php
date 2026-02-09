@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let childEntries = container.querySelectorAll('.child-entry').length || 1;
 
     function createChildEntry() {
-        // childEntries = container.querySelectorAll('.child-entry').length + 1;
+        childEntries = container.querySelectorAll('.child-entry').length + 1;
         const entry = document.createElement('div');
         entry.className = 'child-entry space-y-4 pt-6 border-t border-gray-600 mt-6';
         entry.innerHTML = `
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     addBtn.addEventListener('click', () => {
         const newEntry = createChildEntry();
         container.appendChild(newEntry);
-        newEntry.querySelector('.child-first').focus();
+        newEntry.querySelector('.child-first');
         updateRemoveButtons();
     });
 });

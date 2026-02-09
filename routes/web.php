@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', function () {
-    return redirect()->route('playhouse.phone');
+    return redirect()->route('playhouse.registration');
 });
 
 //---- mockup pages
