@@ -212,15 +212,17 @@
 
             document.querySelectorAll('.child-entry').forEach((child, index) => {
                 // const name = data.get(`child[${index}][name]`);
-                const name = child.querySelector('input[name*="[name]"]');
+                const nameEl = child.querySelector('input[name*="[name]"]'); // "Bug Fix" Selects the specific input element for the child's name
+                const name = nameEl ? nameEl.value : 'Child'; // "Bug Fix" Extracts the text value if the element exists, otherwise defaults to 'Child'
                 const birthday = data.get(`child[${index}][birthday]`) || '-';
                 const duration = data.get(`child[${index}][playDuration]`);
 
                 let durationDefs = duration === 'unlimited' ? 'Unlimited' : `${duration} hr`;
 
+                // Displays child name with "Name:" label and bold styling to match Birthday/Duration rows
                 childrenItems += `
                         <div class="bg-teal-50 border border-teal-200 rounded p-3">
-                            <p class="text-gray-900 font-semibold">${name} ${data.get('parentLastName')}</p>
+                            <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name} ${data.get('parentLastName')}</span></p> 
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${birthday}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
                         </div>
