@@ -10,7 +10,7 @@
         </div>
     </div>
     
-    <div id="message" class="text-center min-h-[24px] font-medium"></div>
+    <div id="otp-message" class="text-center min-h-[24px] font-medium"></div>
 </div>
 
 <script>

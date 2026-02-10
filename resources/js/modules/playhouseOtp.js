@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('otp-choices');
-    const messageDiv = document.getElementById('message');
+    const messageDiv = document.getElementById('otp-message');
 
     let correctCode = false;
     window.correctCode = correctCode;

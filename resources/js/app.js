@@ -4,6 +4,8 @@ import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 
+import { dateToString } from './utilities/dateString.js';
+
 document.addEventListener('DOMContentLoaded', function () {
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
@@ -172,13 +174,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="font-semibold text-cyan-800 w-24">Phone:</span>
                         <span class="text-gray-900 font-medium flex-1">${data.get('phone')}</span>
                     </div>
-                    <div class="flex items-start border-b border-cyan-400 pb-3">
+                    <div class="flex gap-2 items-start border-b border-cyan-400 pb-3 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-24">Parent:</span>
-                        <span class="text-gray-900 font-medium flex-1">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
+                        <span class="text-gray-900 font-medium flex-1 w-full ">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
                     </div>
-                    <div class="flex items-start border-b border-cyan-400 pb-3">
+                    <div class="flex gap-2 items-start border-b border-cyan-400 pb-3">
                         <span class="font-semibold text-cyan-800">Parent's Birthdate:</span>
-                        <span class="text-gray-900 font-medium flex-1"> ${data.get('parentBirthday') || '   - '}</span>
+                        <span class="text-gray-900 font-medium flex-1">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
                     </div>
                     <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
