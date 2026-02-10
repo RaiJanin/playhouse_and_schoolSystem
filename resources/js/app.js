@@ -171,17 +171,17 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             
             summary.innerHTML = `
-                    <div class="flex items-start border-b border-cyan-400 pb-3">
-                        <span class="font-semibold text-cyan-800 w-24">Phone:</span>
-                        <span class="text-gray-900 font-medium flex-1">${data.get('phone')}</span>
+                    <div class="flex items-start border-b border-cyan-400 py-2">
+                        <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${data.get('phone')}</span>
                     </div>
-                    <div class="flex gap-2 items-start border-b border-cyan-400 pb-3 max-w-full overflow-auto">
-                        <span class="font-semibold text-cyan-800 w-24">Parent:</span>
-                        <span class="text-gray-900 font-medium flex-1 w-full ">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
+                    <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
+                        <span class="font-semibold text-cyan-800 w-fit">Parent:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
                     </div>
-                    <div class="flex gap-2 items-start border-b border-cyan-400 pb-3">
-                        <span class="font-semibold text-cyan-800">Parent's Birthdate:</span>
-                        <span class="text-gray-900 font-medium flex-1">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
+                    <div class="flex items-center border-b border-cyan-400 py-2">
+                        <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
                     </div>
                     <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
