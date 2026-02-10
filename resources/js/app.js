@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if(getCurrentStepName() === 'otp') {
                 if(!correctCode) {
+                    valid = false;
                 }
             }
             
