@@ -4,7 +4,7 @@
         Select the 3-digit code shown on your trusted device
     </p>
     
-    <div class="space-y-4 mb-6">
+    <div class="flex items-center justify-center mb-6">
         <div id="otp-choices" class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <!-- OTP choices will be generated here -->
         </div>
@@ -35,7 +35,7 @@
         choices.forEach(otp => {
             const button = document.createElement('button');
             button.type = 'button';
-            button.className = 'otp-choice bg-gray-50 border-2 border-gray-300 rounded-lg shadow p-4 text-xl font-bold text-gray-800 cursor-pointer transition-all hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-500';
+            button.className = 'w-30 otp-choice bg-gray-50 border-2 border-gray-300 rounded-lg shadow p-2 text-xl font-bold text-gray-800 cursor-pointer transition-all hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-500';
             button.innerHTML = `
                 <span>${otp[0]}</span>
                 <span>${otp[1]}</span>
