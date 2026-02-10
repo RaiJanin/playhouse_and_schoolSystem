@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         valid = false;
                     } else {
                         input.classList.remove('border-red-500');
+                        generateOtp(input.value);
                     }
                 }
                 else {
