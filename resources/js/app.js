@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 childrenItems += `
                         <div class="bg-teal-50 border border-teal-200 rounded p-3">
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name} ${data.get('parentLastName')}</span></p> 
-							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${birthday}</span></p>
+							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
                         </div>
                 `;
