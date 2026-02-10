@@ -239,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
             //     console.error(error);
             //     alert('Something went wrong!');
             // }
+            window.location.href='/playhouse/success'
         });
     });
 

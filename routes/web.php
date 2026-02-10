@@ -12,6 +12,7 @@ Route::get('/', function () {
 
 Route::prefix('playhouse')->group(function() {
     Route::get('/registration', function () { return view('pages.playhouse-registration'); })->name('playhouse.registration');
+    Route::get('/success', function() {return view ('pages.playhouse-success');})->name('playhouse.end');
 });
 
 Route::get('/reference', function () {

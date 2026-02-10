@@ -50,7 +50,7 @@
                             @include('ui.playhouse-children')
                         </div>
                         <div class="step hidden" id="step5" data-step='done'>
-                            @include('ui.playhouse-done-prompt')
+                            @include('ui.playhouse-done-prompt')     
                         </div>
                     </div>
                     <div class="flex items-center justify-center mb-3">
