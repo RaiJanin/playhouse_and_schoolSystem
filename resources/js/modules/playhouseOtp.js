@@ -57,9 +57,9 @@ function generateOtpChoices(correctOtp) {
                         btn.classList.remove('opacity-70');
                     });
                 }, 500);
-                
+                readAttempts();
             }
-            readAttempts();
+            
         });
         
         container.appendChild(button);
@@ -119,6 +119,12 @@ function readAttempts() {
     if(otpAttempt == 2) {
         messageDiv.textContent = 'Multiple Attempts. Terminating form';
         messageDiv.className = 'text-center text-red-500 font-medium';
+        
+        document.querySelectorAll('.otp-choice').forEach(btn => {
+            btn.disabled = true;
+            btn.classList.remove('border-green-500', 'border-red-500', 'bg-green-50', 'bg-red-50');
+            btn.classList.add('border-gray-300', 'opacity-70');
+        });
 
         setTimeout(() => {
             location.reload();
