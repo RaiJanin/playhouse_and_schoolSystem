@@ -13,10 +13,9 @@
  */
 
 export function dateToString(options, dateString) {
-    console.log(dateString);
-
+    
     if(dateString == null || dateString == '') {
-        return ' ';
+        return '';
     }
 
     const dateStamp = new Date(dateString);

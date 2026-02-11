@@ -6,6 +6,12 @@ import './modules/playhouseOtp.js';
 
 import { dateToString } from './utilities/dateString.js';
 
+import { 
+        customCheckBx, 
+        checkBxBtn, 
+        checkBxInfo 
+    } from './components/customCheckbox.js';
+
 document.addEventListener('DOMContentLoaded', function () {
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
@@ -192,24 +198,10 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
         }
 
-        let checkAgree = false;
-        const agree = document.getElementById('agree-terms');
-        const checkAgreeIcon = document.getElementById('check-agree-terms');
-        if(agree && submitBtn){
-            agree.addEventListener('click', () => {
-                checkAgree = !checkAgree;
-
-                if(checkAgree) {
-                    checkAgreeIcon.classList.remove('fa-square-xmark', 'text-red-500');
-                    checkAgreeIcon.classList.add('fa-square-check', 'text-green-500');
-                    submitBtn.disabled = false;
-                } else {
-                    checkAgreeIcon.classList.remove('fa-square-check', 'text-green-500');
-                    checkAgreeIcon.classList.add('fa-square-xmark', 'text-red-500');
-                    submitBtn.disabled = true;
-                }
-            });
-        }
+        checkBxInfo.innerHTML += `I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>`;
+        checkBxBtn.addEventListener('click', () => {
+            submitBtn.disabled = customCheckBx();
+        });
 
         document.getElementById('playhouse-registration-form').addEventListener('submit', (e) => {
             e.preventDefault();
