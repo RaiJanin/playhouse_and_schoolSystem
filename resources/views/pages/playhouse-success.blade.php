@@ -4,22 +4,23 @@
 
 @section('styles')
     <style>
-    @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-15px) rotate(5deg); }
-    }
-    @keyframes bounce-slow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .animate-float { animation: float 6s ease-in-out infinite; }
-    .animate-bounce-slow { animation: bounce-slow 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-bounce-slow { animation: bounce-slow 3s ease-in-out infinite; }
     </style>
 @endsection
 
 @section('main-content')
 <div class="step" id="step7">
-  <h2 class="step-title text-center text-3xl font-bold mb-2 text-gray-800">Registration Complete!</h2>
+    @include('ui.partials.header')
+  <h2 class="step-title text-center text-3xl font-bold mb-2 text-gray-800"></h2>
   <div class="relative max-w-2xl mx-auto p-8 md:p-10 text-center 
               bg-[#b2f2ea] rounded-2xl shadow-md border border-[#1abc9c] overflow-hidden">
     
@@ -33,7 +34,7 @@
     <div class="text-8xl mb-6 text-[#1abc9c] animate-bounce-slow">🎊</div>
     
     <h3 class="text-[#0d9984] text-2xl md:text-3xl font-bold mb-3">
-      Welcome to PlayCare!
+      Registration Complete!
     </h3>
     <p class="text-lg md:text-xl mb-4 text-gray-700">
       Your children are all set for an amazing adventure!
