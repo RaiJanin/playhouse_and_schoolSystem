@@ -176,9 +176,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 const birthday = birthdayEl ? birthdayEl.value : '-';
                 const duration = durationEl.value;
 
-                let durationDefs = duration === 'unlimited' ? 'Unlimited' : `${duration} hr`;
+                const durationMap = {  // Map the dropdown values to their full display labels with prices for the summary
+                    '1': '1 Hour = ₱100',
+                    '2': '2 Hours = ₱200', 
+                    '3': '3 Hours = ₱300',
+                    '4': '4 Hours = ₱400',
+                    'unlimited': 'Unlimited = ₱500'
+                };
 
-                
+                const durationDefs = durationMap[duration] || duration;
+
                 childrenItems += `
                         <div class="bg-teal-50 border border-teal-200 rounded p-3">
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name} ${data.get('parentLastName')}</span></p> 
