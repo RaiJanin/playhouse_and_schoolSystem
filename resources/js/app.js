@@ -6,6 +6,12 @@ import './modules/playhouseOtp.js';
 
 import { dateToString } from './utilities/dateString.js';
 
+import { 
+        customCheckBx, 
+        checkBxBtn, 
+        checkBxInfo 
+    } from './components/customCheckbox.js';
+
 document.addEventListener('DOMContentLoaded', function () {
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
@@ -164,24 +170,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 childrenItems += `
                         <div class="bg-teal-50 border border-teal-200 rounded p-3">
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name} ${data.get('parentLastName')}</span></p> 
-							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${birthday}</span></p>
+							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
                         </div>
                 `;
             });
             
             summary.innerHTML = `
-                    <div class="flex items-start border-b border-cyan-400 pb-3">
-                        <span class="font-semibold text-cyan-800 w-24">Phone:</span>
-                        <span class="text-gray-900 font-medium flex-1">${data.get('phone')}</span>
+                    <div class="flex items-start border-b border-cyan-400 py-2">
+                        <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${data.get('phone')}</span>
                     </div>
-                    <div class="flex gap-2 items-start border-b border-cyan-400 pb-3 max-w-full overflow-auto">
-                        <span class="font-semibold text-cyan-800 w-24">Parent:</span>
-                        <span class="text-gray-900 font-medium flex-1 w-full ">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
+                    <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
+                        <span class="font-semibold text-cyan-800 w-fit">Parent:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
                     </div>
-                    <div class="flex gap-2 items-start border-b border-cyan-400 pb-3">
-                        <span class="font-semibold text-cyan-800">Parent's Birthdate:</span>
-                        <span class="text-gray-900 font-medium flex-1">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
+                    <div class="flex items-center border-b border-cyan-400 py-2">
+                        <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
                     </div>
                     <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
@@ -192,24 +198,10 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
         }
 
-        let checkAgree = false;
-        const agree = document.getElementById('agree-terms');
-        const checkAgreeIcon = document.getElementById('check-agree-terms');
-        if(agree && submitBtn){
-            agree.addEventListener('click', () => {
-                checkAgree = !checkAgree;
-
-                if(checkAgree) {
-                    checkAgreeIcon.classList.remove('fa-square-xmark', 'text-red-500');
-                    checkAgreeIcon.classList.add('fa-square-check', 'text-green-500');
-                    submitBtn.disabled = false;
-                } else {
-                    checkAgreeIcon.classList.remove('fa-square-check', 'text-green-500');
-                    checkAgreeIcon.classList.add('fa-square-xmark', 'text-red-500');
-                    submitBtn.disabled = true;
-                }
-            });
-        }
+        checkBxInfo.innerHTML += `I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>`;
+        checkBxBtn.addEventListener('click', () => {
+            submitBtn.disabled = customCheckBx();
+        });
 
         document.getElementById('playhouse-registration-form').addEventListener('submit', (e) => {
             e.preventDefault();
