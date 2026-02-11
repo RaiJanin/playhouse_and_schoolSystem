@@ -3,6 +3,7 @@ import './bootstrap';
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
+import './modules/playhouseParent.js';
 
 import { dateToString } from './utilities/dateString.js';
 
@@ -196,12 +197,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
             `;
-        }
 
-        checkBxInfo.innerHTML += `I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>`;
+            checkBxInfo.innerHTML += `I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>`;
         checkBxBtn.addEventListener('click', () => {
             submitBtn.disabled = customCheckBx();
         });
+        }
+
+        
 
         document.getElementById('playhouse-registration-form').addEventListener('submit', (e) => {
             e.preventDefault();
