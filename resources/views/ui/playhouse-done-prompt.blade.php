@@ -9,12 +9,6 @@
 	</div>
 
 	<div class="flex items-center mb-2">
-		{{-- <button type="button" id="agree-terms" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-			<span class="flex items-center">
-				<i id="check-agree-terms" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
-				<p class="ml-2">I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span> </p>
-			</span>
-		</button> --}}
 		@include('components.checkbox')
 	</div>
 </div>

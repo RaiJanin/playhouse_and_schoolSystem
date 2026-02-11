@@ -13,6 +13,7 @@
         color: #6b7280 !important;
     }
 </style>
+
 <div class="p-4">
     <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center">Parent Information</h2>
     <p class="text-center text-gray-600 mb-5 font-semibold">
@@ -27,23 +28,22 @@
             <label for="parentLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
             <input type="text" id="parentLastName" name="parentLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" required />
         </div>
-        <!-- <div>
+        <div>
             <label for="parentEmail" class="block text-base font-semibold text-gray-900 mb-2">Email Address</label>
             <input type="email" id="parentEmail" name="parentEmail" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com"/>
-        </div> -->
+        </div>
         <div>
             <label for="parentBirthday" class="block text-base font-semibold text-gray-900 mb-2">Birthday</label>
             <input type="date" id="parentBirthday" name="parentBirthday" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
         </div>
     </div>
 
-    <div>
-        <div class="mt-6 pt-4 border-t-2 border-gray-200">
+    
+    <div class="mt-6 pt-4 border-t-2 border-gray-200">
+        @include('components.checkbox')
 
-            @include('components.checkbox')
-
-            <div class="flex items-center space-x-1">
-                <div id="guardian-check-info" class="flex-1">
+        <div class="flex items-center space-x-1">
+            <div id="guardian-check-info" class="flex-1">
                 <span class="block text-sm font-normal text-gray-600 mt-1">Confirm I am the legal guardian of the child</span>
             </div>
         </div>

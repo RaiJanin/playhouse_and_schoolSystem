@@ -4,9 +4,14 @@ import {
     checkBxInfo
 } from '../components/customCheckbox.js';
 
+import { readStep } from '../utilities/stepState.js';
+
 document.addEventListener('DOMContentLoaded', () => {
-    checkBxInfo.innerHTML += `Guardian:`;
+
+    if(readStep() == 'parent') {
+        checkBxInfo.innerHTML += `Guardian:`;
         checkBxBtn.addEventListener('click', () => {
             customCheckBx();
         });
-})
+    }
+});

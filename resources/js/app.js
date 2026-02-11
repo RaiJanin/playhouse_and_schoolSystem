@@ -11,6 +11,7 @@ import { API_ROUTES } from './config/api.js';
 
 import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './utilities/parseFlatJson.js';
+import { getCurrentStepNameS, readStep } from './utilities/stepState.js';
 
 import { 
     customCheckBx, 
@@ -111,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
         function getCurrentStepName() {
             return steps[currentStep].dataset.step;
         }
+        window.getCurrentStepName = getCurrentStepName;
 
         nextBtn.addEventListener('click', () => {
             const currentForm = steps[currentStep];
@@ -147,6 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     valid = false;
                 }
             }
+            
+            getCurrentStepNameS(steps[currentStep + 1].dataset.step);
+            console.log(readStep());
             
             if(!valid)return;
             if(currentStep < steps.length - 1) {
@@ -205,12 +210,10 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
 
             checkBxInfo.innerHTML += `I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>`;
-        checkBxBtn.addEventListener('click', () => {
-            submitBtn.disabled = customCheckBx();
-        });
+            checkBxBtn.addEventListener('click', () => {
+                submitBtn.disabled = customCheckBx();
+            });
         }
-
-        
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
