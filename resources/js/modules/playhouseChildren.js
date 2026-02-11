@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
     const addBtn = document.getElementById('addChildBtn');
 
-    let childEntries = container.querySelectorAll('.child-entry').length || 1;
+    let childEntries = container.querySelectorAll('.child-entry').length - 1;
 
     function createChildEntry() {
-        childEntries = container.querySelectorAll('.child-entry').length + 1;
+        childEntries = childEntries + 1;
         const entry = document.createElement('div');
         entry.className = 'child-entry space-y-4 pt-6 border-t border-gray-600 mt-6';
         entry.innerHTML = `
