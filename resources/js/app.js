@@ -5,15 +5,21 @@ import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
+import { submitData } from './services/submitData.js'
+
+import { API_ROUTES } from './config/api.js';
+
 import { dateToString } from './utilities/dateString.js';
+import { parseBracketedFormData } from './utilities/parseFlatJson.js';
 
 import { 
-        customCheckBx, 
-        checkBxBtn, 
-        checkBxInfo 
-    } from './components/customCheckbox.js';
+    customCheckBx, 
+    checkBxBtn, 
+    checkBxInfo 
+} from './components/customCheckbox.js';
 
 document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('playhouse-registration-form');
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
@@ -206,37 +212,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         
 
-        document.getElementById('playhouse-registration-form').addEventListener('submit', (e) => {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             console.log('Form submition active');
 
-            //--- reserved api for data submission
-            //---- REMEMBER to change this function into a Promise (async, await)
+            const formData = new FormData(form);
+            const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
 
-            // const form = document.getElementById('multi-step-form');
-            // const formData = new FormData(form);
-
-            // try {
-            //     const response = await fetch('/submit-form', {
-            //         method: 'POST',
-            //         body: formData
-            //     });
-
-            //     if (!response.ok) {
-            //         throw new Error('Failed to submit form');
-            //     }
-
-            //     const result = await response.json();
-            //     alert('Form submitted successfully!');
-            //     console.log(result);
-
-            // } catch (error) {
-            //     console.error(error);
-            //     alert('Something went wrong!');
-            // }
-            window.location.href='/playhouse/success'
+            submitData(API_ROUTES.submitURL, jsonData);
         });
     });
-
-    //--- REFER TO SAMPLE-2 BLADE ON THE REFERENCES FOLDER
