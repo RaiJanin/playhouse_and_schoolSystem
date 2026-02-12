@@ -48,7 +48,17 @@
         </div>
 
         <div id="guardian-form" hidden>
-            <h1>Hello guardian</h1>
+        <div>
+            <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
+            <input type="text" id="guardianName" name="guardianName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+        </div>
+        <div>
+            <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
+            <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+        </div>
+        <div>
+            <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Phone Number</label>
+            <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
         </div>
     </div>
 </div>
