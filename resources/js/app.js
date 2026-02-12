@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         function generateQR() {
-            
+            form.classList.add('hidden');
+            document.getElementById('qr-container').classList.remove('hidden');
         }
     });

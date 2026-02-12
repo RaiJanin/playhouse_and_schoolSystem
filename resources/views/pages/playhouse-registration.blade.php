@@ -61,6 +61,9 @@
                         </div>
                     </div>
                 </form>
+                <div id="qr-container" class="overflow-hidden hidden">
+                    @include('ui.playhouse-showQR')
+                </div>
             </div>
         </div>
     </div>
