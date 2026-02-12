@@ -7,7 +7,7 @@
     <div class="mb-5 px-5 flex justify-center">
         <div class="bg-white p-5 rounded-xl shadow-lg border-2 border-gray-200">
             <img 
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Registration+Successful" 
+                src="{{asset('images/Qr.png')}}"
                 alt="QR Code" 
                 class="w-48 h-48 rounded-lg"
             />
