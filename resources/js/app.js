@@ -11,13 +11,8 @@ import { API_ROUTES } from './config/api.js';
 
 import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './utilities/parseFlatJson.js';
-import { getCurrentStepNameS, readStep } from './utilities/stepState.js';
 
-import { 
-    customCheckBx, 
-    checkBxBtn, 
-    checkBxInfo 
-} from './components/customCheckbox.js';
+import { CustomCheckbox} from './components/customCheckbox.js';
 
 document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('playhouse-registration-form');
@@ -42,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
 
         let currentStep = 0;
+        let replyFromBackend = '';
 
         function showSteps(step, direction = 'next') {
             const currentStepEl = steps[currentStep];
@@ -150,9 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             
-            getCurrentStepNameS(steps[currentStep + 1].dataset.step);
-            console.log(readStep());
-            
             if(!valid)return;
             if(currentStep < steps.length - 1) {
                 showSteps(currentStep + 1,'next');
@@ -176,11 +169,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const birthday = birthdayEl ? birthdayEl.value : '-';
                 const duration = durationEl.value;
 
+                // playtime durations should fetch from the master file (database)
                 const durationMap = {  // Map the dropdown values to their full display labels with prices for the summary
-                    '1': '1 Hour = ₱100',
-                    '2': '2 Hours = ₱200', 
-                    '3': '3 Hours = ₱300',
-                    '4': '4 Hours = ₱400',
+                    '1': '1 hr = ₱100',
+                    '2': '2 hrs = ₱200', 
+                    '3': '3 hrs = ₱300',
+                    '4': '4 hrs = ₱400',
                     'unlimited': 'Unlimited = ₱500'
                 };
 
@@ -216,13 +210,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
             `;
 
-            checkBxInfo.innerHTML += `I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>`;
-            checkBxBtn.addEventListener('click', () => {
-                submitBtn.disabled = customCheckBx();
-            });
+            document.querySelectorAll('.custom-checkbox').forEach(button => {
+                const termsCheckBx = new CustomCheckbox(button);
+
+                termsCheckBx.setLabel(`
+                    I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>
+                `);
+                
+                button.addEventListener('change', (event) => {
+                    submitBtn.disabled = !event.detail.checked;
+                });
+            })
         }
 
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             console.log('Form submition active');
@@ -230,6 +231,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
 
-            submitData(API_ROUTES.submitURL, jsonData);
+            replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
+            console.log("Reply from Backend");
+            console.log(replyFromBackend);
+
+            if(replyFromBackend.isFormSubmitted) generateQR();
+
         });
+
+        function generateQR() {
+            
+        }
     });

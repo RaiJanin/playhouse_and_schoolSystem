@@ -38,14 +38,17 @@
         </div>
     </div>
 
-    
-    <div class="mt-6 pt-4 border-t-2 border-gray-200">
+    <div class="mt-6 pt-4 border-t border-gray-800">
         @include('components.checkbox')
 
         <div class="flex items-center space-x-1">
             <div id="guardian-check-info" class="flex-1">
                 <span class="block text-sm font-normal text-gray-600 mt-1">Confirm I am the legal guardian of the child</span>
             </div>
+        </div>
+
+        <div id="guardian-form" hidden>
+            <h1>Hello guardian</h1>
         </div>
     </div>
 </div>

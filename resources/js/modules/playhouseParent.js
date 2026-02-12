@@ -1,17 +1,11 @@
-import {
-    customCheckBx,
-    checkBxBtn,
-    checkBxInfo
-} from '../components/customCheckbox.js';
+import { CustomCheckbox } from '../components/customCheckbox.js';
 
-import { readStep } from '../utilities/stepState.js';
+document.querySelectorAll('.custom-checkbox').forEach(button => {
+    const guardianCheckBx = new CustomCheckbox(button);
 
-document.addEventListener('DOMContentLoaded', () => {
+    guardianCheckBx.setLabel(`Add Guardian `);
 
-    if(readStep() == 'parent') {
-        checkBxInfo.innerHTML += `Guardian:`;
-        checkBxBtn.addEventListener('click', () => {
-            customCheckBx();
-        });
-    }
+    button.addEventListener('change', (event) => {
+        document.getElementById('guardian-form').hidden = !event.detail.checked;
+    });
 });

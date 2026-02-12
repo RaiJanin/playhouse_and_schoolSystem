@@ -1,20 +1,36 @@
-const checkBxIcon = document.getElementById('check-icon');
+export class CustomCheckbox {
+    constructor(buttonElement) {
+        this.button = buttonElement;
+        this.icon = this.button.querySelector('.check-icon');
+        this.info = this.button.querySelector('.check-info');
+        this.state = false;
 
-let checkState = false;
+        this.button.addEventListener('click', () => this.toggle());
+    }
 
-export const checkBxInfo = document.getElementById('check-info');
-export const checkBxBtn = document.getElementById('custom-checkbox');
+    toggle() {
+        this.state = !this.state;
 
-export function customCheckBx() {
-    checkState = !checkState;
-    
-    if(checkState) {
-        checkBxIcon.classList.remove('fa-square-xmark', 'text-red-500');
-        checkBxIcon.classList.add('fa-square-check', 'text-green-500');
-        return false;
-    } else {
-        checkBxIcon.classList.remove('fa-square-check', 'text-green-500');
-        checkBxIcon.classList.add('fa-square-xmark', 'text-red-500');
-        return true;
+        this.icon.classList.toggle('fa-square-check', this.state);
+        this.icon.classList.toggle('text-green-500', this.state);
+        this.icon.classList.toggle('fa-square-xmark', !this.state);
+        this.icon.classList.toggle('text-red-500', !this.state);
+
+        this.button.dispatchEvent(
+            new CustomEvent('change', {
+                detail: { checked: this.state }
+            })
+        );
+
+        return this.state;
+    }
+
+    setLabel(html) {
+        this.info.innerHTML = html;
+    }
+
+    isChecked() {
+        return this.state;
     }
 }
+
