@@ -148,9 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if(getCurrentStepName() === 'parent') {
-                if(!addguardianCheckBx.isChecked()) {
-                    valid = true;
-                }
                 if(addguardianCheckBx.isChecked() && !confirmGuardianCheckBx.isChecked()) {
                     valid = false;
                 }
