@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class GuardianResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        //return parent::toArray($request);
+
+        return [
+            'id' => $this->id,
+            'guardianName' => $this->guardianName,
+            'guardianLastName' => $this->guardianLastName,
+            'guardianPhone' => $this->guardianPhone,
+        ];
+    }
+}

@@ -31,10 +31,10 @@
                   Welcome to PlayCare!
                 </h3>
                 <p class="text-lg md:text-xl mb-4 text-gray-700">
-                  Your children are all set for an amazing adventure!
+                  A fun and creative space where little imaginations grow big
                 </p>
                 <p class="text-lg text-[#0d9984] font-medium mb-8">
-                  Please keep your name tags and enjoy your time with us!
+                  Let your child explore, learn, play, and socialize while you relax and enjoy quality time
                 </p>
                 <div class="absolute top-0 left-0 w-16 h-16 border-l-4 border-t-4 border-[#1abc9c] rounded-bl-full"></div>
                 <div class="absolute top-0 right-0 w-16 h-16 border-r-4 border-t-4 border-[#0d9984] rounded-br-full"></div>
@@ -47,7 +47,7 @@
                         rounded-full shadow-md overflow-hidden transition-all duration-300 
                         hover:shadow-lg hover:scale-105 active:scale-95">
                   <span class="relative z-10 flex items-center justify-center gap-2">
-                    Start another Registration
+                    Start Registration
                     <span class="transition-transform group-hover:translate-x-1">→</span>
                   </span>
                 </button>

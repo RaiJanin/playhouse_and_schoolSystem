@@ -165,7 +165,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const summary = document.getElementById('summaryContainer');
             const data = new FormData(document.getElementById('playhouse-registration-form'));
             let parentEmail = data.get('parentEmail') ? `(${data.get('parentEmail')})` : '';
+            let guardianPhone = data.get('guardianPhone') ? `(${data.get('guardianPhone')})` : '';
             let childrenItems = '';
+            let guardianInfo = '';
 
             document.querySelectorAll('.child-entry').forEach((child) => {
                 const nameEl = child.querySelector('input[name*="[name]"]');
@@ -195,6 +197,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                 `;
             });
+
+            if(addguardianCheckBx.isChecked()) {
+                guardianInfo = `
+                    <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
+                        <span class="font-semibold text-cyan-800 w-fit">Guardian:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${data.get('guardianName')} ${data.get('guardianLastName')} ${guardianPhone}</span>
+                    </div>
+                `;
+            }
             
             summary.innerHTML = `
                     <div class="flex items-start border-b border-cyan-400 py-2">
@@ -209,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
                     </div>
+                    ${guardianInfo}
                     <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
                         <div id="summary-children-list" class="space-y-3 ml-2">

@@ -7,7 +7,7 @@ const guardianFields = [
 
 export const addguardianCheckBx = new CustomCheckbox('add-guardian-checkbox', 'check-add-guardian-icon', 'check-add-guardian-info');
 addguardianCheckBx.setLabel(`
-    Add Guardian
+    Add Guardian <span class="text-red-600">*</span>
 `);
 addguardianCheckBx.onChange(checked => {
     document.getElementById('guardian-form').hidden = !checked;
