@@ -10,6 +10,9 @@ class PlayHouseController extends Controller
     public function store(StorePlayhouseFormRequest $request)
     {
         $data = $request->validated();
-        return response()->json($data);
+        return response()->json([
+            'isFormSubmitted' => true,
+            'data' => $data,
+        ]);
     }
 }
