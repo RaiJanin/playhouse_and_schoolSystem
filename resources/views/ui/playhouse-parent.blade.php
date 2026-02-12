@@ -40,6 +40,7 @@
 
     
     <div class="mt-6 pt-4 border-t-2 border-gray-200">
+        
         @include('components.checkbox')
 
         <div class="flex items-center space-x-1">
