@@ -46,7 +46,8 @@
         </div>
 
         <div class="pt-2">
-            <button type="button" id="addChildBtn" class="text-base font-bold text-teal-500 hover:text-teal-700 flex items-center gap-1">
+            <button type="button" id="addChildBtn" 
+            class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>
         </div>

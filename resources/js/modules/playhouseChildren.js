@@ -34,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
-            <div class="flex justify-end">
-                <button type="button" class="remove-child text-base font-semibold text-slate-600 hover:text-red-600 transition-colors">Remove</button>
+            <div class="flex justify-end pt-2">
+                <button type="button" class="remove-child text-sm font-bold text-red-700 bg-red-100 hover:bg-red-200 px-4 py-1.5 rounded-full border border-red-300 transition-all duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-trash text-xs"></i> Remove
             </div>
         `;
         attachEntryListeners(entry);
