@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         entry.className = 'child-entry space-y-4 pt-6 border-t border-gray-600 mt-6';
         entry.innerHTML = `
             <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Name</label>
+                <label class="block text-base font-semibold text-gray-900 mb-2">Name <span class="text-red-600">*</span></label>
                 <input type="text" name="child[${childEntries}][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
             </div>
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
 
             <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration</label>
+                <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                 <div class="relative">
                     <select name="child[${childEntries}][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                         <option value="1">1 Hour = ₱100</option>  

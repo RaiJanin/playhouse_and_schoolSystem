@@ -46,11 +46,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             stepNums.forEach((num, i) => {
                 if (i <= step) {
-                    num.classList.remove('border-gray-300', 'bg-white');
-                    num.classList.add('border-teal-300', 'bg-amber-200');
+                    num.classList.remove('border-gray-300', 'bg-white', 'text-gray-500');
+                    num.classList.add('border-teal-300', 'bg-amber-200', 'text-teal-500');
                 } else {
-                    num.classList.remove('border-teal-300', 'bg-amber-200');
-                    num.classList.add('border-gray-300', 'bg-white');
+                    num.classList.remove('border-teal-300', 'bg-amber-200', 'text-teal-500');
+                    num.classList.add('border-gray-300', 'bg-white', 'text-gray-500');
                 }
             });
             stepTexts.forEach((text, i) => {
@@ -148,6 +148,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if(getCurrentStepName() === 'parent') {
+                if(!addguardianCheckBx.isChecked()) {
+                    valid = true;
+                }
                 if(addguardianCheckBx.isChecked() && !confirmGuardianCheckBx.isChecked()) {
                     valid = false;
                 }

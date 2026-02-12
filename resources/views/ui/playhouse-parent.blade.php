@@ -21,11 +21,11 @@
     </p>
     <div class="space-y-4">
         <div>
-            <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
+            <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
             <input type="text" id="parentName" name="parentName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="John" required />
         </div>
         <div>
-            <label for="parentLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
+            <label for="parentLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
             <input type="text" id="parentLastName" name="parentLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" required />
         </div>
         <div>
@@ -47,16 +47,16 @@
 		</button>
         <div id="guardian-form" hidden>
             <div>
-                <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">First Name</label>
-                <input type="text" id="guardianName" name="guardianName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will" required/>
+                <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
+                <input type="text" id="guardianName" name="guardianName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
             </div>
             <div>
-                <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name</label>
-                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith" required/>
+                <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
+                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
             </div>
             <div>
                 <label for="guardianPhone" class="block text-base font-semibold text-gray-900 my-2">Phone Number</label>
-                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel" required/>
+                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
             </div>
             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                 <span class="flex flex-row">

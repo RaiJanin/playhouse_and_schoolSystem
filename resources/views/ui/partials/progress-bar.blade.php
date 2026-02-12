@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="flex justify-between px-0 max-w-6xl">
-        <div id="step-1-text" class="text-sm font-medium text-teal-700">Phone</div>
+        <div id="step-1-text" class="text-sm font-medium text-teal-500">Phone</div>
         <div id="step-2-text" class="text-sm font-medium text-gray-700">OTP</div>
         <div id="step-3-text" class="text-sm font-medium text-gray-700">Parent</div>
         <div id="step-4-text" class="text-sm font-medium text-gray-700">Children</div>

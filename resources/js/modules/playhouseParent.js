@@ -2,8 +2,7 @@ import { CustomCheckbox } from '../components/customCheckbox.js';
 
 const guardianFields = [
     document.getElementById('guardianName'),
-    document.getElementById('guardianLastName'),
-    document.getElementById('guardianPhone'),
+    document.getElementById('guardianLastName')
 ];
 
 export const addguardianCheckBx = new CustomCheckbox('add-guardian-checkbox', 'check-add-guardian-icon', 'check-add-guardian-info');

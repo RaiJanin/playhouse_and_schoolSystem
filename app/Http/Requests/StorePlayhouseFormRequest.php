@@ -22,11 +22,14 @@ class StorePlayhouseFormRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'phone' => 'required|string|max:20',
             'parentName' => 'required|string|max:255',
             'parentLastName' => 'required|string|max:255',
-            'parentEmail' => 'required|email|max:255',
+            'parentEmail' => 'nullable|email|max:255',
             'parentBirthday' => 'nullable|date',
-            'phone' => 'required|string|max:20',
+            'guardianName' => 'nullable|string|max:255',
+            'guardianLastName' => 'nullable|string|max:255',
+            'guardianPhone' => 'nullable|string|max:20',
             'child' => 'required|array|min:1',
             'child.*.name' => 'required|string|max:255',
             'child.*.birthday' => 'nullable|date',
