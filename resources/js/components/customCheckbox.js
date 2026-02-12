@@ -1,8 +1,8 @@
 export class CustomCheckbox {
-    constructor(buttonElement) {
-        this.button = buttonElement;
-        this.icon = this.button.querySelector('.check-icon');
-        this.info = this.button.querySelector('.check-info');
+    constructor(buttonElement, checkBxIcon, checkBxInfo) {
+        this.button = document.getElementById(`${buttonElement}`);
+        this.icon = document.getElementById(`${checkBxIcon}`);
+        this.info = document.getElementById(`${checkBxInfo}`);
         this.state = false;
 
         this.button.addEventListener('click', () => this.toggle());
@@ -31,6 +31,10 @@ export class CustomCheckbox {
 
     isChecked() {
         return this.state;
+    }
+
+    onChange(callback) {
+        this.button.addEventListener('change', e => callback(e.detail.checked));
     }
 }
 

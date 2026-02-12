@@ -1,11 +1,26 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
 
-document.querySelectorAll('.custom-checkbox').forEach(button => {
-    const guardianCheckBx = new CustomCheckbox(button);
+const guardianFields = [
+    document.getElementById('guardianName'),
+    document.getElementById('guardianLastName'),
+    document.getElementById('guardianPhone'),
+];
 
-    guardianCheckBx.setLabel(`Add Guardian `);
+export const addguardianCheckBx = new CustomCheckbox('add-guardian-checkbox', 'check-add-guardian-icon', 'check-add-guardian-info');
+addguardianCheckBx.setLabel(`
+    Add Guardian
+`);
+addguardianCheckBx.onChange(checked => {
+    document.getElementById('guardian-form').hidden = !checked;
+});
 
-    button.addEventListener('change', (event) => {
-        document.getElementById('guardian-form').hidden = !event.detail.checked;
+
+export const confirmGuardianCheckBx = new CustomCheckbox('confirm-guardian-checkbox', 'confirm-guardian-icon', 'confirm-guardian-info');
+confirmGuardianCheckBx.setLabel(`
+    Confirm I am the legal guardian of the child
+`);
+confirmGuardianCheckBx.onChange(checked => {
+    guardianFields.forEach(field => {
+        field.required = checked;
     });
 });

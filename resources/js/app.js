@@ -12,7 +12,8 @@ import { API_ROUTES } from './config/api.js';
 import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './utilities/parseFlatJson.js';
 
-import { CustomCheckbox} from './components/customCheckbox.js';
+import { CustomCheckbox } from './components/customCheckbox.js';
+import { addguardianCheckBx, confirmGuardianCheckBx } from './modules/playhouseParent.js';
 
 document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('playhouse-registration-form');
@@ -145,6 +146,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     valid = false;
                 }
             }
+
+            if(getCurrentStepName() === 'parent') {
+                if(addguardianCheckBx.isChecked() && !confirmGuardianCheckBx.isChecked()) {
+                    valid = false;
+                }
+            }
             
             if(!valid)return;
             if(currentStep < steps.length - 1) {
@@ -169,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const birthday = birthdayEl ? birthdayEl.value : '-';
                 const duration = durationEl.value;
 
-                // playtime durations should fetch from the master file (database)
+                // playtime durations should fetch from the master file (database or disk storage)
                 const durationMap = {  // Map the dropdown values to their full display labels with prices for the summary
                     '1': '1 hr = ₱100',
                     '2': '2 hrs = ₱200', 
@@ -210,17 +217,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
             `;
 
-            document.querySelectorAll('.custom-checkbox').forEach(button => {
-                const termsCheckBx = new CustomCheckbox(button);
-
-                termsCheckBx.setLabel(`
-                    I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>
-                `);
-                
-                button.addEventListener('change', (event) => {
-                    submitBtn.disabled = !event.detail.checked;
-                });
-            })
+            const termsCheckBx = new CustomCheckbox('agree-checkbox', 'check-agree-icon', 'check-agree-info');
+            termsCheckBx.setLabel(`
+                I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>
+            `);
+            termsCheckBx.onChange(checked => {
+                submitBtn.disabled = !checked;
+            });
         }
 
         form.addEventListener('submit', async (e) => {
