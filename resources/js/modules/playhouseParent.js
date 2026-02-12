@@ -11,6 +11,19 @@ addguardianCheckBx.setLabel(`
 `);
 addguardianCheckBx.onChange(checked => {
     document.getElementById('guardian-form').hidden = !checked;
+    
+    if(!addguardianCheckBx.isChecked()) {
+        guardianFields.forEach(field => {
+            field.value = '';
+        });
+        document.getElementById('guardianPhone').value = '';
+    }
+    if(confirmGuardianCheckBx.isChecked()) {
+        confirmGuardianCheckBx.toggle();
+        guardianFields.forEach(field => {
+            field.required = false;
+        });
+    }
 });
 
 
