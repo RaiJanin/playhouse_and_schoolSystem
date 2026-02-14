@@ -256,6 +256,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function generateQR() {
             form.classList.add('hidden');
+            stepTexts.forEach(text => {
+                text.classList.remove('text-gray-700');
+                text.classList.add('text-teal-500');
+            });
+            //implement the QR generation and functions here
             document.getElementById('qr-container').classList.remove('hidden');
         }
     });

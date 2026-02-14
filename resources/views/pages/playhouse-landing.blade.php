@@ -28,7 +28,7 @@
                 <div class="absolute top-1/4 right-6 text-3xl animate-float" style="animation-delay: 1.2s; color: #1abc9c">🎈</div>
                 <div class="text-8xl mb-6 text-[#1abc9c] animate-bounce-slow">🎊</div>
                 <h3 class="text-[#0d9984] text-2xl md:text-3xl font-bold mb-3">
-                  Welcome to PlayCare!
+                  Welcome!
                 </h3>
                 <p class="text-lg md:text-xl mb-4 text-gray-700">
                   A fun and creative space where little imaginations grow big

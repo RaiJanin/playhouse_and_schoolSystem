@@ -15,4 +15,23 @@ class PlayHouseController extends Controller
             'data' => $data,
         ]);
     }
+
+    public function makeOtp(Request $request)
+    {
+        $request->validate(['phone' => 'required|string|max:20']);
+        
+        $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
+
+        //Insert numbers on the database here
+
+        return response()->json([
+            'generated' => true,
+            'code' => $OTP
+        ]);
+    }
+
+    public function verifyOTP(Request $request)
+    {
+        
+    }
 }

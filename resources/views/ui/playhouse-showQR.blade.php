@@ -1,7 +1,7 @@
 <div class="p-3 flex flex-col">
     <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center">Registration Complete</h2>
     <p class="text-center text-gray-600 mb-5 font-semibold">
-        Your registration was successful! Scan the QR code below to access your account or save this information for future reference.
+        Your registration was successful! Scan the QR code below to access your account.
     </p>
     
     <div class="mb-5 px-5 flex justify-center">

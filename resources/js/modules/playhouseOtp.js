@@ -1,9 +1,14 @@
+import { submitData } from "../services/submitData.js";
+import { API_ROUTES } from "../config/api.js";
 
 const container = document.getElementById('otp-choices');
 const messageDiv = document.getElementById('otp-message');
 
 let correctCode = false;
+let storePhone = 0;
 window.correctCode = correctCode;
+window.storePhone = storePhone;
+
 let otpCode = 0;
 let otpAttempt = 0;
 
@@ -98,18 +103,24 @@ function shuffleArray(array) {
 
 //Simulate random code
 //Get this using API
-function generateOtp(phoneNumber) {
-    if(otpCode !== 0) {
+async function generateOtp(phoneNumber) {
+    if(storePhone !== 0 && storePhone === phoneNumber) {
         return;
     }
 
-    //submit with the phoneNumber
+    storePhone = phoneNumber;
+    otpAttempt = 0;
+    
+    const phoneIntoJson = { phone: phoneNumber };
+    const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
 
-    const otp = Math.floor(100 + Math.random() * 900);
-    otpCode = otp.toString();
-    console.log("Phone number: "+phoneNumber);
-    console.log("OTP Code: "+otp.toString());
-    generateOtpChoices(otpCode);
+    console.log("Server response: ");
+    console.log(otp);
+
+    console.log("Phone number: "+storePhone);
+    console.log("OTP Code: "+otp.code);
+    
+    generateOtpChoices(otp.code);
 }
 window.generateOtp = generateOtp;
 
