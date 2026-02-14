@@ -5,7 +5,7 @@ import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
-import { submitData } from './services/submitData.js'
+import { submitData } from './services/requestApi.js'
 
 import { API_ROUTES } from './config/api.js';
 

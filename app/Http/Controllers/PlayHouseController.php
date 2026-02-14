@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlayhouseFormRequest;
+use App\Models\Playhouse;
 use Illuminate\Http\Request;
 
 class PlayHouseController extends Controller
@@ -21,7 +22,7 @@ class PlayHouseController extends Controller
         $request->validate(['phone' => 'required|string|max:20']);
         
         $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
-
+        
         //Insert numbers on the database here
 
         return response()->json([
@@ -30,8 +31,17 @@ class PlayHouseController extends Controller
         ]);
     }
 
-    public function verifyOTP(Request $request)
+    public function verifyOTP(Request $request, $phoneNum)
     {
-        
+        //query for phone number later
+        $request->validate(['otp' => 'required|string|size:3']);
+
+        //Query to find the phone number and its OTP
+
+        //Update phone number, label as "verified"
+
+        return response()->json([
+            'isCorrectOtp' => true
+        ]);
     }
 }

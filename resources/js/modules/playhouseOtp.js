@@ -1,4 +1,4 @@
-import { submitData } from "../services/submitData.js";
+import { submitData } from "../services/requestApi.js";
 import { API_ROUTES } from "../config/api.js";
 
 const container = document.getElementById('otp-choices');
@@ -9,7 +9,6 @@ let storePhone = 0;
 window.correctCode = correctCode;
 window.storePhone = storePhone;
 
-let otpCode = 0;
 let otpAttempt = 0;
 
 function generateOtpChoices(correctOtp) {
@@ -33,7 +32,7 @@ function generateOtpChoices(correctOtp) {
         `;
         button.dataset.otp = otp;
         
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
 
             document.querySelectorAll('.otp-choice').forEach(btn => {
                 btn.disabled = true;
@@ -41,7 +40,13 @@ function generateOtpChoices(correctOtp) {
                 btn.classList.add('border-gray-300', 'opacity-70');
             });
             
-            if (otp === correctOtp) {
+            //Test verify OTP on backend
+            //Every code for now is correct
+
+            const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", storePhone);
+
+            // if (otp === correctOtp) {
+            if(sendOtpAttempt.isCorrectOtp) {
                 button.classList.remove('border-gray-300', 'opacity-70');
                 button.classList.add('border-green-500', 'bg-green-50');
                 messageDiv.textContent = '✓ Correct!';
@@ -49,7 +54,6 @@ function generateOtpChoices(correctOtp) {
                 
                 window.correctCode = true;
                 phoneReadOnly(true);
-        
             } else {
                 button.classList.remove('border-gray-300', 'opacity-70');
                 button.classList.add('border-red-500', 'bg-red-50');
@@ -101,8 +105,6 @@ function shuffleArray(array) {
     return array;
 }
 
-//Simulate random code
-//Get this using API
 async function generateOtp(phoneNumber) {
     if(storePhone !== 0 && storePhone === phoneNumber) {
         return;
@@ -113,12 +115,6 @@ async function generateOtp(phoneNumber) {
     
     const phoneIntoJson = { phone: phoneNumber };
     const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
-
-    console.log("Server response: ");
-    console.log(otp);
-
-    console.log("Phone number: "+storePhone);
-    console.log("OTP Code: "+otp.code);
     
     generateOtpChoices(otp.code);
 }
