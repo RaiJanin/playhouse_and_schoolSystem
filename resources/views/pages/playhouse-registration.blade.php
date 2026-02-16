@@ -49,7 +49,12 @@
                         <div class="step hidden" id="step4" data-step='children'>
                             @include('ui.playhouse-children')
                         </div>
-                        <div class="step hidden" id="step5" data-step='done'>
+
+                        <div class="step hidden" id="step5" data-step='menu'>
+                            @include('ui.playhouse-menu')
+                        </div>
+
+                        <div class="step hidden" id="step6" data-step='done'>
                             @include('ui.playhouse-done-prompt')     
                         </div>
                     </div>

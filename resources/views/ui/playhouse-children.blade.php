@@ -23,8 +23,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Birthday</label>
-                    <input type="date" name="child[0][birthday]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
+                    <input type="tel" id="child-0-birthday" data-birthday required class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="MM / DD / YYYY" inputmode="numeric" autocomplete="bday" />
+                    <input type="hidden" name="child[0][birthday]" />
                 </div>
 
                 <div>
