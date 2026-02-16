@@ -4,7 +4,7 @@
  * @param {string} apiLink - The API endpoint URL.
  * @param {Object} dataObject - A JSON Object to be sent in the request body.
  * @param {'POST'|'PATCH'|'PUT'} method - Request method (default = POST)
- * @param {string} - Route parameter
+ * @param {string} routeParam - Route parameter
  * @returns Server response
  */
 
