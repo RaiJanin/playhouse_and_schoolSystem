@@ -11,6 +11,7 @@
         @vite('resources/js/app.js')
     @endif
     @vite('resources/css/app.css')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     @yield('styles')
 </head>
 <body class="min-h-screen">

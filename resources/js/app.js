@@ -244,17 +244,29 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("Reply from Backend");
             console.log(replyFromBackend);
 
-            if(replyFromBackend.isFormSubmitted) generateQR();
+            if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
 
         });
 
-        function generateQR() {
+        function generateQR(orderNum) {
+            const qrContainer = document.getElementById('qr-container');
+            const orderNumText = document.getElementById('order-number-text');
+            const qrImage = document.getElementById('qr-image');
+
             form.classList.add('hidden');
             stepTexts.forEach(text => {
                 text.classList.remove('text-gray-700');
                 text.classList.add('text-teal-500');
             });
-            //implement the QR generation and functions here
-            document.getElementById('qr-container').classList.remove('hidden');
+            
+            qrContainer.classList.remove('hidden');
+            orderNumText.textContent = orderNum;
+            qrImage.innerHTML = "";
+
+            new QRCode(qrImage, {
+                text: orderNum,
+                width: 150,
+                height: 150
+            });
         }
     });

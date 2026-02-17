@@ -41,16 +41,32 @@
                 <div class="absolute bottom-0 left-0 w-16 h-16 border-l-4 border-b-4 border-[#0d9984] rounded-tl-full"></div>
                 <div class="absolute bottom-0 right-0 w-16 h-16 border-r-4 border-b-4 border-[#1abc9c] rounded-tr-full"></div>
                 
-                <button 
-                  onclick="window.location.href=`{{route('playhouse.registration')}}`"
-                  class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                        rounded-full shadow-md overflow-hidden transition-all duration-300 
-                        hover:shadow-lg hover:scale-105 active:scale-95">
-                  <span class="relative z-10 flex items-center justify-center gap-2">
-                    Start Registration
-                    <span class="transition-transform group-hover:translate-x-1">→</span>
-                  </span>
-                </button>
+                <div class="flex items-center justify-center">
+                    <p class="text-2xl text-[#0d9984] font-bold mb-8">Start registration for</p>
+                </div>
+                <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
+                    <button 
+                        onclick="window.location.href=`{{route('playhouse.registration')}}`"
+                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
+                                rounded-full shadow-md overflow-hidden transition-all duration-300 
+                                hover:shadow-lg hover:scale-105 active:scale-95">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            Returnee Customer
+                            <span class="transition-transform group-hover:translate-x-1">→</span>
+                        </span>
+                    </button>
+                    <button 
+                        onclick="window.location.href=`{{route('playhouse.registration')}}`"
+                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
+                                rounded-full shadow-md overflow-hidden transition-all duration-300 
+                                hover:shadow-lg hover:scale-105 active:scale-95">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            New Customer
+                            <span class="transition-transform group-hover:translate-x-1">→</span>
+                        </span>
+                    </button>
+                </div>
+                
             </div>
         </div>
     </div>
