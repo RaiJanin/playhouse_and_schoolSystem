@@ -14,7 +14,7 @@ class PlayHouseController extends Controller
 
         //Temporary
         $order_number = '00'.str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
-        
+
         return response()->json([
             'isFormSubmitted' => true,
             'orderNum' => $order_number,

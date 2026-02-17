@@ -46,7 +46,7 @@
                 </div>
                 <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
                     <button 
-                        onclick="window.location.href=`{{route('playhouse.registration')}}`"
+                        onclick="window.location.href=`{{route('playhouse.registration', ['type' => 'returnee'])}}`"
                         class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
                                 rounded-full shadow-md overflow-hidden transition-all duration-300 
                                 hover:shadow-lg hover:scale-105 active:scale-95">
@@ -56,7 +56,7 @@
                         </span>
                     </button>
                     <button 
-                        onclick="window.location.href=`{{route('playhouse.registration')}}`"
+                        onclick="window.location.href=`{{route('playhouse.registration', ['type' => 'new'])}}`"
                         class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
                                 rounded-full shadow-md overflow-hidden transition-all duration-300 
                                 hover:shadow-lg hover:scale-105 active:scale-95">
