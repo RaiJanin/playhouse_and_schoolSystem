@@ -44,28 +44,59 @@
                 <div class="flex items-center justify-center">
                     <p class="text-2xl text-[#0d9984] font-bold mb-8">Start registration for</p>
                 </div>
-                <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
+
+                {{-- UPDATED BUTTONS SECTION START --}}
+            <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
+                <!-- Returnee Button -->
+                <button 
+                    onclick="document.getElementById('returnee-search-form').classList.remove('hidden'); this.classList.add('hidden');"
+                    class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
+                            rounded-full shadow-md overflow-hidden transition-all duration-300 
+                            hover:shadow-lg hover:scale-105 active:scale-95">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        Returnee Customer
+                        <span class="transition-transform group-hover:translate-x-1">→</span>
+                    </span>
+                </button>
+
+                <!-- Returnee Search Form (Hidden by default) -->
+                <form id="returnee-search-form" action="{{ route('returnee.search') }}" method="POST" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
+                    @csrf
+                    <input 
+                        type="text" 
+                        name="phone" 
+                        placeholder="Enter your phone number" 
+                        class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0d9984] w-full sm:w-64"
+                        required
+                    >
                     <button 
-                        onclick="window.location.href=`{{route('playhouse.registration')}}`"
-                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                                rounded-full shadow-md overflow-hidden transition-all duration-300 
-                                hover:shadow-lg hover:scale-105 active:scale-95">
-                        <span class="relative z-10 flex items-center justify-center gap-2">
-                            Returnee Customer
-                            <span class="transition-transform group-hover:translate-x-1">→</span>
-                        </span>
+                        type="submit" 
+                        class="px-6 py-2 bg-[#0d9984] text-white rounded-lg hover:bg-[#1abc9c] transition whitespace-nowrap"
+                    >
+                        Search
                     </button>
                     <button 
-                        onclick="window.location.href=`{{route('playhouse.registration')}}`"
-                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                                rounded-full shadow-md overflow-hidden transition-all duration-300 
-                                hover:shadow-lg hover:scale-105 active:scale-95">
-                        <span class="relative z-10 flex items-center justify-center gap-2">
-                            New Customer
-                            <span class="transition-transform group-hover:translate-x-1">→</span>
-                        </span>
+                        type="button" 
+                        onclick="document.getElementById('returnee-search-form').classList.add('hidden'); document.querySelector('button[onclick*=\'Returnee Customer\']').classList.remove('hidden');"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
+                    >
+                        ✕
                     </button>
-                </div>
+                </form>
+
+                <!-- New Customer Button -->
+                <button 
+                    onclick="window.location.href=`{{ route('playhouse.registration', ['type' => 'new']) }}`"
+                    class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
+                            rounded-full shadow-md overflow-hidden transition-all duration-300 
+                            hover:shadow-lg hover:scale-105 active:scale-95">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        New Customer
+                        <span class="transition-transform group-hover:translate-x-1">→</span>
+                    </span>
+                </button>
+            </div>
+            {{-- UPDATED BUTTONS SECTION END --}}
                 
             </div>
         </div>
