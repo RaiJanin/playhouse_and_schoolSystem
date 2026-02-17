@@ -54,6 +54,8 @@ function generateOtpChoices(correctOtp) {
                 
                 window.correctCode = true;
                 phoneReadOnly(true);
+
+                
             } else {
                 button.classList.remove('border-gray-300', 'opacity-70');
                 button.classList.add('border-red-500', 'bg-red-50');

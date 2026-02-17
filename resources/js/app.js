@@ -4,6 +4,7 @@ import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
+import './modules/playhouseMenu.js';
 
 import { submitData } from './services/requestApi.js'
 
@@ -245,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
+            console.log(jsonData);
 
             replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
             console.log("Reply from Backend");

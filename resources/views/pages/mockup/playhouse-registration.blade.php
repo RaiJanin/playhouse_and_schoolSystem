@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.app-mockup')
 
 @section('title', 'Playhouse Registration')
 
