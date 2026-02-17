@@ -13,6 +13,7 @@ import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './utilities/parseFlatJson.js';
 
 import { CustomCheckbox } from './components/customCheckbox.js';
+import { requestBirthdayValidation } from './components/birthdayInput.js';
 import { addguardianCheckBx, confirmGuardianCheckBx } from './modules/playhouseParent.js';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -27,14 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('step-2-num'),
             document.getElementById('step-3-num'),
             document.getElementById('step-4-num'),
-            document.getElementById('step-5-num')
+            document.getElementById('step-5-num'),
+            document.getElementById('step-6-num')
         ];
         const stepTexts = [
             document.getElementById('step-1-text'),
             document.getElementById('step-2-text'),
             document.getElementById('step-3-text'),
             document.getElementById('step-4-text'),
-            document.getElementById('step-5-text')
+            document.getElementById('step-5-text'),
+            document.getElementById('step-6-text')
         ];
 
         let currentStep = 0;
@@ -117,6 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 'input[required], select[required]'
             );
 
+            // trigger birthday validation UI only when the user pressed Next
+            requestBirthdayValidation(currentForm);
+
             let valid = true;
 
             inputs.forEach(input => {
@@ -133,10 +139,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 else {
                     if (!input.checkValidity()) {
                         input.classList.remove('border-teal-500');
-                        input.classList.add('border-red-500');
+                        input.classList.add('border-red-600');
                         valid = false;
                     } else {
-                        input.classList.remove('border-red-500');
+                        input.classList.remove('border-red-600');
                     }
                 }
             });

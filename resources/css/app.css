@@ -60,3 +60,24 @@
   animation: fadeOut 0.3s ease;
 }
 
+/* Birthday input - match email input visual style */
+.birthday-input {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  /* sizing comes from utility classes (px-4 py-2) — don't override height/font-size here */ 
+}
+.birthday-input.birthday-active,
+.birthday-input:focus {
+  outline: none !important;
+  box-shadow: 0 6px 18px rgba(2,132,137,0.08), 0 0 0 4px rgba(6,182,212,0.06);
+  border-color: #06b6d4; /* cyan focus */
+}
+.birthday-input.birthday-valid {
+  border-color: #10b981; /* green */
+}
+/* show the red error border only when validation has been requested and the field is not focused */
+input[data-validation-triggered="true"].birthday-input.birthday-invalid:not(:focus) {
+  border-color: #ef4444; /* red */
+}
+
