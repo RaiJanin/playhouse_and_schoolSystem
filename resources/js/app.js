@@ -153,6 +153,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     valid = false;
                 }
             }
+
+            // High-priority gate: when Add Guardian is used, confirm-guardian MUST be authorized
+            if (getCurrentStepName() === 'parent' && typeof addguardianCheckBx !== 'undefined' && addguardianCheckBx.isChecked()) {
+                if (!confirmGuardianCheckBx.isChecked()) {
+                    const infoEl = document.getElementById('confirm-guardian-info');
+                    if (infoEl) {
+                        infoEl.innerHTML = '<span class="text-red-600 font-semibold">To authorize this guardian and proceed to the next step, please click the red "X" icon</span>';
+                    }
+                    valid = false;
+                }
+            }
             
             if(!valid)return;
             if(currentStep < steps.length - 1) {
@@ -169,6 +180,17 @@ document.addEventListener('DOMContentLoaded', function () {
             let guardianPhone = data.get('guardianPhone') ? `(${data.get('guardianPhone')})` : '';
             let childrenItems = '';
             let guardianInfo = '';
+            let menuItems = '';
+            let childrenTotalCost = 0;
+
+            // Price map for durations
+            const durationPriceMap = {
+                '1': 100,
+                '2': 200, 
+                '3': 300,
+                '4': 400,
+                'unlimited': 500
+            };
 
             document.querySelectorAll('.child-entry').forEach((child) => {
                 const nameEl = child.querySelector('input[name*="[name]"]');
@@ -189,6 +211,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
 
                 const durationDefs = durationMap[duration] || duration;
+                
+                // Add to children total cost
+                if (durationPriceMap[duration]) {
+                    childrenTotalCost += durationPriceMap[duration];
+                }
 
                 childrenItems += `
                         <div class="bg-teal-50 border border-teal-200 rounded p-3">
@@ -198,6 +225,45 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                 `;
             });
+
+            // Gather menu items from persistent form data
+            const formElement = document.getElementById('playhouse-registration-form');
+            let selectedMenuItems = [];
+            let menuTotalCost = 0;
+
+            if (formElement.dataset.selectedMenuItems) {
+                try {
+                    selectedMenuItems = JSON.parse(formElement.dataset.selectedMenuItems);
+                } catch (e) {
+                    console.log('Could not parse menu items:', e);
+                    selectedMenuItems = [];
+                }
+            }
+
+            // Format menu items for display
+            if (selectedMenuItems.length > 0) {
+                menuItems = selectedMenuItems.map(item => {
+                    const totalPrice = item.price ? (item.price * item.quantity) : 0;
+                    menuTotalCost += totalPrice;
+                    return `
+                    <div class="bg-teal-50 border border-teal-200 rounded p-3">
+                        <p class="text-sm text-gray-600">Item: <span class="font-bold text-gray-900">${item.name}</span></p>
+                        <p class="text-sm text-gray-600 mt-1">Quantity: <span class="font-medium text-gray-900">${item.quantity}</span></p>
+                        ${item.price ? `<p class="text-sm text-gray-600 mt-1">Unit Price: <span class="font-medium text-gray-600">₱${item.price}</span></p>` : ''}
+                        ${item.price ? `<p class="text-sm text-gray-600 mt-1">Total Price: <span class="font-bold text-teal-600">₱${totalPrice}</span></p>` : ''}
+                    </div>
+                `;
+                }).join('');
+            } else {
+                menuItems = `
+                    <div class="bg-teal-50 border border-teal-200 rounded p-3">
+                        <p class="text-sm text-gray-600">No items selected</p>
+                    </div>
+                `;
+            }
+
+            // Calculate overall total
+            const overallTotal = childrenTotalCost + menuTotalCost;
 
             if(addguardianCheckBx.isChecked()) {
                 guardianInfo = `
@@ -226,6 +292,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
                         <div id="summary-children-list" class="space-y-3 ml-2">
                             ${childrenItems}
+                        </div>
+                    </div>
+                    <div class="pb-3">
+                        <span class="font-semibold text-cyan-800 block mb-3">Menu:</span>
+                        <div id="summary-menu-list" class="space-y-3 ml-2">
+                            ${menuItems}
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t-2 border-cyan-400">
+                        <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
+                            <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
+                            <p class="text-xs text-gray-600 i id="check-agree-icon" class="hidden"></i>
+                                <mt-2">Children: ₱${childrenTotalCost} | Menu: ₱${menuTotalCost}</p>
                         </div>
                     </div>
             `;

@@ -6,24 +6,24 @@ const items = [
             {
                 name: "Snack Combo",
                 items: [
-                    { id: 1, name: "Snack Combo 1" },
-                    { id: 2, name: "Snack Combo 2" },
-                    { id: 3, name: "Snack Combo 3" }
+                    { id: 1, name: "Snack Combo 1", price: 150 },
+                    { id: 2, name: "Snack Combo 2", price: 150 },
+                    { id: 3, name: "Snack Combo 3", price: 150 }
                 ]
             },
             {
                 name: "Drink",
                 items: [
-                    { id: 4, name: "Drink 1" },
-                    { id: 5, name: "Drink 2" }
+                    { id: 4, name: "Drink 1", price: 80 },
+                    { id: 5, name: "Drink 2", price: 80 }
                 ]
             },
             {
                 name: "Burger & Fries",
                 items: [
-                    { id: 6, name: "Burger & Fries 1" },
-                    { id: 7, name: "Burger & Fries 2" },
-                    { id: 12, name: "Burger & Fries 3" },
+                    { id: 6, name: "Burger & Fries 1", price: 200 },
+                    { id: 7, name: "Burger & Fries 2", price: 200 },
+                    { id: 12, name: "Burger & Fries 3", price: 200 },
                 ]
             },
         ]
@@ -34,9 +34,9 @@ const items = [
             {
                 name: "Socks",
                 items: [
-                    { id: 8, name: "Socks small" },
-                    { id: 10, name: "Socks medium" },
-                    { id: 9, name: "Socks large" },
+                    { id: 8, name: "Socks small", price: 50 },
+                    { id: 10, name: "Socks medium", price: 50 },
+                    { id: 9, name: "Socks large", price: 50 },
                 ]
             }
         ]
@@ -95,9 +95,9 @@ function openSubcategoryModal(subcategory) {
         itemEl.className = 'item-container w-full flex flex-col gap-1 pt-6 shadow-[0_5px_20px_rgba(0,0,0,0.25)] bg-teal-50 rounded-lg hover:bg-teal-100 transition';
         itemEl.innerHTML = ''
         itemEl.innerHTML = `
-            <div class="px-6">
-                <p class="item-name p-15">${item.name}</p>
-                <!-- Item image maybe?-->
+            <div class="px-6 text-center">
+                <p class="item-name text-lg font-semibold text-gray-900">${item.name}</p>
+                <p class="item-price text-sm font-bold text-teal-600 mt-1">₱${item.price}</p>
             </div>
             <div class="flex flex-row items-start gap-4 bg-teal-500 w-full p-4 rounded-b-lg rounded-tr-2xl">
                 <div class="flex items-center jsutify-center">
@@ -147,11 +147,13 @@ function createCart() {
         if (quantity > 0) {
             const itemId = input.name.match(/\d+/)[0];
             const itemName = input.closest('.item-container').querySelector('.item-name').textContent;
+            const itemPrice = input.closest('.item-container').querySelector('.item-price').textContent.replace('₱', '');
 
             cart.push({
                 id: parseInt(itemId),
                 name: itemName,
-                quantity: quantity
+                quantity: quantity,
+                price: parseInt(itemPrice)
             });
         }
     });
@@ -162,12 +164,40 @@ function createCart() {
 
 saveItemsBtn.addEventListener('click', () => {
     const cartItems = createCart();
+    const mainForm = document.getElementById('playhouse-registration-form');
 
-    console.log(cartItems);
+    // Get existing items or initialize as empty array
+    let existingItems = [];
+    if (mainForm.dataset.selectedMenuItems) {
+        try {
+            existingItems = JSON.parse(mainForm.dataset.selectedMenuItems);
+        } catch (e) {
+            existingItems = [];
+        }
+    }
+
+    // Merge new items with existing items
+    // Remove duplicates by ID and combine
+    const itemMap = {};
+    
+    // Add existing items to map
+    existingItems.forEach(item => {
+        itemMap[item.id] = item;
+    });
+    
+    // Add/update with new items
+    cartItems.forEach(item => {
+        itemMap[item.id] = item;
+    });
+    
+    // Convert back to array
+    const mergedItems = Object.values(itemMap);
+
+    // Store merged items in a data attribute on the form for persistence
+    mainForm.dataset.selectedMenuItems = JSON.stringify(mergedItems);
+
+    console.log('Menu items saved (merged):', mergedItems);
     modal.classList.add('hidden');
-
-    //next is display the cart
-    //update every "save" event
 });
 
 
