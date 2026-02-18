@@ -32,25 +32,4 @@
     @endforeach --}}
 
     <p class="text-sm text-gray-500 mt-4 text-center">You can change selections anytime before review.</p>
-
-    <div id="cart-container" class="hidden max-w-full mx-auto border border-teal-500 rounded-lg pb-4 pr-4 mt-4">
-        <h2 class="w-60 text-xl text-gray-50 font-bold px-4 py-2 bg-amber-600 rounded-br-xl rounded-tl-lg">Cart</h2>
-        <div id="items-cart-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-teal-100 p-2 sm:p-4 rounded-lg">
-            <div class="flex justify-between bg-gray-50 pl-4 shadow-[0_5px_20px_rgba(0,0,0,0.25)] rounded-lg border border-gray-200">
-                <div class="p-2">
-                    <h2>Snacks combo w/ burgers and fries 1</h2>
-                    <div class="border-t border-gray-400 w-full py-1"></div>
-                    <p class="flex justify-between">
-                        <span>Qty: 2</span> 
-                        <span class=" text-teal-500 font-semibold">₱ 135</span>
-                    </p>
-                </div>
-                <div class="flex flex-row items-end gap-1">
-                    <button class="edit-item bg-amber-600 text-white px-3 rounded-lg h-10"><i class="fa-solid fa-pencil"></i></i></button>
-                    <button class="remove-item bg-red-600 text-white px-3 rounded-lg h-10"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>

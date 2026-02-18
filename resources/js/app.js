@@ -6,7 +6,8 @@ import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 import './modules/playhouseMenu.js';
 
-import { submitData } from './services/requestApi.js'
+import { getOrDelete, submitData } from './services/requestApi.js'
+import { autoFillFields, oldUser } from './services/olduserState.js';
 
 import { API_ROUTES } from './config/api.js';
 
@@ -45,9 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentStep = 0;
         let replyFromBackend = '';
 
-        function showSteps(step, direction = 'next') {
+        function showSteps(step, direction = 'next', override = null) {
             const currentStepEl = steps[currentStep];
             let nextStepIndex = currentStep;
+            let nextStepEl = steps[0];
 
             stepNums.forEach((num, i) => {
                 if (i <= step) {
@@ -72,6 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
             filledLine.style.width = `${lineWidth}%`;
 
             if (direction === 'next' && currentStep < steps.length - 1) {
+                if(override) {
+                    nextStepIndex = currentStep + override;
+                    nextStepEl = steps[nextStepIndex];
+                }
                 nextStepIndex = currentStep + 1;
             } else if (direction === 'prev' && currentStep > 0) {
                 nextStepIndex = currentStep - 1;
@@ -79,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const nextStepEl = steps[nextStepIndex];
+            nextStepEl = steps[nextStepIndex];
 
             if (direction === 'next') {
                 currentStepEl.classList.remove('slide-in-left', 'slide-in-right');
@@ -116,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         window.getCurrentStepName = getCurrentStepName;
 
-        nextBtn.addEventListener('click', () => {
+        nextBtn.addEventListener('click', async () => {
             const currentForm = steps[currentStep];
             const inputs = currentForm.querySelectorAll(
                 'input[required], select[required]'
@@ -151,6 +157,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if(getCurrentStepName() === 'otp') {
                 if(!correctCode) {
                     valid = false;
+                }
+                if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
+                    const oldUserData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
+                    autoFillFields(oldUserData);
+                    showSteps(currentStep + 2,'next', 2);
+                    return;
                 }
             }
 
@@ -275,13 +287,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             summary.innerHTML = `
-                    <div class="flex items-start border-b border-cyan-400 py-2">
-                        <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${data.get('phone')}</span>
-                    </div>
                     <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-fit">Parent:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
+                    </div>
+                    <div class="flex items-start border-b border-cyan-400 py-2">
+                        <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${data.get('phone')}</span>
                     </div>
                     <div class="flex items-center border-b border-cyan-400 py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>

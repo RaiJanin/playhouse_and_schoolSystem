@@ -47,116 +47,36 @@ class PlayHouseController extends Controller
         //query for phone number later
         $request->validate(['otp' => 'required|string|size:3']);
 
+        //Simulate returnee
+        $isOldUser = true;
+
         //Query to find the phone number and its OTP
 
         //Update phone number, label as "verified"
 
         return response()->json([
-            'isCorrectOtp' => true
+            'isCorrectOtp' => true,
+            'isOldUser' => $isOldUser,
+            'phoneNum' => $phoneNum,
         ]);
     }
 
-    public function searchReturnee(Request $request)
+    public function searchReturnee($phoneNumber)
     {
-        // Validate phone number input
-        $request->validate([
-            'mobileno' => [
-                'required',
-                'string',
-                'regex:/^(\+63|0)?9\d{9}$/'
-            ]
+        //Search by number query later
+
+        //Simulate old user data
+        $parentData = [
+            'parent_name' => 'Romeo',
+            'parent_lastname' => 'Agustus',
+            'parent_email' => 'agustusmeo@gmail.com',
+            'parent_birthday' => '2003-01-17'
+        ];
+
+        return response()->json([
+            'userLoaded' => true,
+            'data' => $parentData
         ]);
 
-        // Normalize phone number
-        $phone = preg_replace('/^(\+63|0)/', '0', $request->mobileno);
-
-        // Search in M06 table (parents/guardians)
-        $parent = \App\Models\M06::where('mobileno', $phone)
-            ->where('isparent', true)
-            ->first();
-
-        // If not found as parent, try as guardian
-        if (!$parent) {
-            $parent = \App\Models\M06::where('mobileno', $phone)
-                ->where('isguardian', true)
-                ->first();
-        }
-
-        // If phone number not found at all
-        if (!$parent) {
-            return redirect()->back()
-                ->with('error', 'No account found with this phone number. Please register as a new customer.');
-        }
-
-        // Get children linked to this parent via d_code
-        $children = \App\Models\M06Child::where('d_code', $parent->d_code)->get();
-
-        // Store customer data in session using M06 structure
-        session([
-            'registration_type' => 'returnee',
-            'd_code' => $parent->d_code,
-            'parent_name' => $parent->firstname . ' ' . $parent->lastname,
-            'parent_email' => $parent->email ?? null,
-            'parent_birthday' => $parent->birthday,
-            'mobileno' => $parent->mobileno,
-            'isguardian' => $parent->isguardian,
-            'children' => $children->map(function($child) {
-                return [
-                    'd_code_c' => $child->d_code_c,
-                    'firstname' => $child->firstname,
-                    'lastname' => $child->lastname,
-                    'birthday' => $child->birthday,
-                    'age' => $child->age,
-                ];
-            })->toArray(),
-        ]);
-
-        // Redirect to registration page (skip phone/OTP steps)
-        return redirect()->route('playhouse.registration', ['type' => 'returnee'])
-            ->with('success', 'Welcome back, ' . $parent->firstname . '!');
-    }
-        public function registration(Request $request)
-    {
-        $type = $request->get('type', session('registration_type', 'new'));
-        $parentData = null;
-        $startStep = 'phone';
-
-        // If returnee, skip phone and OTP steps
-        if ($type === 'returnee' || session('registration_type') === 'returnee') {
-            $dCode = session('d_code');
-            
-            if ($dCode) {
-                // Get parent data from M06 table
-                $parentData = \App\Models\M06::where('d_code', $dCode)->first();
-
-                if ($parentData) {
-                    // Get children from M06Child table
-                    $parentData->children = \App\Models\M06Child::where('d_code', $dCode)->get();
-
-                    $startStep = 'parent'; // Skip to step 3 (Parent Info)
-                }
-            }
-        }
-
-        return view('pages.playhouse-registration', [
-            'startStep' => $startStep,
-            'parentData' => $parentData,
-            'registrationType' => $type,
-        ]);
-    }
-    public function clearSession()
-    {
-        session()->forget([
-            'registration_type',
-            'd_code',              // M06 primary key
-            'parent_name',
-            'parent_email',
-            'parent_birthday',
-            'mobileno',            // M06 phone field
-            'isguardian',
-            'children',
-        ]);
-
-        return redirect()->route('playhouse.landing');
     }
 }
