@@ -4,6 +4,7 @@ import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
+import './modules/playhouseMenu.js';
 
 import { submitData } from './services/requestApi.js'
 
@@ -14,6 +15,7 @@ import { parseBracketedFormData } from './utilities/parseFlatJson.js';
 
 import { CustomCheckbox } from './components/customCheckbox.js';
 import { requestBirthdayValidation } from './components/birthdayInput.js';
+
 import { addguardianCheckBx, confirmGuardianCheckBx } from './modules/playhouseParent.js';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -120,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 'input[required], select[required]'
             );
 
-            // trigger birthday validation UI only when the user pressed Next
             requestBirthdayValidation(currentForm);
 
             let valid = true;
@@ -179,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const duration = durationEl.value;
 
                 // playtime durations should fetch from the master file (database or disk storage)
-                const durationMap = {  // Map the dropdown values to their full display labels with prices for the summary
+                const durationMap = {
                     '1': '1 hr = ₱100',
                     '2': '2 hrs = ₱200', 
                     '3': '3 hrs = ₱300',
@@ -245,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
+            console.log(jsonData);
 
             replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
             console.log("Reply from Backend");

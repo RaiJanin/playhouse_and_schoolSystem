@@ -60,7 +60,7 @@
                 </button>
 
                 <!-- Returnee Search Form (Hidden by default) -->
-                <form id="returnee-search-form" action="{{ route('returnee.search') }}" method="POST" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
+                <form id="returnee-search-form" action="{{ route('returnee-search') }}" method="POST" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
                     @csrf
                     <input 
                         type="text" 
@@ -70,17 +70,24 @@
                         required
                     >
                     <button 
-                        type="submit" 
-                        class="px-6 py-2 bg-[#0d9984] text-white rounded-lg hover:bg-[#1abc9c] transition whitespace-nowrap"
-                    >
-                        Search
+                        onclick="window.location.href=`{{route('playhouse.registration', ['type' => 'returnee'])}}`"
+                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
+                                rounded-full shadow-md overflow-hidden transition-all duration-300 
+                                hover:shadow-lg hover:scale-105 active:scale-95">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            Returnee Customer
+                            <span class="transition-transform group-hover:translate-x-1">→</span>
+                        </span>
                     </button>
                     <button 
-                        type="button" 
-                        onclick="document.getElementById('returnee-search-form').classList.add('hidden'); document.querySelector('button[onclick*=\'Returnee Customer\']').classList.remove('hidden');"
-                        class="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
-                    >
-                        ✕
+                        onclick="window.location.href=`{{route('playhouse.registration', ['type' => 'new'])}}`"
+                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
+                                rounded-full shadow-md overflow-hidden transition-all duration-300 
+                                hover:shadow-lg hover:scale-105 active:scale-95">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            New Customer
+                            <span class="transition-transform group-hover:translate-x-1">→</span>
+                        </span>
                     </button>
                 </form>
 

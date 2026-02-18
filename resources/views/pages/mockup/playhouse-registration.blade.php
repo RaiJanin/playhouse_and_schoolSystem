@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.app-mockup')
 
 @section('title', 'Playhouse Registration')
 
@@ -37,7 +37,7 @@
             <div class="bg-gradient-to-r from-teal-100 to-teal-200 border border-gray-200 rounded-xl p-3 shadow">
                 <form id="playhouse-registration-form" class="overflow-hidden">
                     <div class="overflow-hidden">
-                        <div class="step" id="step1" data-step='phone'>
+                        {{-- <div class="step" id="step1" data-step='phone'>
                             @include('ui.playhouse-phone')
                         </div>
                         <div class="step hidden" id="step2" data-step='otp'>
@@ -48,15 +48,15 @@
                         </div>
                         <div class="step hidden" id="step4" data-step='children'>
                             @include('ui.playhouse-children')
+                        </div> --}}
+
+                        <div class="step" id="step5" data-step='menu'>
+                            @include('ui.mockup.playhouse-menu')
                         </div>
 
-                        <div class="step hidden" id="step5" data-step='menu'>
-                            @include('ui.playhouse-menu')
-                        </div>
-
-                        <div class="step hidden" id="step6" data-step='done'>
+                        {{-- <div class="step hidden" id="step6" data-step='done'>
                             @include('ui.playhouse-done-prompt')     
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="flex items-center justify-center mb-3">
                         <div class="flex space-x-4 mt-8">
@@ -72,8 +72,4 @@
             </div>
         </div>
     </div>
-
-    {{-- Terms-required modal (added) --}}
-    @include('ui.partials.terms-required-modal')
-
 @endsection

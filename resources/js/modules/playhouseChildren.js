@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         attachEntryListeners(entry);
-        // attach birthday behaviour for dynamically created entry
+        
         const b = entry.querySelector('input[data-birthday]');
         if (b) attachBirthdayInput(b);
         return entry;
