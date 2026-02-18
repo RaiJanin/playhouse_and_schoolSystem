@@ -1,4 +1,5 @@
 import { submitData } from "../services/requestApi.js";
+import { oldUser } from "../services/olduserState.js";
 import { API_ROUTES } from "../config/api.js";
 
 const container = document.getElementById('otp-choices');
@@ -54,8 +55,12 @@ function generateOtpChoices(correctOtp) {
                 
                 window.correctCode = true;
                 phoneReadOnly(true);
-
                 
+                if(sendOtpAttempt.isOldUser) {
+                    oldUser.isOldUser = sendOtpAttempt.isOldUser;
+                    oldUser.phoneNumber = sendOtpAttempt.phoneNum;
+                }
+
             } else {
                 button.classList.remove('border-gray-300', 'opacity-70');
                 button.classList.add('border-red-500', 'bg-red-50');

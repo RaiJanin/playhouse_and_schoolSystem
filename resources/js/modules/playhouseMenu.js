@@ -47,6 +47,10 @@ const container = document.getElementById("items-container");
 const modal = document.getElementById('modal-container');
 const saveItemsBtn = document.getElementById('save-btn');
 const closeModal = document.querySelectorAll('.close-modal');
+const cartContainer = document.getElementById('cart-container');
+const itemsCartContainer = document.getElementById('items-cart-container');
+
+export let mergedItems;
 
 items.forEach(category => {
 
@@ -191,7 +195,7 @@ saveItemsBtn.addEventListener('click', () => {
     });
     
     // Convert back to array
-    const mergedItems = Object.values(itemMap);
+    mergedItems = Object.values(itemMap);
 
     // Store merged items in a data attribute on the form for persistence
     mainForm.dataset.selectedMenuItems = JSON.stringify(mergedItems);
@@ -199,7 +203,6 @@ saveItemsBtn.addEventListener('click', () => {
     console.log('Menu items saved (merged):', mergedItems);
     modal.classList.add('hidden');
 });
-
 
 closeModal.forEach(btn => {
     btn.addEventListener('click', () => {

@@ -11,3 +11,4 @@ Route::get('/user', function (Request $request) {
 Route::post('/submit/whole-form', [PlayHouseController::class, 'store']);
 Route::post('/submit/make-otp', [PlayHouseController::class, 'makeOtp']);
 Route::patch('/verify-otp/{phoneNum}', [PlayHouseController::class, 'verifyOTP']);
+Route::get('/search-returnee/{phoneNumber}', [PlayHouseController::class, 'searchReturnee']);
