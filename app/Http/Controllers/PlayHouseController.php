@@ -60,98 +60,101 @@ class PlayHouseController extends Controller
     {
         // Validate phone number input
         $request->validate([
-            'phone' => 'required|string|min:11'
+            'mobileno' => [
+                'required',
+                'string',
+                'regex:/^(\+63|0)?9\d{9}$/'
+            ]
         ]);
 
-        // Search phone number in phone_numbers table (RAW QUERY)
-        $phoneNumber = DB::table('phone_numbers')
-            ->where('phone_number', $request->phone)
+        // Normalize phone number
+        $phone = preg_replace('/^(\+63|0)/', '0', $request->mobileno);
+
+        // Search in M06 table (parents/guardians)
+        $parent = \App\Models\M06::where('mobileno', $phone)
+            ->where('isparent', true)
             ->first();
 
-        // If phone number not found
-        if (!$phoneNumber) {
+        // If not found as parent, try as guardian
+        if (!$parent) {
+            $parent = \App\Models\M06::where('mobileno', $phone)
+                ->where('isguardian', true)
+                ->first();
+        }
+
+        // If phone number not found at all
+        if (!$parent) {
             return redirect()->back()
                 ->with('error', 'No account found with this phone number. Please register as a new customer.');
         }
 
-        // Get customer record using pivot table (many-to-many) (RAW QUERY)
-        $customer = DB::table('customer_records')
-            ->join('customer_phone', 'customer_records.id', '=', 'customer_phone.customer_record_id')
-            ->where('customer_phone.phone_number_id', $phoneNumber->id)
-            ->select('customer_records.*', 'customer_phone.is_primary')
-            ->orderBy('customer_phone.is_primary', 'desc')
-            ->first();
+        // Get children linked to this parent via d_code
+        $children = \App\Models\M06Child::where('d_code', $parent->d_code)->get();
 
-        // If customer not found
-        if (!$customer) {
-            return redirect()->back()
-                ->with('error', 'Customer record not found.');
-        }
-
-        // Store customer data in session
-        Session::put([
+        // Store customer data in session using M06 structure
+        session([
             'registration_type' => 'returnee',
-            'customer_id' => $customer->id,
-            'customer_name' => $customer->first_name . ' ' . $customer->last_name,
-            'customer_email' => $customer->email,
-            'customer_birthday' => $customer->birthday,
-            'phone_number' => $phoneNumber->phone_number,
+            'd_code' => $parent->d_code,
+            'parent_name' => $parent->firstname . ' ' . $parent->lastname,
+            'parent_email' => $parent->email ?? null,
+            'parent_birthday' => $parent->birthday,
+            'mobileno' => $parent->mobileno,
+            'isguardian' => $parent->isguardian,
+            'children' => $children->map(function($child) {
+                return [
+                    'd_code_c' => $child->d_code_c,
+                    'firstname' => $child->firstname,
+                    'lastname' => $child->lastname,
+                    'birthday' => $child->birthday,
+                    'age' => $child->age,
+                ];
+            })->toArray(),
         ]);
 
-        // Redirect to registration page (will skip phone/OTP steps)
-        return redirect()->route('playhouse.registration')
-            ->with('success', 'Welcome back! We found your account.');
+        // Redirect to registration page (skip phone/OTP steps)
+        return redirect()->route('playhouse.registration', ['type' => 'returnee'])
+            ->with('success', 'Welcome back, ' . $parent->firstname . '!');
     }
-
-    public function registration(Request $request)
+        public function registration(Request $request)
     {
-        $type = Session::get('registration_type', 'new');
-        $customerData = null;
+        $type = $request->get('type', session('registration_type', 'new'));
+        $parentData = null;
         $startStep = 'phone';
 
         // If returnee, skip phone and OTP steps
-        if ($type === 'returnee') {
-            $customerId = Session::get('customer_id');
+        if ($type === 'returnee' || session('registration_type') === 'returnee') {
+            $dCode = session('d_code');
             
-            if ($customerId) {
-                // Get customer data (RAW QUERY)
-                $customerData = DB::table('customer_records')
-                    ->where('id', $customerId)
-                    ->first();
+            if ($dCode) {
+                // Get parent data from M06 table
+                $parentData = \App\Models\M06::where('d_code', $dCode)->first();
 
-                if ($customerData) {
-                    // Get phone numbers (RAW QUERY)
-                    $customerData->phoneNumbers = DB::table('phone_numbers')
-                        ->join('customer_phone', 'phone_numbers.id', '=', 'customer_phone.phone_number_id')
-                        ->where('customer_phone.customer_record_id', $customerId)
-                        ->select('phone_numbers.*', 'customer_phone.is_primary')
-                        ->get();
+                if ($parentData) {
+                    // Get children from M06Child table
+                    $parentData->children = \App\Models\M06Child::where('d_code', $dCode)->get();
 
-                    // Get children (RAW QUERY)
-                    $customerData->children = DB::table('children')
-                        ->where('customer_record_id', $customerId)
-                        ->get();
-
-                    $startStep = 'parent'; // Skip to step 3 (Parent)
+                    $startStep = 'parent'; // Skip to step 3 (Parent Info)
                 }
             }
         }
 
         return view('pages.playhouse-registration', [
             'startStep' => $startStep,
-            'customerData' => $customerData,
+            'parentData' => $parentData,
+            'registrationType' => $type,
         ]);
     }
-
     public function clearSession()
     {
-        Session::forget([
+        session()->forget([
             'registration_type',
-            'customer_id',
-            'customer_name',
-            'customer_email',
-            'customer_birthday',
-            'phone_number',
+            'd_code',              // M06 primary key
+            'parent_name',
+            'parent_email',
+            'parent_birthday',
+            'mobileno',            // M06 phone field
+            'isguardian',
+            'children',
         ]);
 
         return redirect()->route('playhouse.landing');

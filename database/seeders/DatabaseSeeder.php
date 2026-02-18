@@ -15,11 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Parent table FIRST
+        $this->call([
+            M06TableSeeder::class,      // ← Parent table
+            M06ChildTableSeeder::class, // ← Child table (after parent)
         ]);
     }
 }
