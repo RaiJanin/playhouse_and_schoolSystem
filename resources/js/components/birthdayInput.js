@@ -39,8 +39,7 @@ function isValidDateParts(mm, dd, yyyy) {
     const daysInMonth = new Date(y, m, 0).getDate();
     if (d < 1 || d > daysInMonth) return false;
 
-    const currentYear = new Date().getFullYear();
-    if (y < 1900 || y > currentYear) return false;
+    if (y < 1900 || y > 3000) return false;
 
     return true;
 }

@@ -65,11 +65,8 @@
                     <p id="confirm-guardian-info" class="ml-2"></p>
                 </span>
             </button>
+
+            <input type="hidden" name="guardianAuthorized" id="guardianAuthorized" value="0" />
         </div>
     </div>
 </div>
-        
-
-
-
-
