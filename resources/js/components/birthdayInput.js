@@ -94,6 +94,7 @@ export function attachBirthdayInput(input) {
     input.classList.add('birthday-input');
     input.setAttribute('aria-label', 'Birthday, format: month, day, year');
 
+    // --- Helpers shared by keyboard + dropdown picker ---
     const setDisplayFromRaw = (raw, caretDigitsBefore = null) => {
         const formatted = formatDisplay(raw);
         input.value = formatted;
@@ -194,6 +195,7 @@ export function attachBirthdayInput(input) {
         return true;
     };
 
+    // --- Keyboard / direct typing wiring ---
     const onInput = (e) => {
         const el = e.target;
         const prevCursor = el.selectionStart || 0;
@@ -269,6 +271,170 @@ export function attachBirthdayInput(input) {
   setDisplayFromRaw(initialRaw, null);
   
   setValidityState(input, initialRaw);
+
+  // --- Dropdown month / day / year picker (iPad-friendly) ---
+  // Wrap input in a relatively positioned container so we can place a button on the right
+  if (!input.closest('.birthday-input-wrapper')) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'birthday-input-wrapper';
+      
+      input.parentNode.insertBefore(wrapper, input);
+      wrapper.appendChild(input);
+  }
+
+  const wrapperEl = input.closest('.birthday-input-wrapper');
+
+  // Avoid adding multiple buttons if attachBirthdayInput is called again
+  let dropdownBtn = wrapperEl.querySelector('.birthday-dropdown-button');
+  if (!dropdownBtn) {
+      dropdownBtn = document.createElement('button');
+      dropdownBtn.type = 'button';
+      dropdownBtn.className = 'birthday-dropdown-button';
+      dropdownBtn.setAttribute('aria-label', 'Choose birthday from picker');
+      dropdownBtn.setAttribute('title', 'Open birthday picker');
+      dropdownBtn.innerHTML = '<i class="fa-solid fa-calendar-day"></i>';
+      wrapperEl.appendChild(dropdownBtn);
+  }
+
+  const openDropdownPicker = () => {
+      // If a picker is already open for this input, do nothing
+      if (document.querySelector('.birthday-picker-overlay[data-for="' + (input.id || '') + '"]')) return;
+
+      const existingRaw = digitsOnly(input.value).slice(0, 8);
+      let mm = existingRaw.slice(0, 2) || '';
+      let dd = existingRaw.slice(2, 4) || '';
+      let yyyy = existingRaw.slice(4, 8) || '';
+
+      // Fall back to today's date when there is nothing yet
+      if (!mm || !dd || !yyyy) {
+          const now = new Date();
+          mm = String(now.getMonth() + 1).padStart(2, '0');
+          dd = String(now.getDate()).padStart(2, '0');
+          yyyy = String(now.getFullYear());
+      }
+
+      const overlay = document.createElement('div');
+      overlay.className = 'birthday-picker-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4';
+      overlay.dataset.for = input.id || '';
+
+      const panel = document.createElement('div');
+      panel.className = 'max-w-md w-full bg-white rounded-2xl shadow-xl p-4 space-y-4 animate-fadeIn';
+
+      panel.innerHTML = `
+        <div class="text-center space-y-1">
+          <h2 class="text-lg font-semibold text-gray-800">Select Birthday</h2>
+          <p class="text-xs text-gray-500">Month • Day • Year</p>
+        </div>
+        <div class="grid grid-cols-3 gap-3 mt-2">
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-600 tracking-wide uppercase">Month</label>
+            <select class="birthday-picker-month bg-teal-50 border border-teal-400 rounded-lg px-2 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400">
+            </select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-600 tracking-wide uppercase">Day</label>
+            <select class="birthday-picker-day bg-teal-50 border border-teal-400 rounded-lg px-2 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400">
+            </select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-600 tracking-wide uppercase">Year</label>
+            <select class="birthday-picker-year bg-teal-50 border border-teal-400 rounded-lg px-2 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400">
+            </select>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" class="birthday-picker-cancel text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2 rounded-full border border-gray-300 text-gray-700 bg-white hover:bg-gray-50">
+            Cancel
+          </button>
+          <button type="button" class="birthday-picker-apply text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded-full bg-teal-500 text-white shadow-md hover:bg-teal-600">
+            Apply
+          </button>
+        </div>
+      `;
+
+      overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+
+      const monthSelect = panel.querySelector('.birthday-picker-month');
+      const daySelect = panel.querySelector('.birthday-picker-day');
+      const yearSelect = panel.querySelector('.birthday-picker-year');
+      const cancelBtn = panel.querySelector('.birthday-picker-cancel');
+      const applyBtn = panel.querySelector('.birthday-picker-apply');
+
+      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      monthSelect.innerHTML = monthNames.map((name, idx) => {
+          const val = String(idx + 1).padStart(2, '0');
+          const selected = (val === mm) ? ' selected' : '';
+          return `<option value="${val}"${selected}>${val} - ${name}</option>`;
+      }).join('');
+
+      const buildDays = () => {
+          const maxDays = 31;
+          const currentDay = daySelect.value || dd;
+          let options = '';
+          for (let d = 1; d <= maxDays; d++) {
+              const v = String(d).padStart(2, '0');
+              const selected = (v === currentDay) ? ' selected' : '';
+              options += `<option value="${v}"${selected}>${v}</option>`;
+          }
+          daySelect.innerHTML = options;
+      };
+
+      const startYear = 1900;
+      const endYear = 3000;
+      let yearOptions = '';
+      for (let y = endYear; y >= startYear; y--) {
+          const selected = (String(y) === yyyy) ? ' selected' : '';
+          yearOptions += `<option value="${y}"${selected}>${y}</option>`;
+      }
+      yearSelect.innerHTML = yearOptions;
+
+      buildDays();
+
+      const closeOverlay = () => {
+          overlay.classList.add('animate-fadeOut');
+          setTimeout(() => {
+              if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          }, 200);
+      };
+
+      overlay.addEventListener('click', (evt) => {
+          if (evt.target === overlay) {
+              closeOverlay();
+          }
+      });
+
+      cancelBtn.addEventListener('click', () => {
+          closeOverlay();
+      });
+
+      applyBtn.addEventListener('click', () => {
+          const selectedMM = monthSelect.value;
+          const selectedDD = daySelect.value;
+          const selectedYYYY = yearSelect.value;
+
+          const raw = (selectedMM + selectedDD + selectedYYYY).slice(0, 8);
+          setDisplayFromRaw(raw, raw.length);
+          setValidityState(input, raw);
+          input.focus();
+          closeOverlay();
+      });
+
+      // Escape key support
+      const onKeyDownGlobal = (e) => {
+          if (e.key === 'Escape') {
+              e.preventDefault();
+              closeOverlay();
+              document.removeEventListener('keydown', onKeyDownGlobal);
+          }
+      };
+      document.addEventListener('keydown', onKeyDownGlobal);
+  };
+
+  dropdownBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openDropdownPicker();
+  });
 
   input.dataset.birthdayAttached = '1';
 }

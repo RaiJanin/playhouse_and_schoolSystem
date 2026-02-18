@@ -67,6 +67,30 @@
   box-sizing: border-box;
   /* sizing comes from utility classes (px-4 py-2) — don't override height/font-size here */ 
 }
+.birthday-input-wrapper {
+  position: relative;
+}
+.birthday-input-wrapper .birthday-input {
+  padding-right: 2.75rem; /* room for dropdown icon without changing overall height */
+}
+.birthday-dropdown-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.75rem;
+  background: transparent;
+  border: none;
+  color: #0f766e; /* teal-700 */
+  cursor: pointer;
+}
+.birthday-dropdown-button:focus-visible {
+  outline: 2px solid #06b6d4; /* cyan-400 */
+  outline-offset: 2px;
+}
 .birthday-input.birthday-active,
 .birthday-input:focus {
   outline: none !important;
