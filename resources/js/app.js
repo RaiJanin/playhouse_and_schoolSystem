@@ -1,10 +1,8 @@
 import './bootstrap';
-
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
-import './modules/playhouseMenu.js';
 
 import { getOrDelete, submitData } from './services/requestApi.js'
 import { autoFillFields, oldUser } from './services/olduserState.js';
@@ -31,16 +29,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('step-2-num'),
             document.getElementById('step-3-num'),
             document.getElementById('step-4-num'),
-            document.getElementById('step-5-num'),
-            document.getElementById('step-6-num')
+            document.getElementById('step-5-num')
         ];
         const stepTexts = [
             document.getElementById('step-1-text'),
             document.getElementById('step-2-text'),
             document.getElementById('step-3-text'),
             document.getElementById('step-4-text'),
-            document.getElementById('step-5-text'),
-            document.getElementById('step-6-text')
+            document.getElementById('step-5-text')
         ];
 
         let currentStep = 0;
@@ -217,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let guardianPhone = data.get('guardianPhone') ? `(${data.get('guardianPhone')})` : '';
             let childrenItems = '';
             let guardianInfo = '';
-            let menuItems = '';
             let childrenTotalCost = 0;
 
             // Price map for durations
@@ -263,20 +258,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
             });
 
-            // Gather menu items from persistent form data
-            const formElement = document.getElementById('playhouse-registration-form');
-            let selectedMenuItems = [];
-            let menuTotalCost = 0;
-
-            if (formElement.dataset.selectedMenuItems) {
-                try {
-                    selectedMenuItems = JSON.parse(formElement.dataset.selectedMenuItems);
-                } catch (e) {
-                    console.log('Could not parse menu items:', e);
-                    selectedMenuItems = [];
-                }
-            }
-
             // Gather socks items from step 4 (Add Item) - only entries where user clicked Apply
             let socksItemsHtml = '';
             let socksTotalCost = 0;
@@ -313,30 +294,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 socksItemsHtml = '<div class="bg-teal-50 border border-teal-200 rounded p-3"><p class="text-sm text-gray-600">No items added</p></div>';
             }
 
-            // Format menu items for display
-            if (selectedMenuItems.length > 0) {
-                menuItems = selectedMenuItems.map(item => {
-                    const totalPrice = item.price ? (item.price * item.quantity) : 0;
-                    menuTotalCost += totalPrice;
-                    return `
-                    <div class="bg-teal-50 border border-teal-200 rounded p-3">
-                        <p class="text-sm text-gray-600">Item: <span class="font-bold text-gray-900">${item.name}</span></p>
-                        <p class="text-sm text-gray-600 mt-1">Quantity: <span class="font-medium text-gray-900">${item.quantity}</span></p>
-                        ${item.price ? `<p class="text-sm text-gray-600 mt-1">Unit Price: <span class="font-medium text-gray-600">₱${item.price}</span></p>` : ''}
-                        ${item.price ? `<p class="text-sm text-gray-600 mt-1">Total Price: <span class="font-bold text-teal-600">₱${totalPrice}</span></p>` : ''}
-                    </div>
-                `;
-                }).join('');
-            } else {
-                menuItems = `
-                    <div class="bg-teal-50 border border-teal-200 rounded p-3">
-                        <p class="text-sm text-gray-600">No items selected</p>
-                    </div>
-                `;
-            }
-
             // Calculate overall total
-            const overallTotal = childrenTotalCost + menuTotalCost + socksTotalCost;
+            const overallTotal = childrenTotalCost + socksTotalCost;
 
             if(addguardianCheckBx.isChecked()) {
                 guardianInfo = `
@@ -368,12 +327,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                     <div class="pb-3">
-                        <span class="font-semibold text-cyan-800 block mb-3">Menu:</span>
-                        <div id="summary-menu-list" class="space-y-3 ml-2">
-                            ${menuItems}
-                        </div>
-                    </div>
-                    <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Item:</span>
                         <div id="summary-item-list" class="space-y-3 ml-2">
                             ${socksItemsHtml}
@@ -382,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="mt-6 pt-4 border-t-2 border-cyan-400">
                         <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
-                            <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Menu: ₱${menuTotalCost} | Item: ₱${socksTotalCost}</p>
+                            <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Item: ₱${socksTotalCost}</p>
                         </div>
                     </div>
             `;
