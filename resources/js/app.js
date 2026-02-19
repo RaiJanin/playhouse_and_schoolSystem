@@ -176,6 +176,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     valid = false;
                 }
             }
+
+            // Gate: socks items must be applied before proceeding from step 4
+            if (getCurrentStepName() === 'children') {
+                const socksInfoEl = document.getElementById('socks-apply-info');
+                if (socksInfoEl) {
+                    socksInfoEl.classList.add('hidden');
+                    socksInfoEl.innerHTML = '';
+                }
+                const itemEntries = document.querySelectorAll('.item-entry');
+                const hasUnapplied = Array.from(itemEntries).some((entry) => {
+                    const small = parseInt(entry.querySelector('input[name*="[adult][small]"]')?.value || 0);
+                    const medium = parseInt(entry.querySelector('input[name*="[adult][medium]"]')?.value || 0);
+                    const large = parseInt(entry.querySelector('input[name*="[adult][large]"]')?.value || 0);
+                    const childQty = parseInt(entry.querySelector('input[name*="[child][qty]"]')?.value || 0);
+                    const totalQty = small + medium + large + childQty;
+                    return totalQty > 0 && !entry.dataset.appliedQuantities;
+                });
+                if (hasUnapplied) {
+                    valid = false;
+                    if (socksInfoEl) {
+                        socksInfoEl.innerHTML = 'Please click the <strong>Apply</strong> button on your socks item(s) before proceeding.';
+                        socksInfoEl.classList.remove('hidden');
+                    }
+                }
+            }
             
             if(!valid)return;
             if(currentStep < steps.length - 1) {
@@ -252,6 +277,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
+            // Gather socks items from step 4 (Add Item) - only entries where user clicked Apply
+            let socksItemsHtml = '';
+            let socksTotalCost = 0;
+            const itemEntries = document.querySelectorAll('.item-entry[data-applied-quantities]');
+            itemEntries.forEach((entry) => {
+                let applied;
+                try {
+                    applied = JSON.parse(entry.dataset.appliedQuantities || '{}');
+                } catch (e) {
+                    applied = {};
+                }
+                const small = applied.small || 0;
+                const medium = applied.medium || 0;
+                const large = applied.large || 0;
+                const childQty = applied.child || 0;
+                const totalQty = small + medium + large + childQty;
+                if (totalQty > 0) {
+                    socksTotalCost += totalQty * 100;
+                    const parts = [];
+                    if (small > 0) parts.push(`Adult Small: ${small}`);
+                    if (medium > 0) parts.push(`Adult Medium: ${medium}`);
+                    if (large > 0) parts.push(`Adult Large: ${large}`);
+                    if (childQty > 0) parts.push(`Child: ${childQty}`);
+                    socksItemsHtml += `
+                        <div class="bg-teal-50 border border-teal-200 rounded p-3">
+                            <p class="text-sm text-gray-600">Socks - ₱100 each</p>
+                            <p class="text-sm text-gray-600 mt-1">Quantity: <span class="font-medium text-gray-900">${parts.join(' | ')}</span></p>
+                            <p class="text-sm text-gray-600 mt-1">Total: <span class="font-bold text-teal-600">₱${totalQty * 100}</span></p>
+                        </div>
+                    `;
+                }
+            });
+            if (!socksItemsHtml) {
+                socksItemsHtml = '<div class="bg-teal-50 border border-teal-200 rounded p-3"><p class="text-sm text-gray-600">No items added</p></div>';
+            }
+
             // Format menu items for display
             if (selectedMenuItems.length > 0) {
                 menuItems = selectedMenuItems.map(item => {
@@ -275,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Calculate overall total
-            const overallTotal = childrenTotalCost + menuTotalCost;
+            const overallTotal = childrenTotalCost + menuTotalCost + socksTotalCost;
 
             if(addguardianCheckBx.isChecked()) {
                 guardianInfo = `
@@ -312,11 +373,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             ${menuItems}
                         </div>
                     </div>
+                    <div class="pb-3">
+                        <span class="font-semibold text-cyan-800 block mb-3">Item:</span>
+                        <div id="summary-item-list" class="space-y-3 ml-2">
+                            ${socksItemsHtml}
+                        </div>
+                    </div>
                     <div class="mt-6 pt-4 border-t-2 border-cyan-400">
                         <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
-                            <p class="text-xs text-gray-600 i id="check-agree-icon" class="hidden"></i>
-                                <mt-2">Children: ₱${childrenTotalCost} | Menu: ₱${menuTotalCost}</p>
+                            <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Menu: ₱${menuTotalCost} | Item: ₱${socksTotalCost}</p>
                         </div>
                     </div>
             `;

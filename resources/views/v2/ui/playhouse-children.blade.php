@@ -7,6 +7,23 @@
         -webkit-appearance: none;
         appearance: none;
     }
+    /* iPad-friendly quantity inputs - hide spinners, larger tap area */
+    .socks-qty-input {
+        -moz-appearance: textfield;
+    }
+    .socks-qty-input::-webkit-outer-spin-button,
+    .socks-qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .socks-qty-input:focus {
+        outline: none;
+    }
+    /* Min 44px touch targets for iPad (Apple HIG) */
+    .socks-qty-minus,
+    .socks-qty-plus {
+        -webkit-tap-highlight-color: transparent;
+    }
 </style>
 
 <div class="p-4">
@@ -46,9 +63,18 @@
             </div>
         </div>
 
-        <div class="pt-2">
+        <div id="itemsContainer" class="space-y-4 hidden">
+            <!-- Socks item entries appended here -->
+        </div>
+        <div id="socks-apply-info" class="hidden mt-2 text-red-600 font-semibold text-sm"></div>
+
+        <div class="pt-4 pb-4 flex flex-col gap-3">
+            <button type="button" id="addItemBtn" 
+            class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
+                <i class="fa-solid fa-plus text-xs"></i> Add Item
+            </button>
             <button type="button" id="addChildBtn" 
-            class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300">
+            class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>
         </div>

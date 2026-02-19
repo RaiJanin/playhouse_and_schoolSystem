@@ -36,7 +36,7 @@
         <div class="opacity-100 z-10">
             <div class="bg-gradient-to-r from-teal-100 to-teal-200 border border-gray-200 rounded-xl p-3 shadow max-w-full">
                 <form id="playhouse-registration-form" class="overflow-hidden">
-                    <div class="overflow-hidden">
+                    <div class="overflow-x-hidden overflow-y-auto max-h-[55vh]">
                         <div class="step" id="step1" data-step='phone'>
                             @include('v2.ui.playhouse-phone')
                         </div>

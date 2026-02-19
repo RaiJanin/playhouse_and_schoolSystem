@@ -29,7 +29,7 @@
             <input type="text" id="parentLastName" name="parentLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" required />
         </div>
         <div>
-            <label for="parentEmail" class="block text-base font-semibold text-gray-900 mb-2">Email Address</label>
+            <label for="parentEmail" class="block text-base font-semibold text-gray-900 mb-2">Email Address <span class="text-red-600">*</span></label>
             <input type="email" id="parentEmail" name="parentEmail" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com"/>
         </div>
         <div>
@@ -56,7 +56,7 @@
                 <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
             </div>
             <div>
-                <label for="guardianPhone" class="block text-base font-semibold text-gray-900">Phone Number</label>
+                <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Phone Number <span class="text-red-600">*</span></label> 
                 <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
             </div>
             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">

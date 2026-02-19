@@ -3,8 +3,11 @@ import { attachBirthdayInput } from '../components/birthdayInput.js';
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
     const addBtn = document.getElementById('addChildBtn');
+    const itemsContainer = document.getElementById('itemsContainer');
+    const addItemBtn = document.getElementById('addItemBtn');
 
     let childEntries = container.querySelectorAll('.child-entry').length - 1;
+    let itemEntryIndex = 0;
 
     function createChildEntry() {
         childEntries = childEntries + 1;
@@ -76,4 +79,169 @@ document.addEventListener('DOMContentLoaded', function() {
         newEntry.querySelector('.child-first');
         updateRemoveButtons();
     });
+
+    function createItemEntry() {
+        const index = itemEntryIndex++;
+        const entry = document.createElement('div');
+        entry.className = 'item-entry p-4 border border-teal-600 rounded-lg bg-teal-50/50';
+        entry.innerHTML = `
+            <p class="text-lg font-semibold text-gray-900 mb-4">Socks - ₱100 each</p>
+            <div class="space-y-4 mb-4">
+                <p class="text-base font-semibold text-gray-800">Adult Socks</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="socks-row">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Small</label>
+                        <div class="flex items-center gap-1 bg-teal-500 rounded-xl overflow-hidden w-fit">
+                            <button type="button" class="socks-qty-minus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Decrease Small quantity">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <input type="number" name="socks_item[${index}][adult][small]" value="0" min="0" class="socks-qty-input w-14 min-h-[48px] bg-teal-100 text-center text-lg font-bold text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded" inputmode="numeric" pattern="[0-9]*">
+                            <button type="button" class="socks-qty-plus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Increase Small quantity">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="socks-row">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Medium</label>
+                        <div class="flex items-center gap-1 bg-teal-500 rounded-xl overflow-hidden w-fit">
+                            <button type="button" class="socks-qty-minus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Decrease Medium quantity">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <input type="number" name="socks_item[${index}][adult][medium]" value="0" min="0" class="socks-qty-input w-14 min-h-[48px] bg-teal-100 text-center text-lg font-bold text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded" inputmode="numeric" pattern="[0-9]*">
+                            <button type="button" class="socks-qty-plus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Increase Medium quantity">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="socks-row">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Large</label>
+                        <div class="flex items-center gap-1 bg-teal-500 rounded-xl overflow-hidden w-fit">
+                            <button type="button" class="socks-qty-minus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Decrease Large quantity">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <input type="number" name="socks_item[${index}][adult][large]" value="0" min="0" class="socks-qty-input w-14 min-h-[48px] bg-teal-100 text-center text-lg font-bold text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded" inputmode="numeric" pattern="[0-9]*">
+                            <button type="button" class="socks-qty-plus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Increase Large quantity">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="socks-row pt-2">
+                    <label class="block text-base font-semibold text-gray-800 mb-2">Child Socks (One Size)</label>
+                    <div class="flex items-center gap-1 bg-teal-500 rounded-xl overflow-hidden w-fit">
+                        <button type="button" class="socks-qty-minus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Decrease quantity">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <input type="number" name="socks_item[${index}][child][qty]" value="0" min="0" class="socks-qty-input w-14 min-h-[48px] bg-teal-100 text-center text-lg font-bold text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded" inputmode="numeric" pattern="[0-9]*">
+                        <button type="button" class="socks-qty-plus min-w-[48px] min-h-[48px] flex items-center justify-center text-xl font-bold text-white hover:bg-teal-600 active:bg-teal-700 transition-colors" aria-label="Increase quantity">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-between items-center">
+                <button type="button" class="remove-item min-h-[48px] min-w-[48px] flex items-center justify-center gap-2 px-5 py-2.5 text-base font-bold text-white bg-red-600 hover:bg-red-500 active:bg-red-700 rounded-tr-xl rounded-bl-lg shadow transition-all duration-200">
+                    <i class="fa-solid fa-trash"></i> Remove
+                </button>
+                <button type="button" class="socks-apply-btn min-h-[48px] flex items-center justify-center gap-2 px-6 py-2.5 text-base font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 active:bg-teal-300 border border-teal-300 rounded-full shadow transition-all duration-200">
+                    Apply
+                </button>
+            </div>
+        `;
+        attachSocksListeners(entry);
+        const removeBtn = entry.querySelector('.remove-item');
+        const applyBtn = entry.querySelector('.socks-apply-btn');
+        if (removeBtn && itemsContainer) {
+            removeBtn.addEventListener('click', () => {
+                entry.remove();
+                if (itemsContainer.querySelectorAll('.item-entry').length === 0) {
+                    itemsContainer.classList.add('hidden');
+                }
+            });
+        }
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
+                const small = parseInt(entry.querySelector('input[name*="[adult][small]"]')?.value || 0);
+                const medium = parseInt(entry.querySelector('input[name*="[adult][medium]"]')?.value || 0);
+                const large = parseInt(entry.querySelector('input[name*="[adult][large]"]')?.value || 0);
+                const childQty = parseInt(entry.querySelector('input[name*="[child][qty]"]')?.value || 0);
+                entry.dataset.appliedQuantities = JSON.stringify({ small, medium, large, child: childQty });
+                updateApplyButtonState(entry);
+                applyBtn.textContent = 'Applied ✓';
+                applyBtn.classList.add('bg-teal-300', 'border-teal-400');
+                applyBtn.classList.remove('hover:bg-teal-200', 'active:bg-teal-300');
+                setTimeout(() => {
+                    applyBtn.textContent = 'Apply';
+                    applyBtn.classList.remove('bg-teal-300', 'border-teal-400');
+                    applyBtn.classList.add('hover:bg-teal-200', 'active:bg-teal-300');
+                }, 1500);
+            });
+        }
+        return entry;
+    }
+
+    function getSocksTotal(entry) {
+        const small = parseInt(entry.querySelector('input[name*="[adult][small]"]')?.value || 0);
+        const medium = parseInt(entry.querySelector('input[name*="[adult][medium]"]')?.value || 0);
+        const large = parseInt(entry.querySelector('input[name*="[adult][large]"]')?.value || 0);
+        const childQty = parseInt(entry.querySelector('input[name*="[child][qty]"]')?.value || 0);
+        return small + medium + large + childQty;
+    }
+
+    function updateApplyButtonState(entry) {
+        const applyBtn = entry.querySelector('.socks-apply-btn');
+        if (!applyBtn) return;
+        const totalQty = getSocksTotal(entry);
+        const hasApplied = !!entry.dataset.appliedQuantities;
+        const needsApply = totalQty > 0 && !hasApplied;
+        if (needsApply) {
+            applyBtn.classList.add('border-red-500', 'ring-2', 'ring-red-500', 'ring-offset-1');
+            applyBtn.classList.remove('border-teal-300');
+        } else {
+            applyBtn.classList.remove('border-red-500', 'ring-2', 'ring-red-500', 'ring-offset-1');
+            applyBtn.classList.add('border-teal-300');
+        }
+    }
+
+    function attachSocksListeners(entry) {
+        const onQtyChange = () => {
+            delete entry.dataset.appliedQuantities;
+            updateApplyButtonState(entry);
+        };
+        entry.querySelectorAll('.socks-row').forEach(row => {
+            const minusBtn = row.querySelector('.socks-qty-minus');
+            const plusBtn = row.querySelector('.socks-qty-plus');
+            const input = row.querySelector('.socks-qty-input');
+            if (!input) return;
+            const minVal = isNaN(parseInt(input.min)) ? 0 : parseInt(input.min);
+            const syncInput = () => {
+                let val = parseInt(input.value) || minVal;
+                val = Math.max(minVal, val);
+                input.value = val;
+                onQtyChange();
+            };
+            minusBtn?.addEventListener('click', () => {
+                let val = parseInt(input.value) || minVal;
+                if (val > minVal) {
+                    input.value = val - 1;
+                    onQtyChange();
+                }
+            });
+            plusBtn?.addEventListener('click', () => {
+                let val = parseInt(input.value) || minVal;
+                input.value = val + 1;
+                onQtyChange();
+            });
+            input.addEventListener('input', syncInput);
+            input.addEventListener('change', syncInput);
+            input.addEventListener('blur', syncInput);
+        });
+    }
+
+    if (addItemBtn && itemsContainer) {
+        addItemBtn.addEventListener('click', () => {
+            itemsContainer.classList.remove('hidden');
+            itemsContainer.appendChild(createItemEntry());
+        });
+    }
 });
