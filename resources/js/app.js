@@ -15,7 +15,7 @@ import { parseBracketedFormData } from './utilities/parseFlatJson.js';
 import { CustomCheckbox } from './components/customCheckbox.js';
 import { requestBirthdayValidation } from './components/birthdayInput.js';
 
-import { addguardianCheckBx, confirmGuardianCheckBx } from './modules/playhouseParent.js';
+import { addguardianCheckBx, confirmGuardianCheckBx, lockParentNames, checkParentNamesState } from './modules/playhouseParent.js';
 
 document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('playhouse-registration-form');
@@ -106,6 +106,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 currentStep = nextStepIndex;
 
+                // Check parent names state when entering parent step
+                if (getCurrentStepName() === 'parent') {
+                    checkParentNamesState();
+                }
+
                 prevBtn.classList.toggle('hidden', currentStep === 0);
                 nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
@@ -157,6 +162,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
                     const oldUserData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
                     autoFillFields(oldUserData);
+                    // Lock names for old users after auto-filling
+                    lockParentNames();
                     showSteps(currentStep + 2,'next', 2);
                     return;
                 }
@@ -199,6 +206,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             if(!valid)return;
+            
+            // Lock parent names when proceeding from parent step
+            if (getCurrentStepName() === 'parent') {
+                lockParentNames();
+            }
+            
             if(currentStep < steps.length - 1) {
                 showSteps(currentStep + 1,'next');
                 if (currentStep + 1 === steps.length -1) populateSummary();
