@@ -60,7 +60,8 @@
                     </button>
 
                     <!-- Returnee Search Form (Hidden by default) -->
-                    <form id="returnee-search-form" action="{{ route('returnee.search') }}" method="POST" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
+                    <!-- Fetching data using POST is not recommended, GET request is actually the norm -->
+                    {{-- <form id="returnee-search-form" action="{{ route('returnee.search') }}" method="POST" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
                         @csrf
                         <input 
                             type="tel" 
@@ -84,7 +85,39 @@
                         >
                             ✕
                         </button>
-                    </form>
+                    </form> --}}
+                    <div id="returnee-search-form" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
+                        <input 
+                            type="tel"
+                            id="mobileno"
+                            name="mobileno" 
+                            placeholder="Enter your phone number" 
+                            class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0d9984] w-full sm:w-64"
+                            pattern="^(\+63|0)?9\d{9}$"
+                            title="Please enter a valid Philippine mobile number"
+                            required
+                        >
+                        <button 
+                            type="button" 
+                            class="px-6 py-2 bg-[#0d9984] text-white rounded-lg hover:bg-[#1abc9c] transition whitespace-nowrap font-semibold"
+                            onclick="findReturnee()"
+                        >
+                        <script>
+                            function findReturnee() {
+                                let phone = document.getElementById('mobileno').value;
+                                window.location.href = '/api/search-returnee/'+phone;
+                            }
+                        </script>
+                            Search
+                        </button>
+                        <button 
+                            type="button" 
+                            onclick="document.getElementById('returnee-search-form').classList.add('hidden'); document.querySelector('button[onclick*=\'Returnee Customer\']').classList.remove('hidden');"
+                            class="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
+                        >
+                            ✕
+                        </button>
+                    </div>
 
                     <!-- New Customer Button -->
                     <button 

@@ -10,9 +10,11 @@ return new class extends Migration
     {
         Schema::create('phone_numbers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_record_id')->constrained('customer_records')->onDelete('cascade');
-            $table->string('phone_number');
-            $table->boolean('is_primary')->default(false);
+            $table->string('phone_number', 20)->unique();
+            $table->string('otp_code', 6)->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
+            $table->timestamp('otp_verified_at')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }

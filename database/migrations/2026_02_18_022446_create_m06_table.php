@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('firstname', 100);
             $table->string('mi', 10)->nullable(); // Middle Initial
             $table->string('mobileno', 20)->unique();
+            //$table->foreign('mobileno')->references('phone_number')->on('phone_numbers')->onDelete('restrict');
             $table->boolean('isparent')->default(true);
             $table->boolean('isguardian')->default(false);
             $table->string('createdby', 50)->nullable();

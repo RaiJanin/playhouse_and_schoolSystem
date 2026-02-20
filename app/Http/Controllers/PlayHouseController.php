@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlayhouseFormRequest;
+use App\Models\PhoneNumber;
+use App\Models\M06;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class PlayHouseController extends Controller
 {
@@ -31,33 +34,68 @@ class PlayHouseController extends Controller
     public function makeOtp(Request $request)
     {
         $request->validate(['phone' => 'required|string|max:20']);
-        
+
         $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
-        
-        //Insert numbers on the database here
+
+        $phoneRecord = PhoneNumber::create([
+            'phone_number' => $request->phone,
+            'otp_code' => $OTP,
+            'otp_expires_at' => Carbon::now()->addMinutes(5)
+        ]);
 
         return response()->json([
             'generated' => true,
+            'id' => $phoneRecord->id,
             'code' => $OTP
         ]);
     }
 
     public function verifyOTP(Request $request, $phoneNum)
     {
-        //query for phone number later
+
         $request->validate(['otp' => 'required|string|size:3']);
 
-        //Simulate returnee
-        $isOldUser = true;
+        $phoneVerified = PhoneNumber::where('phone_number', $phoneNum)
+                                ->where('otp_code', $request->otp)
+                                ->where('is_verified', false)
+                                ->first();
 
-        //Query to find the phone number and its OTP
+        if(!$phoneVerified) 
+        {
+            return response()->json([
+                'isCorrectOtp' => false,
+            ]);
+        }
 
-        //Update phone number, label as "verified"
+        $phoneVerified->update([
+            'is_verified' => true,
+            'otp_verified_at' => Carbon::now()
+        ]);
+        
+        $isOldUser = M06::where('mobileno', $phoneNum)->first();
 
         return response()->json([
             'isCorrectOtp' => true,
             'isOldUser' => $isOldUser,
             'phoneNum' => $phoneNum,
+        ]);
+    }
+
+    public function deleteOtp($otpId)
+    {
+        $OtpToDelete = PhoneNumber::find($otpId);
+                            
+        if(!$OtpToDelete)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to find phone and OTP',
+            ]);
+        }
+        $OtpToDelete->delete();
+
+        return response()->json([
+            'success' => true
         ]);
     }
 

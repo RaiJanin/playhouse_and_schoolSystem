@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\M06;
 
 class PhoneNumber extends Model
 {
@@ -11,24 +12,13 @@ class PhoneNumber extends Model
 
     protected $fillable = [
         'phone_number',
+        'otp_code',
+        'otp_expires_at',
+        'otp_verified_at',
         'is_verified',
     ];
 
     protected $casts = [
         'is_verified' => 'boolean',
     ];
-
-    // Many-to-Many: Phone number can belong to many customers
-    public function customers()
-    {
-        return $this->belongsToMany(CustomerRecord::class, 'customer_phone')
-                    ->withPivot('is_primary')
-                    ->withTimestamps();
-    }
-
-    // Get primary customer for this phone
-    public function getPrimaryCustomerAttribute()
-    {
-        return $this->customers()->wherePivot('is_primary', true)->first();
-    }
 }

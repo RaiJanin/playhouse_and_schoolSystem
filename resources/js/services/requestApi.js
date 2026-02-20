@@ -35,13 +35,13 @@ export async function submitData(apiLink, dataObject, method = 'POST', routePara
  * Sends GET or DELETE requests
  * 
  * @param {string} apiLink - The API endpoint URL
- * @param {string} routeParam - Route parameter
+ * @param {Array} routeParam - Route parameter
  * @param {'GET'|'DELETE'} method - Request Method
  * @returns Server response
  */
-export async function getOrDelete(method, apiLink, routeParam = null) {
+export async function getOrDelete(method, apiLink, routeParam = []) {
     try {
-        const reqURl = routeParam == null ? apiLink : `${apiLink}/${routeParam}`;
+        const reqURl = routeParam.length === 0 ? apiLink : `${apiLink}/${routeParam.join('/')}`;
         const options = {
             method: method.toUpperCase(),
             headers: {
@@ -54,7 +54,7 @@ export async function getOrDelete(method, apiLink, routeParam = null) {
             const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             options.headers['X-CSRF-TOKEN'] = csrf;
         }
-
+        
         const response = await fetch(reqURl, options);
         return await response.json();
 

@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlayHouseController;
 
+//WEB routes for page viewing only
+
 Route::get('/', function () {
     return view('pages.playhouse-landing');
 })->name('playhouse.start');
@@ -17,20 +19,8 @@ Route::prefix('v2')->group(function () {
 
 });
 
-
-// Returnee search (POST)
-Route::post('/playhouse/search-returnee', [PlayHouseController::class, 'searchReturnee'])->name('returnee.search');
-
-// Registration page (with type parameter)
-Route::get('/playhouse/registration', [PlayHouseController::class, 'registration'])->name('playhouse.registration');
-
-// Clear session
-Route::post('/playhouse/clear-session', [PlayHouseController::class, 'clearSession'])->name('playhouse.clear-session');
-
-// Your existing store/OTP routes
-Route::post('/playhouse/store', [PlayHouseController::class, 'store'])->name('playhouse.store');
-Route::post('/playhouse/make-otp', [PlayHouseController::class, 'makeOtp'])->name('playhouse.make-otp');
-Route::post('/playhouse/verify-otp/{phoneNum}', [PlayHouseController::class, 'verifyOTP'])->name('playhouse.verify-otp');
+// Naa sa api.php na ang para submit/get routes
+//REMEMBER: when calling a route url, put `/api` first before your URL
 //----- mock ups
 Route::get('/mockup-menu', function () {
     return view('pages.mockup.playhouse-registration');

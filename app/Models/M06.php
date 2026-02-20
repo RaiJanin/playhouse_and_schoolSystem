@@ -40,4 +40,5 @@ class M06 extends Model
     {
         return $this->hasMany(M06Child::class, 'd_code', 'd_code');
     }
+
 }

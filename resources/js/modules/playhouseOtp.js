@@ -1,4 +1,4 @@
-import { submitData } from "../services/requestApi.js";
+import { getOrDelete, submitData } from "../services/requestApi.js";
 import { oldUser } from "../services/olduserState.js";
 import { API_ROUTES } from "../config/api.js";
 
@@ -12,7 +12,7 @@ window.storePhone = storePhone;
 
 let otpAttempt = 0;
 
-function generateOtpChoices(correctOtp) {
+function generateOtpChoices(correctOtp, otpId) {
     container.innerHTML = '';
     messageDiv.textContent = '';
     messageDiv.className = 'text-center min-h-[24px] font-medium';
@@ -44,8 +44,10 @@ function generateOtpChoices(correctOtp) {
             //Test verify OTP on backend
             //Every code for now is correct
 
+            
             const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", storePhone);
-
+            console.log(sendOtpAttempt);
+            
             // if (otp === correctOtp) {
             if(sendOtpAttempt.isCorrectOtp) {
                 button.classList.remove('border-gray-300', 'opacity-70');
@@ -73,7 +75,7 @@ function generateOtpChoices(correctOtp) {
                         btn.classList.remove('opacity-70');
                     });
                 }, 500);
-                readAttempts();
+                readAttempts(otpId);
             }
             
         });
@@ -122,12 +124,13 @@ async function generateOtp(phoneNumber) {
     
     const phoneIntoJson = { phone: phoneNumber };
     const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
+    console.log('OTP: '+otp.code);
     
-    generateOtpChoices(otp.code);
+    generateOtpChoices(otp.code, otp.id);
 }
 window.generateOtp = generateOtp;
 
-function readAttempts() {
+function readAttempts(otpId) {
     otpAttempt++;
     
     if(otpAttempt == 2) {
@@ -140,7 +143,8 @@ function readAttempts() {
             btn.classList.add('border-gray-300', 'opacity-70');
         });
 
-        setTimeout(() => {
+        setTimeout(async () => {
+            await getOrDelete('DELETE', API_ROUTES.deleteOtpURL, [otpId]);
             location.reload();
         }, 1000);
         
