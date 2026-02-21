@@ -1,7 +1,7 @@
 import { attachBirthdayInput } from '../components/birthdayInput.js';
 import { CustomCheckbox } from '../components/customCheckbox.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+window.document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
     const addBtn = document.getElementById('addChildBtn');
     //const itemsContainer = document.getElementById('itemsContainer');
@@ -12,10 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createChildEntry() {
         childEntries = childEntries + 1;
-        const checkboxId = `add-socks-child-checkbox-${childEntries}`;
-        const iconId = `add-socks-child-icon-${childEntries}`;
-        const labelId = `add-socks-child-info-${childEntries}`;
-
+        const index = childEntries;
+       
         const entry = document.createElement('div');
         entry.className = 'child-entry pt-3 border border-teal-600 rounded-lg mt-4';
         entry.innerHTML = `
@@ -48,10 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <button id="add-socks-child-checkbox-${childEntries}" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
-                        <i id="add-socks-child-icon-${childEntries}" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+                        <i id="add-socks-child-icon-${childEntries}" class="fa-regular fa-square text-red-500 text-xl"></i>
                         <p id="add-socks-child-info-${childEntries}" class="ml-2"></p>
                     </span>
                 </button>
+                <input type="hidden" name="child[${childEntries}][addSocks]" id="addSocks" class="addSocks hidden">
             </div>
             
             <div class="flex justify-start pt-2">
@@ -61,32 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         attachEntryListeners(entry);
-
-        const addedAddSocksChild = new CustomCheckbox(`add-socks-child-checkbox-${childEntries}`, `add-socks-child-icon-${childEntries}`, `add-socks-child-info-${childEntries}`);
-
-        addedAddSocksChild.setLabel(`Add Socks for Child ${childEntries+1}`);
-
-        addedAddSocksChild.onChange(() => {
-            const isChecked = addedAddSocksChild.isChecked();
-
-            let hidden = entry.querySelector('input[name$="[addSocks]"]');
-
-            if (!hidden) {
-                hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.name = `child[${childEntries}][addSocks]`;
-                entry.appendChild(hidden);
-            }
-
-            hidden.value = isChecked ? '1' : '0';
-        });
         
         const b = entry.querySelector('input[data-birthday]');
         if (b) attachBirthdayInput(b);
 
-        //attachSocksCheckbox(entry, checkboxId, iconId, labelId);
-
-        return entry;
+        return { entry, index };
     }
 
     function attachEntryListeners(entry) {
@@ -100,44 +78,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const addSocksChild = new CustomCheckbox('add-socks-child-checkbox-0', 'add-socks-child-icon-0', 'add-socks-child-info-0');
-    addSocksChild.setLabel(`Add Socks for Child ${1}`);
+    addSocksChild.setLabel(`Add Socks`);
 
     addSocksChild.onChange(() => {
         const isChecked = addSocksChild.isChecked();
 
             let hidden = document.getElementById('addSocks');
 
-            if (!hidden) {
-                hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.name = `child[0][addSocks]`;
-                entry.appendChild(hidden);
-            }
-
             hidden.value = isChecked ? '1' : '0';
     })
 
-    function attachSocksCheckbox(entry, checkboxId, iconId, labelId) {
-        console.log(checkboxId, iconId, labelId);
-        const addedAddSocksChild = new CustomCheckbox(checkboxId, iconId, labelId);
+    function attachSocksCheckbox(entry, index) {
+       
+        const addedAddSocksChild = new CustomCheckbox(`add-socks-child-checkbox-${index}`, `add-socks-child-icon-${index}`, `add-socks-child-info-${index}`);
 
-        addedAddSocksChild.setLabel(`Add Socks for Child ${childEntries+1}`);
+        addedAddSocksChild.setLabel(`Add Socks`);
 
         addedAddSocksChild.onChange(() => {
             const isChecked = addedAddSocksChild.isChecked();
 
-            let hidden = entry.querySelector('input[name$="[addSocks]"]');
-
-            if (!hidden) {
-                hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.name = `child[${childEntries}][addSocks]`;
-                entry.appendChild(hidden);
-            }
+            let hidden = entry.querySelector('.addSocks');
 
             hidden.value = isChecked ? '1' : '0';
         });
     }
+
+    function countSelectedSocks() {
+        // Select all hidden inputs for addSocks
+        const socksInputs = container.querySelectorAll('input[name$="[addSocks]"]');
+
+        // Count how many have value === '1'
+        let count = 0;
+        let subTotal;
+        socksInputs.forEach(input => {
+            if (input.value === '1') {
+                count++;
+            }
+            subTotal = count * 100;
+        });
+
+        return subTotal;
+    }
+    window.countSelectedSocks = countSelectedSocks;
 
     function updateRemoveButtons() {
         const entries = container.querySelectorAll('.child-entry');
@@ -149,8 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     addBtn.addEventListener('click', () => {
         const newEntry = createChildEntry();
-        container.appendChild(newEntry);
-        newEntry.querySelector('.child-first');
+        container.appendChild(newEntry.entry);
+        attachSocksCheckbox(newEntry.entry, newEntry.index);
+        newEntry.entry.querySelector('.child-first');
         updateRemoveButtons();
     });
 

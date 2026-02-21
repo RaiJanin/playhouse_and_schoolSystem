@@ -200,7 +200,6 @@ saveItemsBtn.addEventListener('click', () => {
     // Store merged items in a data attribute on the form for persistence
     mainForm.dataset.selectedMenuItems = JSON.stringify(mergedItems);
 
-    console.log('Menu items saved (merged):', mergedItems);
     modal.classList.add('hidden');
 });
 

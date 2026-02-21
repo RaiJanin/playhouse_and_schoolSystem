@@ -11,9 +11,11 @@ export class CustomCheckbox {
     toggle() {
         this.state = !this.state;
 
+        this.icon.classList.toggle('fa-solid', this.state);
         this.icon.classList.toggle('fa-square-check', this.state);
         this.icon.classList.toggle('text-green-500', this.state);
-        this.icon.classList.toggle('fa-square-xmark', !this.state);
+        this.icon.classList.toggle('fa-regular', !this.state);
+        this.icon.classList.toggle('fa-square', !this.state);
         this.icon.classList.toggle('text-red-500', !this.state);
 
         this.button.dispatchEvent(

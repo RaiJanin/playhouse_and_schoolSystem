@@ -34,7 +34,7 @@
     <div id="edit-parent-checkbox-el" class="hidden">
         <button id="edit-parent-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
             <span class="flex items-center">
-                <i id="edit-parent-icon" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+                <i id="edit-parent-icon" class="fa-regular fa-square text-red-500 text-xl"></i></i>
                 <p id="edit-parent-info" class="ml-2"></p>
             </span>
         </button>
@@ -62,7 +62,7 @@
     <div class="mt-6 pt-4 border-t border-gray-800">
         <button id="add-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
 			<span class="flex items-center">
-				<i id="check-add-guardian-icon" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+				<i id="check-add-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
 				<p id="check-add-guardian-info" class="ml-2"></p>
 			</span>
 		</button>
@@ -81,7 +81,7 @@
             </div>
             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                 <span class="flex flex-row">
-                    <i id="confirm-guardian-icon" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+                    <i id="confirm-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
                     <p id="confirm-guardian-info" class="ml-2"></p>
                 </span>
             </button>

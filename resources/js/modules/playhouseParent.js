@@ -49,7 +49,6 @@ export const editParentChkBx = new CustomCheckbox(`edit-parent-checkbox`, `edit-
 editParentChkBx.setLabel(`Edit info`);
 
 editParentChkBx.onChange(() => {
-    console.log(editParentChkBx.isChecked());
 
     parentFields.forEach(field => {
         if(editParentChkBx.isChecked() && field.hasAttribute('required')) {

@@ -238,10 +238,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const nameEl = child.querySelector('input[name*="[name]"]');
                 const birthdayEl = child.querySelector('input[name*="[birthday]"]');
                 const durationEl = child.querySelector('select[name*="[playDuration]"]');
+                const addedSocks = child.querySelector('input[name*="[addSocks]"]');
 
                 const name = nameEl ? nameEl.value : 'Child';
                 const birthday = birthdayEl ? birthdayEl.value : '-';
                 const duration = durationEl.value;
+                const parseSocksBool = addedSocks.value === '1' ? 'Socks added' : '';
 
                 // playtime durations should fetch from the master file (database or disk storage)
                 const durationMap = {
@@ -264,47 +266,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name} ${data.get('parentLastName')}</span></p> 
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">${parseSocksBool}</p>
                         </div>
                 `;
             });
 
-            // Gather socks items from step 4 (Add Item) - only entries where user clicked Apply
-            let socksItemsHtml = '';
-            let socksTotalCost = 0;
-            const itemEntries = document.querySelectorAll('.item-entry[data-applied-quantities]');
-            itemEntries.forEach((entry) => {
-                let applied;
-                try {
-                    applied = JSON.parse(entry.dataset.appliedQuantities || '{}');
-                } catch (e) {
-                    applied = {};
-                }
-                const small = applied.small || 0;
-                const medium = applied.medium || 0;
-                const large = applied.large || 0;
-                const childQty = applied.child || 0;
-                const totalQty = small + medium + large + childQty;
-                if (totalQty > 0) {
-                    socksTotalCost += totalQty * 100;
-                    const parts = [];
-                    if (small > 0) parts.push(`Adult Small: ${small}`);
-                    if (medium > 0) parts.push(`Adult Medium: ${medium}`);
-                    if (large > 0) parts.push(`Adult Large: ${large}`);
-                    if (childQty > 0) parts.push(`Child: ${childQty}`);
-                    socksItemsHtml += `
-                        <div class="bg-teal-50 border border-teal-200 rounded p-3">
-                            <p class="text-sm text-gray-600">Socks - ₱100 each</p>
-                            <p class="text-sm text-gray-600 mt-1">Quantity: <span class="font-medium text-gray-900">${parts.join(' | ')}</span></p>
-                            <p class="text-sm text-gray-600 mt-1">Total: <span class="font-bold text-teal-600">₱${totalQty * 100}</span></p>
-                        </div>
-                    `;
-                }
-            });
-            if (!socksItemsHtml) {
-                socksItemsHtml = '<div class="bg-teal-50 border border-teal-200 rounded p-3"><p class="text-sm text-gray-600">No items added</p></div>';
-            }
-
-            // Calculate overall total
+            const socksTotalCost = countSelectedSocks();
             const overallTotal = childrenTotalCost + socksTotalCost;
 
             if(addguardianCheckBx.isChecked()) {
@@ -336,12 +303,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             ${childrenItems}
                         </div>
                     </div>
-                    <div class="pb-3">
-                        <span class="font-semibold text-cyan-800 block mb-3">Item:</span>
-                        <div id="summary-item-list" class="space-y-3 ml-2">
-                            ${socksItemsHtml}
-                        </div>
-                    </div>
                     <div class="mt-6 pt-4 border-t-2 border-cyan-400">
                         <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
@@ -366,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
-            console.log(jsonData);
 
             replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
             console.log("Reply from Backend");

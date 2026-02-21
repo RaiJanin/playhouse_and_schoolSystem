@@ -63,12 +63,12 @@
 
                 <button id="add-socks-child-checkbox-0" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
-                        <i id="add-socks-child-icon-0" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+                        <i id="add-socks-child-icon-0" class="fa-regular fa-square text-red-500 text-xl"></i>
                         <p id="add-socks-child-info-0" class="ml-2"></p>
                     </span>
                 </button>
 
-                <input type="hidden" name="addSocks" id="addSocks" class="addSocks hidden">
+                <input type="hidden" name="child[0][addSocks]" id="addSocks" class="addSocks hidden">
             </div>
         </div>
 
