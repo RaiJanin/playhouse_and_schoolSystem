@@ -31,11 +31,15 @@
     <p class="text-center text-gray-600 mb-5 font-semibold">
         Please provide your details
     </p>
+    <div id="edit-parent-checkbox-el" class="hidden">
+        <button id="edit-parent-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+            <span class="flex items-center">
+                <i id="edit-parent-icon" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+                <p id="edit-parent-info" class="ml-2"></p>
+            </span>
+        </button>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div id="edit-parent-name-container" class="sm:col-span-2 md:col-span-3 flex items-center gap-3">
-            <button id="edit-parent-name-btn" type="button" class="ph-edit-name-btn" aria-pressed="false">Edit</button>
-            <p class="text-sm font-semibold text-gray-700">Do you want to edit your name?</p>
-        </div>
         <div>
             <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
             <input type="text" id="parentName" name="parentName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="John" required />

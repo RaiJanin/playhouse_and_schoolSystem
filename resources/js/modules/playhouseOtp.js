@@ -42,12 +42,9 @@ function generateOtpChoices(correctOtp, otpId) {
             });
             
             //Test verify OTP on backend
-            //Every code for now is correct
-
             
             const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", storePhone);
-            console.log(sendOtpAttempt);
-            
+
             // if (otp === correctOtp) {
             if(sendOtpAttempt.isCorrectOtp) {
                 button.classList.remove('border-gray-300', 'opacity-70');

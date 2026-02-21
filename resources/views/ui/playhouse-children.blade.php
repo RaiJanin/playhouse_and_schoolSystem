@@ -43,6 +43,11 @@
                         </div>
                     </div>
                 </div>
+
+                <div>
+                    <label for="addSocks" class="p-2">Add Socks</label>
+                    <input type="checkbox" name="addSocks" class="p-2">
+                </div>
             </div>
         </div>
 

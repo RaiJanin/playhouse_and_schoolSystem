@@ -5,7 +5,7 @@ import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
 import { getOrDelete, submitData } from './services/requestApi.js'
-import { autoFillFields, oldUser } from './services/olduserState.js';
+import { autoFillFields, enableEditInfo, oldUser } from './services/olduserState.js';
 
 import { API_ROUTES } from './config/api.js';
 
@@ -15,7 +15,10 @@ import { parseBracketedFormData } from './utilities/parseFlatJson.js';
 import { CustomCheckbox } from './components/customCheckbox.js';
 import { requestBirthdayValidation } from './components/birthdayInput.js';
 
-import { addguardianCheckBx, confirmGuardianCheckBx, lockParentNames, checkParentNamesState } from './modules/playhouseParent.js';
+import {    addguardianCheckBx, 
+            confirmGuardianCheckBx, 
+            parentFields,
+} from './modules/playhouseParent.js';
 
 document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('playhouse-registration-form');
@@ -106,11 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 currentStep = nextStepIndex;
 
-                // Check parent names state when entering parent step
-                if (getCurrentStepName() === 'parent') {
-                    checkParentNamesState();
-                }
-
                 prevBtn.classList.toggle('hidden', currentStep === 0);
                 nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
@@ -159,26 +157,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(!correctCode) {
                     valid = false;
                 }
+                
                 if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
                     const oldUserData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
                     autoFillFields(oldUserData);
-                    // Lock names for old users after auto-filling
-                    lockParentNames();
+                    enableEditInfo();
+                    parentFields.forEach(field => {
+                        field.setAttribute('readonly', true);
+                    })
                     showSteps(currentStep + 2,'next', 2);
                     return;
                 }
             }
 
+            //ALLOW form to proceed even unchecked
             // High-priority gate: when Add Guardian is used, confirm-guardian MUST be authorized
-            if (getCurrentStepName() === 'parent' && typeof addguardianCheckBx !== 'undefined' && addguardianCheckBx.isChecked()) {
-                if (!confirmGuardianCheckBx.isChecked()) {
-                    const infoEl = document.getElementById('confirm-guardian-info');
-                    if (infoEl) {
-                        infoEl.innerHTML = '<span class="text-red-600 font-semibold">To authorize this guardian and proceed to the next step, please click the red "X" icon</span>';
-                    }
-                    valid = false;
-                }
-            }
+            // if (getCurrentStepName() === 'parent' && typeof addguardianCheckBx !== 'undefined' && addguardianCheckBx.isChecked()) {
+            //     if (!confirmGuardianCheckBx.isChecked()) {
+            //         const infoEl = document.getElementById('confirm-guardian-info');
+            //         if (infoEl) {
+            //             infoEl.innerHTML = '<span class="text-red-600 font-semibold">To authorize this guardian and proceed to the next step, please click the red "X" icon</span>';
+            //         }
+            //         valid = false;
+            //     }
+            // }
 
             // Gate: socks items must be applied before proceeding from step 4
             if (getCurrentStepName() === 'children') {
@@ -206,11 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             if(!valid)return;
-            
-            // Lock parent names when proceeding from parent step
-            if (getCurrentStepName() === 'parent') {
-                lockParentNames();
-            }
             
             if(currentStep < steps.length - 1) {
                 showSteps(currentStep + 1,'next');

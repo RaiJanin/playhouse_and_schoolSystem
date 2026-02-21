@@ -17,9 +17,23 @@ class PlayHouseController extends Controller
         return view('pages.playhouse-landing');
     }
 
-    public function store(StorePlayhouseFormRequest $request)
+    // public function store(StorePlayhouseFormRequest $request)
+    // {
+    //     $data = $request->validated();
+
+    //     //Temporary
+    //     $order_number = '00'.str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
+
+    //     return response()->json([
+    //         'isFormSubmitted' => true,
+    //         'orderNum' => $order_number,
+    //         'data' => $data,
+    //     ]);
+    // }
+
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->all();
 
         //Temporary
         $order_number = '00'.str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
@@ -72,7 +86,11 @@ class PlayHouseController extends Controller
             'otp_verified_at' => Carbon::now()
         ]);
         
-        $isOldUser = M06::where('mobileno', $phoneNum)->first();
+        //Temporary
+        //$isOldUser = M06::where('mobileno', $phoneNum)->first();
+        $isOldUser = $phoneNum === '09785671234' ? true : false;
+
+        //Set old user as true to simulate "old user" feature
 
         return response()->json([
             'isCorrectOtp' => true,

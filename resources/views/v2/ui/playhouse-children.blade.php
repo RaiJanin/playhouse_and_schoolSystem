@@ -60,19 +60,28 @@
                         </div>
                     </div>
                 </div>
+
+                <button id="add-socks-child-checkbox-0" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+                    <span class="flex items-center">
+                        <i id="add-socks-child-icon-0" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
+                        <p id="add-socks-child-info-0" class="ml-2"></p>
+                    </span>
+                </button>
+
+                <input type="hidden" name="addSocks" id="addSocks" class="addSocks hidden">
             </div>
         </div>
 
-        <div id="itemsContainer" class="space-y-4 hidden">
+        {{-- <div id="itemsContainer" class="space-y-4 hidden">
             <!-- Socks item entries appended here -->
         </div>
-        <div id="socks-apply-info" class="hidden mt-2 text-red-600 font-semibold text-sm"></div>
+        <div id="socks-apply-info" class="hidden mt-2 text-red-600 font-semibold text-sm"></div> --}}
 
         <div class="pt-4 pb-4 flex flex-col gap-3">
-            <button type="button" id="addItemBtn" 
+            {{-- <button type="button" id="addItemBtn" 
             class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add Item
-            </button>
+            </button> --}}
             <button type="button" id="addChildBtn" 
             class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child

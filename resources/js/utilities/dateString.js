@@ -34,6 +34,14 @@ export function dateToString(options, dateString) {
                 year: 'numeric',
             });
 
+        case 'slashDate': {
+            const month = String(dateStamp.getMonth() + 1).padStart(2, '0');
+            const day = String(dateStamp.getDate()).padStart(2, '0');
+            const year = dateStamp.getFullYear();
+
+            return `${month} / ${day} / ${year}`;
+            }
+
         case 'iso':
             return dateStamp.toISOString().split('T')[0];
 
