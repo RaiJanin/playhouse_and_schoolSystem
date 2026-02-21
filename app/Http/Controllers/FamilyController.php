@@ -33,20 +33,27 @@ class FamilyController extends Controller
      */
     public function createParent(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:parent_info,email',
-            'birthday' => 'nullable|date',
-        ]);
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:parent_info,email',
+                'birthday' => 'nullable|date',
+            ]);
 
-        $parent = ParentInfo::create($validated);
+            $parent = ParentInfo::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Parent created successfully',
-            'data' => $parent
-        ], 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'Parent created successfully',
+                'data' => $parent
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create parent: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -74,29 +81,36 @@ class FamilyController extends Controller
      */
     public function updateParent(Request $request, int $id): JsonResponse
     {
-        $parent = ParentInfo::find($id);
+        try {
+            $parent = ParentInfo::find($id);
 
-        if (!$parent) {
+            if (!$parent) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Parent not found'
+                ], 404);
+            }
+
+            $validated = $request->validate([
+                'first_name' => 'sometimes|string|max:255',
+                'last_name' => 'sometimes|string|max:255',
+                'email' => 'sometimes|email|unique:parent_info,email,' . $id,
+                'birthday' => 'nullable|date',
+            ]);
+
+            $parent->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Parent updated successfully',
+                'data' => $parent
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Parent not found'
-            ], 404);
+                'message' => 'Failed to update parent: ' . $e->getMessage()
+            ], 500);
         }
-
-        $validated = $request->validate([
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:parent_info,email,' . $id,
-            'birthday' => 'nullable|date',
-        ]);
-
-        $parent->update($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Parent updated successfully',
-            'data' => $parent
-        ]);
     }
 
     /**
@@ -104,21 +118,28 @@ class FamilyController extends Controller
      */
     public function deleteParent(int $id): JsonResponse
     {
-        $parent = ParentInfo::find($id);
+        try {
+            $parent = ParentInfo::find($id);
 
-        if (!$parent) {
+            if (!$parent) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Parent not found'
+                ], 404);
+            }
+
+            $parent->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Parent deleted successfully'
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Parent not found'
-            ], 404);
+                'message' => 'Failed to delete parent: ' . $e->getMessage()
+            ], 500);
         }
-
-        $parent->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Parent deleted successfully'
-        ]);
     }
 
     /**
@@ -143,21 +164,28 @@ class FamilyController extends Controller
      */
     public function createGuardian(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:guardians,email',
-            'birthday' => 'nullable|date',
-            'relationship' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'nullable|email|unique:guardians,email',
+                'birthday' => 'nullable|date',
+                'relationship' => 'required|string|max:255',
+            ]);
 
-        $guardian = Guardian::create($validated);
+            $guardian = Guardian::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Guardian created successfully',
-            'data' => $guardian
-        ], 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'Guardian created successfully',
+                'data' => $guardian
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create guardian: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -185,30 +213,37 @@ class FamilyController extends Controller
      */
     public function updateGuardian(Request $request, int $id): JsonResponse
     {
-        $guardian = Guardian::find($id);
+        try {
+            $guardian = Guardian::find($id);
 
-        if (!$guardian) {
+            if (!$guardian) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Guardian not found'
+                ], 404);
+            }
+
+            $validated = $request->validate([
+                'first_name' => 'sometimes|string|max:255',
+                'last_name' => 'sometimes|string|max:255',
+                'email' => 'nullable|email|unique:guardians,email,' . $id,
+                'birthday' => 'nullable|date',
+                'relationship' => 'sometimes|string|max:255',
+            ]);
+
+            $guardian->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Guardian updated successfully',
+                'data' => $guardian
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Guardian not found'
-            ], 404);
+                'message' => 'Failed to update guardian: ' . $e->getMessage()
+            ], 500);
         }
-
-        $validated = $request->validate([
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
-            'email' => 'nullable|email|unique:guardians,email,' . $id,
-            'birthday' => 'nullable|date',
-            'relationship' => 'sometimes|string|max:255',
-        ]);
-
-        $guardian->update($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Guardian updated successfully',
-            'data' => $guardian
-        ]);
     }
 
     /**
@@ -216,21 +251,28 @@ class FamilyController extends Controller
      */
     public function deleteGuardian(int $id): JsonResponse
     {
-        $guardian = Guardian::find($id);
+        try {
+            $guardian = Guardian::find($id);
 
-        if (!$guardian) {
+            if (!$guardian) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Guardian not found'
+                ], 404);
+            }
+
+            $guardian->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Guardian deleted successfully'
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Guardian not found'
-            ], 404);
+                'message' => 'Failed to delete guardian: ' . $e->getMessage()
+            ], 500);
         }
-
-        $guardian->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Guardian deleted successfully'
-        ]);
     }
 
     /**
@@ -255,30 +297,37 @@ class FamilyController extends Controller
      */
     public function createChild(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'parent_info_id' => 'nullable|exists:parent_info,id',
-            'guardian_id' => 'nullable|exists:guardians,id',
-            'name' => 'required|string|max:255',
-            'birthday' => 'required|date',
-            'playtime_duration' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-        ]);
+        try {
+            $validated = $request->validate([
+                'parent_info_id' => 'nullable|exists:parent_info,id',
+                'guardian_id' => 'nullable|exists:guardians,id',
+                'name' => 'required|string|max:255',
+                'birthday' => 'required|date',
+                'playtime_duration' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+            ]);
 
-        // At least one of parent or guardian must be provided
-        if (!$validated['parent_info_id'] && !$validated['guardian_id']) {
+            // At least one of parent or guardian must be provided
+            if (!$validated['parent_info_id'] && !$validated['guardian_id']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Either parent_info_id or guardian_id is required'
+                ], 422);
+            }
+
+            $child = Child::create($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Child created successfully',
+                'data' => $child
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Either parent_info_id or guardian_id is required'
-            ], 422);
+                'message' => 'Failed to create child: ' . $e->getMessage()
+            ], 500);
         }
-
-        $child = Child::create($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Child created successfully',
-            'data' => $child
-        ], 201);
     }
 
     /**
@@ -306,31 +355,38 @@ class FamilyController extends Controller
      */
     public function updateChild(Request $request, int $id): JsonResponse
     {
-        $child = Child::find($id);
+        try {
+            $child = Child::find($id);
 
-        if (!$child) {
+            if (!$child) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Child not found'
+                ], 404);
+            }
+
+            $validated = $request->validate([
+                'parent_info_id' => 'nullable|exists:parent_info,id',
+                'guardian_id' => 'nullable|exists:guardians,id',
+                'name' => 'sometimes|string|max:255',
+                'birthday' => 'sometimes|date',
+                'playtime_duration' => 'sometimes|string|max:255',
+                'price' => 'sometimes|numeric|min:0',
+            ]);
+
+            $child->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Child updated successfully',
+                'data' => $child
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Child not found'
-            ], 404);
+                'message' => 'Failed to update child: ' . $e->getMessage()
+            ], 500);
         }
-
-        $validated = $request->validate([
-            'parent_info_id' => 'nullable|exists:parent_info,id',
-            'guardian_id' => 'nullable|exists:guardians,id',
-            'name' => 'sometimes|string|max:255',
-            'birthday' => 'sometimes|date',
-            'playtime_duration' => 'sometimes|string|max:255',
-            'price' => 'sometimes|numeric|min:0',
-        ]);
-
-        $child->update($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Child updated successfully',
-            'data' => $child
-        ]);
     }
 
     /**
@@ -338,21 +394,28 @@ class FamilyController extends Controller
      */
     public function deleteChild(int $id): JsonResponse
     {
-        $child = Child::find($id);
+        try {
+            $child = Child::find($id);
 
-        if (!$child) {
+            if (!$child) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Child not found'
+                ], 404);
+            }
+
+            $child->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Child deleted successfully'
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Child not found'
-            ], 404);
+                'message' => 'Failed to delete child: ' . $e->getMessage()
+            ], 500);
         }
-
-        $child->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Child deleted successfully'
-        ]);
     }
 
     /**
@@ -404,27 +467,34 @@ class FamilyController extends Controller
      */
     public function linkParentGuardian(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'parent_info_id' => 'required|exists:parent_info,id',
-            'guardian_id' => 'required|exists:guardians,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'parent_info_id' => 'required|exists:parent_info,id',
+                'guardian_id' => 'required|exists:guardians,id',
+            ]);
 
-        $parent = ParentInfo::find($validated['parent_info_id']);
-        $guardian = Guardian::find($validated['guardian_id']);
+            $parent = ParentInfo::find($validated['parent_info_id']);
+            $guardian = Guardian::find($validated['guardian_id']);
 
-        // Check if already linked
-        if ($parent->guardians()->where('guardian_id', $validated['guardian_id'])->exists()) {
+            // Check if already linked
+            if ($parent->guardians()->where('guardian_id', $validated['guardian_id'])->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Parent and guardian are already linked'
+                ], 422);
+            }
+
+            $parent->guardians()->attach($validated['guardian_id']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Parent and guardian linked successfully'
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Parent and guardian are already linked'
-            ], 422);
+                'message' => 'Failed to link parent and guardian: ' . $e->getMessage()
+            ], 500);
         }
-
-        $parent->guardians()->attach($validated['guardian_id']);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Parent and guardian linked successfully'
-        ]);
     }
 }
