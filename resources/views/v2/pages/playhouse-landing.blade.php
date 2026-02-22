@@ -45,25 +45,17 @@
                         <p class="text-base sm:text-xl sm:w-xl text-start text-[#0d9984] font-medium mb-8">
                             Let your child explore, learn, play, and socialize while you relax and enjoy quality time
                         </p>
+                        
                         <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
-                            {{-- <button 
-                                onclick="window.location.href=`{{route('v2.playhouse.registration', ['type' => 'returnee'])}}`"
-                                class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                                        rounded-full shadow-md overflow-hidden transition-all duration-300 
-                                        hover:shadow-lg hover:scale-105 active:scale-95">
-                                <span class="relative z-10 flex items-center justify-center gap-2">
-                                    Returnee Customer
-                                    <span class="transition-transform group-hover:translate-x-1">→</span>
-                                </span>
-                            </button> --}}
+                            <!-- Start Now Button -->
                             <button 
-                                onclick="window.location.href=`{{route('v2.playhouse.registration', ['type' => 'new'])}}`"
-                                class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                                        rounded-full shadow-md overflow-hidden transition-all duration-300 
-                                        hover:shadow-lg hover:scale-105 active:scale-95">
-                                <span class="relative z-10 flex items-center justify-center gap-2">
+                                onclick="window.location.href='{{route('v2.playhouse.registration')}}'"
+                                class="group relative px-12 py-5 bg-[#0d9984] text-white font-bold text-xl 
+                                        rounded-full shadow-lg overflow-hidden transition-all duration-300 
+                                        hover:shadow-xl hover:scale-105 active:scale-95">
+                                <span class="relative z-10 flex items-center justify-center gap-3">
                                     Start Now
-                                    <span class="transition-transform group-hover:translate-x-1">→</span>
+                                    <span class="transition-transform group-hover:translate-x-1 text-2xl">➔</span>
                                 </span>
                             </button>
                         </div>
@@ -75,13 +67,6 @@
                         </div>
                     </div>
                 </div>
-                
-                
-                {{-- <div class="flex items-center justify-center">
-                    <p class="text-2xl text-[#0d9984] font-bold mb-8">Start registration for</p>
-                </div> --}}
-                
-                
             </div>
         </div>
     </div>

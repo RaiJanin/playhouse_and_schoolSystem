@@ -5,7 +5,7 @@ import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
 import { getOrDelete, submitData } from './services/requestApi.js'
-import { autoFillFields, enableEditInfo, oldUser } from './services/olduserState.js';
+import { autoFillFields, autoFillChildren, enableEditInfo, openEditModal, oldUser } from './services/olduserState.js';
 
 import { API_ROUTES } from './config/api.js';
 
@@ -44,6 +44,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let currentStep = 0;
         let replyFromBackend = '';
+        
+        // Expose functions globally for other modules
+        window.showSteps = showSteps;
+        window.getCurrentStep = () => currentStep;
+        window.getSteps = () => steps;
+        window.populateSummary = populateSummary;
+        window.openEditModal = openEditModal;
 
         function showSteps(step, direction = 'next', override = null) {
             const currentStepEl = steps[currentStep];
@@ -75,9 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (direction === 'next' && currentStep < steps.length - 1) {
                 if(override) {
                     nextStepIndex = currentStep + override;
-                    nextStepEl = steps[nextStepIndex];
+                } else {
+                    nextStepIndex = currentStep + 1;
                 }
-                nextStepIndex = currentStep + 1;
             } else if (direction === 'prev' && currentStep > 0) {
                 nextStepIndex = currentStep - 1;
             } else {
@@ -111,6 +118,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 prevBtn.classList.toggle('hidden', currentStep === 0);
                 nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
+
+                // Show welcome message based on user type
+                // Step 3 (index 2) = Parent Info - for new users
+                // Step 5 (index 4) = Review - for returning users
+                if (window.userDataForMessage) {
+                    const userData = window.userDataForMessage;
+                    if (currentStep === 2 && !userData.isExisting) {
+                        // New user on Parent Info step
+                        window.showWelcomeMessageOnStep('step3', false, '');
+                    } else if (currentStep === 4 && userData.isExisting) {
+                        // Returning user on Review step
+                        window.showWelcomeMessageOnStep('step5', true, userData.name || '');
+                    }
+                }
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
             }, 300);
 
@@ -133,11 +154,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             inputs.forEach(input => {
                 if (input.id === 'phone') {
+                    console.log('Phone input detected, validating...');
                     if (!validatePhone(input)) {
+                        console.log('Phone validation failed');
                         input.classList.remove('border-teal-500');
                         input.classList.add('border-red-500');
                         valid = false;
                     } else {
+                        console.log('Phone validation passed, calling generateOtp');
                         input.classList.remove('border-red-500');
                         generateOtp(input.value);
                     }
@@ -158,14 +182,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     valid = false;
                 }
                 
+                console.log('OTP step - oldUser.isOldUser:', oldUser.isOldUser);
+                console.log('OTP step - oldUser.oldUserLoaded:', oldUser.oldUserLoaded);
+                console.log('OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
+                
                 if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
+                    console.log('Returnee detected, fetching user data...');
                     const oldUserData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
+                    console.log('Returnee data:', oldUserData);
                     autoFillFields(oldUserData);
                     enableEditInfo();
                     parentFields.forEach(field => {
                         field.setAttribute('readonly', true);
                     })
-                    showSteps(currentStep + 2,'next', 2);
+                    console.log('Skipping to review step (currentStep:', currentStep, '+ 3)');
+                    showSteps(currentStep + 3,'next', 3);
+                    populateSummary();
                     return;
                 }
             }
@@ -234,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'unlimited': 500
             };
 
-            document.querySelectorAll('.child-entry').forEach((child) => {
+            document.querySelectorAll('.child-entry').forEach((child, i) => {
                 const nameEl = child.querySelector('input[name*="[name]"]');
                 const birthdayEl = child.querySelector('input[name*="[birthday]"]');
                 const durationEl = child.querySelector('select[name*="[playDuration]"]');
@@ -263,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 childrenItems += `
                         <div class="bg-teal-50 border border-teal-200 rounded p-3">
-                            <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name} ${data.get('parentLastName')}</span></p> 
+                            <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name}</span></p> 
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
                             <p class="text-sm font-bold text-gray-900 mt-1">${parseSocksBool}</p>
@@ -283,10 +315,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
             }
             
+            const parentName = data.get('parentName') || '';
+            const parentLastName = data.get('parentLastName') || '';
+            const parentFullName = [parentName, parentLastName].filter(n => n).join(' ') || '-';
+            
             summary.innerHTML = `
                     <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-fit">Parent:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${data.get('parentName')} ${data.get('parentLastName')} ${parentEmail}</span>
+                        <span class="text-gray-900 font-medium">${parentFullName} ${parentEmail}</span>
                     </div>
                     <div class="flex items-start border-b border-cyan-400 py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
@@ -309,7 +345,57 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Item: ₱${socksTotalCost}</p>
                         </div>
                     </div>
+                    <div class="mt-4 flex justify-end">
+                        <button type="button" id="edit-review-btn" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+                            <i class="fa-solid fa-pen-to-square mr-2"></i>Edit Review
+                        </button>
+                    </div>
             `;
+            
+            // Add event listener for edit button
+            const editBtn = document.getElementById('edit-review-btn');
+            if (editBtn) {
+                editBtn.addEventListener('click', () => {
+                    const reviewData = {
+                        parent: {
+                            first_name: data.get('parentName'),
+                            last_name: data.get('parentLastName'),
+                            email: data.get('parentEmail'),
+                            birthday: data.get('parentBirthday')
+                        },
+                        phone: data.get('phone'),
+                        // Include guardian data if checkbox is checked
+                        guardian: addguardianCheckBx.isChecked() ? {
+                            first_name: data.get('guardianName'),
+                            last_name: data.get('guardianLastName'),
+                            phone: data.get('guardianPhone')
+                        } : null,
+                        children: []
+                    };
+                    
+                    // Collect children data
+                    document.querySelectorAll('.child-entry').forEach((child, idx) => {
+                        const nameEl = child.querySelector('input[name*="[name]"]');
+                        const birthdayEl = child.querySelector('input[name*="[birthday]"]');
+                        const durationEl = child.querySelector('select[name*="[playDuration]"]');
+                        const addedSocks = child.querySelector('input[name*="[addSocks]"]');
+                        const socksIcon = child.querySelector('[id*="add-socks-child-icon"]');
+                        
+                        // Check if socks are added - either from hidden input value or from icon class
+                        const hasSocks = (addedSocks && addedSocks.value === '1') || 
+                                         (socksIcon && socksIcon.classList.contains('fa-check-square'));
+                        
+                        reviewData.children.push({
+                            name: nameEl ? nameEl.value : '',
+                            birthday: birthdayEl ? birthdayEl.value : '',
+                            playtime_duration: durationEl ? durationEl.value : '',
+                            add_socks: hasSocks
+                        });
+                    });
+                    
+                    window.openEditModal(reviewData);
+                });
+            }
 
             const termsCheckBx = new CustomCheckbox('agree-checkbox', 'check-agree-icon', 'check-agree-info');
             termsCheckBx.setLabel(`
@@ -356,5 +442,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 width: 150,
                 height: 150
             });
+
+            // Add "Create Another Registration" button
+            const existingBtn = document.getElementById('create-another-btn');
+            if (!existingBtn) {
+                const btn = document.createElement('a');
+                btn.id = 'create-another-btn';
+                btn.href = '/v2/selection';
+                btn.className = 'mt-4 inline-block px-6 py-3 bg-[#0d9984] text-white font-bold rounded-lg hover:bg-[#1abc9c] transition text-center';
+                btn.textContent = '← Create Another Registration';
+                qrContainer.appendChild(btn);
+            }
         }
     });

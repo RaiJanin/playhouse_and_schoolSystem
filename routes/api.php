@@ -13,6 +13,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/submit/whole-form', [PlayHouseController::class, 'store']);
 Route::post('/submit/make-otp', [PlayHouseController::class, 'makeOtp']);
+Route::get('/check-phone/{phoneNum}', [PlayHouseController::class, 'checkPhone']);
 Route::patch('/verify-otp/{phoneNum}', [PlayHouseController::class, 'verifyOTP']);
 Route::delete('/delete-otp/{otpId}', [PlayHouseController::class, 'deleteOtp']);
 Route::get('/search-returnee/{phoneNumber}', [PlayHouseController::class, 'searchReturnee'])->name('returnee.search');

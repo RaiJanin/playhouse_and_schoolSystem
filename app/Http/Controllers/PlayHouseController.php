@@ -27,52 +27,74 @@ class PlayHouseController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create or find parent (flat field names: parentName, parentLastName, parentEmail, parentBirthday)
-            $parent = null;
-            if (!empty($data['parentName'])) {
-                $parent = ParentInfo::create([
-                    'first_name' => $data['parentName'] ?? '',
-                    'last_name' => $data['parentLastName'] ?? '',
-                    'email' => $data['parentEmail'] ?? null,
-                    'birthday' => $data['parentBirthday'] ?? null,
-                ]);
-
-                // Save parent phone if provided (from 'phone' field or 'parentPhone' field)
-                $phoneNumber = $data['phone'] ?? $data['parentPhone'] ?? null;
-                if (!empty($phoneNumber)) {
-                    // Check if phone number already exists, if not create new
-                    $phone = PhoneNumber::firstOrCreate(
-                        ['phone_number' => $phoneNumber],
-                        ['phone_number' => $phoneNumber]
-                    );
-                    $parent->phoneNumbers()->syncWithoutDetaching([$phone->id => ['is_primary' => true]]);
+            // Create or find guardian (primary contact with phone)
+            $guardian = null;
+            $phoneNumber = $data['phone'] ?? $data['parentPhone'] ?? null;
+            
+            // First, try to find existing guardian by phone number
+            if (!empty($phoneNumber)) {
+                $phone = PhoneNumber::where('phone_number', $phoneNumber)->first();
+                if ($phone) {
+                    $guardian = Guardian::whereHas('phoneNumbers', function($query) use ($phoneNumber) {
+                        $query->where('phone_number', $phoneNumber);
+                    })->first();
                 }
             }
+            
+            // Also try to find by email if provided
+            $parentEmail = $data['parentEmail'] ?? null;
+            if (!$guardian && !empty($parentEmail)) {
+                $guardian = Guardian::where('email', $parentEmail)->first();
+            }
+            
+            // If guardian exists and we have guardian data, update; if guardian doesn't exist, create new
+            if (!empty($data['parentName'])) {
+                if ($guardian) {
+                    $guardian->update([
+                        'first_name' => $data['parentName'] ?? '',
+                        'last_name' => $data['parentLastName'] ?? '',
+                        'email' => $data['parentEmail'] ?? null,
+                        'birthday' => $data['parentBirthday'] ?? null,
+                        'relationship' => $data['guardianRelationship'] ?? 'parent',
+                    ]);
+                } else {
+                    $guardian = Guardian::create([
+                        'first_name' => $data['parentName'] ?? '',
+                        'last_name' => $data['parentLastName'] ?? '',
+                        'email' => $data['parentEmail'] ?? null,
+                        'birthday' => $data['parentBirthday'] ?? null,
+                        'relationship' => $data['guardianRelationship'] ?? 'parent',
+                    ]);
+                }
 
-            // Create or find guardian (flat field names: guardianName, guardianLastName, guardianPhone)
-            $guardian = null;
-            if (!empty($data['guardianName'])) {
-                $guardian = Guardian::create([
+                // Save guardian phone if provided (primary contact has the phone)
+                if (!empty($phoneNumber)) {
+                    // Find existing phone or create new
+                    $phone = PhoneNumber::where('phone_number', $phoneNumber)->first();
+                    if (!$phone) {
+                        $phone = PhoneNumber::create(['phone_number' => $phoneNumber]);
+                    }
+                    $guardian->phoneNumbers()->syncWithoutDetaching([$phone->id => ['is_primary' => true]]);
+                }
+            } elseif ($guardian) {
+                // Guardian fields are empty but we found guardian by phone - keep existing guardian
+            }
+
+            // Create or find parent (secondary contact, no phone)
+            $parent = null;
+            // Only create parent if guardianName AND (email OR it's explicitly provided)
+            // This prevents creating parent records with empty email from auto-filled data
+            if (!empty($data['guardianName']) && !empty($data['guardianEmail'])) {
+                $parent = ParentInfo::create([
                     'first_name' => $data['guardianName'] ?? '',
                     'last_name' => $data['guardianLastName'] ?? '',
                     'email' => $data['guardianEmail'] ?? null,
                     'birthday' => $data['guardianBirthday'] ?? null,
-                    'relationship' => $data['guardianRelationship'] ?? 'other',
                 ]);
-
-                // Save guardian phone if provided
-                if (!empty($data['guardianPhone'])) {
-                    // Check if phone number already exists, if not create new
-                    $phone = PhoneNumber::firstOrCreate(
-                        ['phone_number' => $data['guardianPhone']],
-                        ['phone_number' => $data['guardianPhone']]
-                    );
-                    $guardian->phoneNumbers()->syncWithoutDetaching([$phone->id => ['is_primary' => true]]);
-                }
 
                 // Link parent and guardian if both exist
                 if ($parent && $guardian) {
-                    $parent->guardians()->attach($guardian->id);
+                    $guardian->parentInfos()->attach($parent->id);
                 }
             }
 
@@ -103,6 +125,7 @@ class PlayHouseController extends Controller
                         'birthday' => $childData['birthday'] ?? null,
                         'playtime_duration' => $playDuration,
                         'price' => $price,
+                        'add_socks' => $childData['addSocks'] ?? false,
                     ]);
                     $savedChildren[] = $child;
                 }
@@ -135,23 +158,86 @@ class PlayHouseController extends Controller
         }
     }
 
+    public function checkPhone($phoneNum)
+    {
+        // Check if phone number exists in guardians (primary contact)
+        $guardian = \App\Models\Guardian::whereHas('phoneNumbers', function($query) use ($phoneNum) {
+            $query->where('phone_number', $phoneNum);
+        })->first();
+        
+        if ($guardian) {
+            return response()->json([
+                'isExisting' => true,
+                'type' => 'guardian',
+                'name' => $guardian->first_name,
+                'last_name' => $guardian->last_name,
+            ]);
+        }
+        
+        // Check in parent_info table
+        $parent = \App\Models\ParentInfo::whereHas('phoneNumbers', function($query) use ($phoneNum) {
+            $query->where('phone_number', $phoneNum);
+        })->first();
+        
+        if ($parent) {
+            return response()->json([
+                'isExisting' => true,
+                'type' => 'parent',
+                'name' => $parent->first_name,
+                'last_name' => $parent->last_name,
+            ]);
+        }
+        
+        return response()->json([
+            'isExisting' => false,
+            'name' => null,
+        ]);
+    }
+
     public function makeOtp(Request $request)
     {
-        $request->validate(['phone' => 'required|string|max:20']);
+        try {
+            $request->validate(['phone' => 'required|string|max:20']);
 
-        $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
+            $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
+            $phone = $request->phone;
 
-        $phoneRecord = PhoneNumber::create([
-            'phone_number' => $request->phone,
-            'otp_code' => $OTP,
-            'otp_expires_at' => Carbon::now()->addMinutes(5)
-        ]);
+            // Check if phone number already exists
+            $existingPhone = PhoneNumber::where('phone_number', $phone)->first();
+            
+            if ($existingPhone) {
+                // Update existing record with new OTP
+                $existingPhone->update([
+                    'otp_code' => $OTP,
+                    'otp_expires_at' => Carbon::now()->addMinutes(5),
+                    'is_verified' => false
+                ]);
+                
+                return response()->json([
+                    'generated' => true,
+                    'id' => $existingPhone->id,
+                    'code' => $OTP
+                ]);
+            }
 
-        return response()->json([
-            'generated' => true,
-            'id' => $phoneRecord->id,
-            'code' => $OTP
-        ]);
+            // Create new OTP record
+            $phoneRecord = PhoneNumber::create([
+                'phone_number' => $phone,
+                'otp_code' => $OTP,
+                'otp_expires_at' => Carbon::now()->addMinutes(5)
+            ]);
+
+            return response()->json([
+                'generated' => true,
+                'id' => $phoneRecord->id,
+                'code' => $OTP
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'generated' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function verifyOTP(Request $request, $phoneNum)
@@ -176,16 +262,92 @@ class PlayHouseController extends Controller
             'otp_verified_at' => Carbon::now()
         ]);
         
-        //Temporary
-        //$isOldUser = M06::where('mobileno', $phoneNum)->first();
-        $isOldUser = $phoneNum === '09785671234' ? true : false;
-
-        //Set old user as true to simulate "old user" feature
+        // Check if user is a returnee by searching in guardians and parent_info tables
+        $returneeData = null;
+        $phoneNumber = $phoneNum;
+        
+        // Search in guardians table first (primary contact with phone)
+        $guardianWithPhone = \App\Models\Guardian::whereHas('phoneNumbers', function($query) use ($phoneNumber) {
+            $query->where('phone_number', $phoneNumber);
+        })->with(['children', 'phoneNumbers', 'parentInfos'])->first();
+        
+        if ($guardianWithPhone) {
+            $returneeData = [
+                'isReturnee' => true,
+                'type' => 'guardian',
+                'guardian' => [
+                    'id' => $guardianWithPhone->id,
+                    'first_name' => $guardianWithPhone->first_name,
+                    'last_name' => $guardianWithPhone->last_name,
+                    'email' => $guardianWithPhone->email,
+                    'relationship' => $guardianWithPhone->relationship,
+                ],
+                'children' => $guardianWithPhone->children->map(function($child) {
+                    return [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                        'birthday' => $child->birthday,
+                        'playtime_duration' => $child->playtime_duration,
+                        'price' => $child->price,
+                        'add_socks' => $child->add_socks ?? false,
+                    ];
+                })->toArray(),
+                'parent' => $guardianWithPhone->parentInfos->map(function($parent) {
+                    return [
+                        'id' => $parent->id,
+                        'first_name' => $parent->first_name,
+                        'last_name' => $parent->last_name,
+                        'email' => $parent->email,
+                        'birthday' => $parent->birthday,
+                    ];
+                })->first() ?? null,
+            ];
+        } else {
+            // Search in parent_info table (secondary)
+            $parentWithPhone = \App\Models\ParentInfo::whereHas('phoneNumbers', function($query) use ($phoneNumber) {
+                $query->where('phone_number', $phoneNumber);
+            })->with(['children', 'phoneNumbers', 'guardians'])->first();
+            
+            if ($parentWithPhone) {
+                $returneeData = [
+                    'isReturnee' => true,
+                    'type' => 'parent',
+                    'parent' => [
+                        'id' => $parentWithPhone->id,
+                        'first_name' => $parentWithPhone->first_name,
+                        'last_name' => $parentWithPhone->last_name,
+                        'email' => $parentWithPhone->email,
+                        'birthday' => $parentWithPhone->birthday,
+                    ],
+                    'children' => $parentWithPhone->children->map(function($child) {
+                        return [
+                            'id' => $child->id,
+                            'name' => $child->name,
+                            'birthday' => $child->birthday,
+                            'playtime_duration' => $child->playtime_duration,
+                            'price' => $child->price,
+                            'add_socks' => $child->add_socks ?? false,
+                        ];
+                    })->toArray(),
+                    'guardians' => $parentWithPhone->guardians->map(function($guardian) {
+                        return [
+                            'id' => $guardian->id,
+                            'first_name' => $guardian->first_name,
+                            'last_name' => $guardian->last_name,
+                            'relationship' => $guardian->relationship,
+                        ];
+                    })->toArray(),
+                ];
+            }
+        }
+        
+        $isOldUser = $returneeData !== null;
 
         return response()->json([
             'isCorrectOtp' => true,
             'isOldUser' => $isOldUser,
             'phoneNum' => $phoneNum,
+            'returneeData' => $returneeData,
         ]);
     }
 
@@ -209,20 +371,76 @@ class PlayHouseController extends Controller
 
     public function searchReturnee($phoneNumber)
     {
-        //Search by number query later
-
-        //Simulate old user data
-        $parentData = [
-            'parent_name' => 'Romeo',
-            'parent_lastname' => 'Agustus',
-            'parent_email' => 'agustusmeo@gmail.com',
-            'parent_birthday' => '2003-01-17'
-        ];
-
+        // Search in parent_info table via phone_numbers relationship
+        $parent = \App\Models\ParentInfo::whereHas('phoneNumbers', function($query) use ($phoneNumber) {
+            $query->where('phone_number', $phoneNumber);
+        })->with(['children', 'phoneNumbers', 'guardians'])->first();
+        
+        if ($parent) {
+            return response()->json([
+                'userLoaded' => true,
+                'found' => true,
+                'type' => 'parent',
+                'data' => [
+                    'parent_id' => $parent->id,
+                    'parent_name' => $parent->first_name,
+                    'parent_lastname' => $parent->last_name,
+                    'parent_email' => $parent->email,
+                    'parent_birthday' => $parent->birthday,
+                ],
+                'children' => $parent->children->map(function($child) {
+                    return [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                        'birthday' => $child->birthday,
+                        'playtime_duration' => $child->playtime_duration,
+                        'price' => $child->price,
+                    ];
+                })->toArray(),
+                'guardians' => $parent->guardians->map(function($guardian) {
+                    return [
+                        'id' => $guardian->id,
+                        'first_name' => $guardian->first_name,
+                        'last_name' => $guardian->last_name,
+                        'relationship' => $guardian->relationship,
+                    ];
+                })->toArray(),
+            ]);
+        }
+        
+        // Search in guardians table
+        $guardian = \App\Models\Guardian::whereHas('phoneNumbers', function($query) use ($phoneNumber) {
+            $query->where('phone_number', $phoneNumber);
+        })->with(['children', 'phoneNumbers'])->first();
+        
+        if ($guardian) {
+            return response()->json([
+                'userLoaded' => true,
+                'found' => true,
+                'type' => 'guardian',
+                'data' => [
+                    'guardian_id' => $guardian->id,
+                    'guardian_name' => $guardian->first_name,
+                    'guardian_lastname' => $guardian->last_name,
+                    'guardian_relationship' => $guardian->relationship,
+                ],
+                'children' => $guardian->children->map(function($child) {
+                    return [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                        'birthday' => $child->birthday,
+                        'playtime_duration' => $child->playtime_duration,
+                        'price' => $child->price,
+                    ];
+                })->toArray(),
+            ]);
+        }
+        
+        // Not found
         return response()->json([
-            'userLoaded' => true,
-            'data' => $parentData
+            'userLoaded' => false,
+            'found' => false,
+            'message' => 'Phone number not found in our database'
         ]);
-
     }
 }

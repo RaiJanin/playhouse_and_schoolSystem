@@ -15,6 +15,7 @@ Route::get('/registration', function () { return view('pages.playhouse-registrat
 Route::prefix('v2')->group(function () {
 
     Route::get('/', function () { return view('v2.pages.playhouse-landing'); })->name('v2.playhouse.start');
+    Route::get('/selection', function () { return view('v2.pages.mockup.playhouse-selection'); })->name('v2.playhouse.selection');
     Route::get('/registration', function () { return view('v2.pages.playhouse-registration'); })->name('v2.playhouse.registration');
 
 });

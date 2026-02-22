@@ -16,6 +16,7 @@ class Child extends Model
         'birthday',
         'playtime_duration',
         'price',
+        'add_socks',
     ];
 
     protected $casts = [
