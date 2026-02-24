@@ -47,8 +47,6 @@ const container = document.getElementById("items-container");
 const modal = document.getElementById('modal-container');
 const saveItemsBtn = document.getElementById('save-btn');
 const closeModal = document.querySelectorAll('.close-modal');
-const cartContainer = document.getElementById('cart-container');
-const itemsCartContainer = document.getElementById('items-cart-container');
 
 export let mergedItems;
 

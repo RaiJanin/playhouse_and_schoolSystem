@@ -1,10 +1,11 @@
 /**
  * 
- * @param {'longDate'|'shortDate'|'iso'|'timeOnly24'|'timeOnly12'} options 
+ * @param {'longDate'|'shortDate'|'iso'|'slashDate'|'timeOnly24'|'timeOnly12'} options 
  *  Date type to use
  * - longDate = "January 6, 2025"
  * - shortDate = "Jan. 6, 2025"
  * - iso = "2025-01-06"
+ * - slashDate = "01/06/2025"
  * - timeOnly24 = "14:30"
  * - timeOnly12 = "2:30pm"
  * 

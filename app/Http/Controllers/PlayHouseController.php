@@ -72,6 +72,7 @@ class PlayHouseController extends Controller
         $phoneVerified = PhoneNumber::where('phone_number', $phoneNum)
                                 ->where('otp_code', $request->otp)
                                 ->where('is_verified', false)
+                                ->where('otp_expires_at', '>', Carbon::now())
                                 ->first();
 
         if(!$phoneVerified) 

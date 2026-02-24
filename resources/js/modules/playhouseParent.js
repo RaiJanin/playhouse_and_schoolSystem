@@ -24,17 +24,6 @@ addguardianCheckBx.onChange(checked => {
     guardianFields.forEach(field => {
         if (field) field.required = checked;
     });
-
-    //Redundant, parent fields are required on default
-    // parentFields.forEach(field => {
-    //     if (!field) return;
-    //     field.required = !checked;
-
-    //     if (checked) {
-    //         field.classList.remove('border-red-600');
-    //         field.classList.add('border-teal-500');
-    //     }
-    // });
     
     if(!addguardianCheckBx.isChecked()) {
         guardianFields.forEach(field => {
@@ -65,16 +54,3 @@ export const confirmGuardianCheckBx = new CustomCheckbox('confirm-guardian-check
 confirmGuardianCheckBx.setLabel(`
     This guardian is allowed to pick up this child
 `);
-//ALLOW form to proceed even unchecked
-// confirmGuardianCheckBx.onChange(checked => {
-    
-//     // const hidden = document.getElementById('guardianAuthorized');
-//     // if (hidden) hidden.value = checked ? '1' : '0';
-
-//     const info = document.getElementById('confirm-guardian-info');
-//     if (info) {
-//         info.innerHTML = checked
-//             ? '<span class="text-green-600 font-semibold">Guardian authorized for pick-up</span>'
-//             : '<span class="text-red-600 font-semibold">You must authorize the guardian for pick-up before proceeding.</span>';
-//     }
-// });

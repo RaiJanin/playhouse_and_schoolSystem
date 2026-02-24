@@ -73,17 +73,16 @@ document.addEventListener('DOMContentLoaded', function () {
             filledLine.style.width = `${lineWidth}%`;
 
             if (direction === 'next' && currentStep < steps.length - 1) {
-                if(override) {
-                    nextStepIndex = currentStep + override;
-                    nextStepEl = steps[nextStepIndex];
-                }
-                nextStepIndex = currentStep + 1;
-            } else if (direction === 'prev' && currentStep > 0) {
-                nextStepIndex = currentStep - 1;
-            } else {
+                nextStepIndex = override ? currentStep + override : currentStep + 1;
+            } 
+            else if (direction === 'prev' && currentStep > 0) {
+                nextStepIndex = override ? currentStep - override : currentStep - 1;
+            } 
+            else {
                 return;
             }
 
+            nextStepIndex = Math.max(0, Math.min(nextStepIndex, steps.length - 1));
             nextStepEl = steps[nextStepIndex];
 
             if (direction === 'next') {
@@ -167,43 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     showSteps(currentStep + 2,'next', 2);
                     return;
-                }
-            }
-
-            //ALLOW form to proceed even unchecked
-            // High-priority gate: when Add Guardian is used, confirm-guardian MUST be authorized
-            // if (getCurrentStepName() === 'parent' && typeof addguardianCheckBx !== 'undefined' && addguardianCheckBx.isChecked()) {
-            //     if (!confirmGuardianCheckBx.isChecked()) {
-            //         const infoEl = document.getElementById('confirm-guardian-info');
-            //         if (infoEl) {
-            //             infoEl.innerHTML = '<span class="text-red-600 font-semibold">To authorize this guardian and proceed to the next step, please click the red "X" icon</span>';
-            //         }
-            //         valid = false;
-            //     }
-            // }
-
-            // Gate: socks items must be applied before proceeding from step 4
-            if (getCurrentStepName() === 'children') {
-                const socksInfoEl = document.getElementById('socks-apply-info');
-                if (socksInfoEl) {
-                    socksInfoEl.classList.add('hidden');
-                    socksInfoEl.innerHTML = '';
-                }
-                const itemEntries = document.querySelectorAll('.item-entry');
-                const hasUnapplied = Array.from(itemEntries).some((entry) => {
-                    const small = parseInt(entry.querySelector('input[name*="[adult][small]"]')?.value || 0);
-                    const medium = parseInt(entry.querySelector('input[name*="[adult][medium]"]')?.value || 0);
-                    const large = parseInt(entry.querySelector('input[name*="[adult][large]"]')?.value || 0);
-                    const childQty = parseInt(entry.querySelector('input[name*="[child][qty]"]')?.value || 0);
-                    const totalQty = small + medium + large + childQty;
-                    return totalQty > 0 && !entry.dataset.appliedQuantities;
-                });
-                if (hasUnapplied) {
-                    valid = false;
-                    if (socksInfoEl) {
-                        socksInfoEl.innerHTML = 'Please click the <strong>Apply</strong> button on your socks item(s) before proceeding.';
-                        socksInfoEl.classList.remove('hidden');
-                    }
                 }
             }
             
