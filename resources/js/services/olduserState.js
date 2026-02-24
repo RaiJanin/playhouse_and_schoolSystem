@@ -19,6 +19,7 @@ export function autoFillFields(data) {
     document.getElementById('parentLastName').value = data.oldUserData.lastname;
     document.getElementById('parentEmail').value = data.oldUserData.email;
     document.getElementById('parentBirthday').value = dateToString('slashDate', data.oldUserData.birthday);
+    document.getElementById('parentBirthday-hidden').value = dateToString('iso', data.oldUserData.birthday);
 
     if(data.oldUserData.guardians.length >= 1) {
         data.oldUserData.guardians.forEach(guardian => {
@@ -26,6 +27,7 @@ export function autoFillFields(data) {
             document.getElementById('guardianLastName').value = guardian.lastname;
             document.getElementById('guardianPhone').value = guardian.mobileno;
             document.getElementById('add-guardian-checkbox').classList.add('hidden');
+            addguardianCheckBx.toggle();
 
             if(guardian.guardianauthorized) {
                 confirmGuardianCheckBx.toggle();
@@ -36,101 +38,99 @@ export function autoFillFields(data) {
     }
 }
 
-export async function autoFillChildren(children) {
-    const container = document.getElementById('childrenContainer');
-    const addBtn = document.getElementById('addChildBtn');
-    const existedChild = document.querySelector('exist-children');
+export async function autoFillChildren(data) {
+    console.log("Children data: ");
+    console.log(data);
     
-    // if (!container || !addBtn) {
-    //     console.error('Children container or add button not found');
-    //     return;
-    // }
-    
-    // Get the first child entry (index 0) to populate
-    //const existingEntries = container.querySelectorAll('.child-entry');
+    const existedChild = document.getElementById('exist-children');
+    const newCustomer = document.getElementById('new-customer-header');
+    const returneeCustomer = document.getElementById('returnee-customer-header');
+    const addAnotherMessage = document.getElementById('existing-children-add-m');
 
-    children.oldUserData.children.forEach(child => {
-        existedChild.innerHTML += `
-        
+    existedChild.hidden = false;
+    newCustomer.hidden = true;
+    returneeCustomer.hidden = false;
+    addAnotherMessage.hidden = false;
+
+    data.forEach((child, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'exist-child-el flex flex-col p-3 gap-6 border border-teal-600 rounded-lg';
+
+        wrapper.innerHTML = `
+            <div>
+                <button type="button" class="add-exist-child text-start text-teal-700 font-semibold py-0 px-4 w-25 rounded-full mb-2 hover:text-teal-500 transition-all duration-300">
+                    <i class="check-i fa-solid fa-plus"></i> Add
+                </button>
+                <p class="block text-base font-semibold text-gray-900 mb-2">Name</p>
+                <h3 class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300">${child.firstname}</h3>
+            </div>
         `;
-    })
-    
-    // For each child in the data, either populate existing or create new entries
-    // for (let i = 0; i < children.length; i++) {
-    //     const child = children[i];
+        existedChild.appendChild(wrapper);
+
+        let selectedChild = false;
+        const checkIcon = wrapper.querySelector('.check-i')
+        const addExistChildBtn = wrapper.querySelector('.add-exist-child');
         
-    //     if (i === 0 && existingEntries.length > 0) {
-    //         // Populate the first existing entry
-    //         const firstEntry = existingEntries[0];
-    //         const nameInput = firstEntry.querySelector('input[name*="[name]"]');
-    //         const birthdayInput = firstEntry.querySelector('input[data-birthday]');
-    //         const birthdayHidden = firstEntry.querySelector('input[name*="[birthday]"]');
-    //         const durationSelect = firstEntry.querySelector('select[name*="[playDuration]"]');
-    //         const socksCheckbox = firstEntry.querySelector('[id*="add-socks-child-checkbox"]');
-    //         const socksIcon = firstEntry.querySelector('[id*="add-socks-child-icon"]');
-    //         const socksHidden = firstEntry.querySelector('input[name*="[addSocks]"]');
-            
-    //         if (nameInput) nameInput.value = child.firstname || '';
-    //         if (birthdayInput && child.birthday) {
-    //             birthdayInput.value = dateToString('slashDate', child.birthday);
-    //             // Mark as valid for form validation
-    //             birthdayInput.classList.remove('birthday-invalid');
-    //             birthdayInput.classList.add('birthday-valid');
-    //             birthdayInput.setAttribute('data-birthday-valid', 'true');
-    //             birthdayInput.removeAttribute('aria-invalid');
-    //         }
-    //         if (birthdayHidden) birthdayHidden.value = child.birthday || '';
-    //         if (durationSelect && child.playtime_duration) {
-    //             durationSelect.value = child.playtime_duration.toString();
-    //         }
-    //         // Auto-fill socks if available
-    //         if (child.add_socks && socksCheckbox && socksIcon) {
-    //             socksCheckbox.classList.remove('fa-square');
-    //             socksCheckbox.classList.add('fa-check-square', 'text-green-500');
-    //             if (socksHidden) socksHidden.value = '1';
-    //         }
-    //     } else {
-    //         // Click add button to create new entry
-    //         addBtn.click();
-            
-    //         // Wait for DOM update then populate the new entry
-    //         await new Promise(resolve => setTimeout(resolve, 100));
-            
-    //         const updatedEntries = container.querySelectorAll('.child-entry');
-    //         if (updatedEntries.length > i) {
-    //             const entry = updatedEntries[i];
-    //             const nameInput = entry.querySelector('input[name*="[name]"]');
-    //             const birthdayInput = entry.querySelector('input[data-birthday]');
-    //             const birthdayHidden = entry.querySelector('input[name*="[birthday]"]');
-    //             const durationSelect = entry.querySelector('select[name*="[playDuration]"]');
-    //             const socksCheckbox = entry.querySelector('[id*="add-socks-child-checkbox"]');
-    //             const socksIcon = entry.querySelector('[id*="add-socks-child-icon"]');
-    //             const socksHidden = entry.querySelector('input[name*="[addSocks]"]');
-                
-    //             if (nameInput) nameInput.value = child.name || '';
-    //             if (birthdayInput && child.birthday) {
-    //                 birthdayInput.value = dateToString('slashDate', child.birthday);
-    //                 // Mark as valid for form validation
-    //                 birthdayInput.classList.remove('birthday-invalid');
-    //                 birthdayInput.classList.add('birthday-valid');
-    //                 birthdayInput.setAttribute('data-birthday-valid', 'true');
-    //                 birthdayInput.removeAttribute('aria-invalid');
-    //             }
-    //             if (birthdayHidden) birthdayHidden.value = child.birthday || '';
-    //             if (durationSelect && child.playtime_duration) {
-    //                 durationSelect.value = child.playtime_duration.toString();
-    //             }
-    //             // Auto-fill socks if available
-    //             if (child.add_socks && socksCheckbox && socksIcon) {
-    //                 socksCheckbox.classList.remove('fa-square');
-    //                 socksCheckbox.classList.add('fa-check-square', 'text-green-500');
-    //                 if (socksHidden) socksHidden.value = '1';
-    //             }
-    //         }
-    //     }
-    // }
-    
+        addExistChildBtn.addEventListener('click', () => {
+            selectedChild = !selectedChild;
+
+            if(selectedChild) {
+                checkIcon.classList.remove('fa-plus');
+                addExistChildBtn.classList.remove('text-teal-700');
+                checkIcon.classList.add('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
+                addExistChildBtn.classList.add('text-green-500');
+
+                wrapper.insertAdjacentHTML('beforeend', attachFields(child, index));
+            } else {
+                checkIcon.classList.remove('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
+                addExistChildBtn.classList.remove('text-green-500');
+                checkIcon.classList.add('fa-plus');
+                addExistChildBtn.classList.add('text-teal-700');
+
+                const fields = wrapper.querySelector('.attached-fields');
+                if (fields) fields.remove();
+            }
+        });
+    });
+
     console.log('Children auto-filled successfully');
+    removeFirstChild(data.length);
+}
+
+function attachFields(data, index) {
+    return `
+        <div class="attached-fields flex flex-col">
+            <input type="name" name="child[${index}][name]" value="${data.firstname}" hidden required/>
+            <input type="hidden" name="child[${index}][birthday]" value="${data.birthday}"/>
+            <div class="h-full">
+                <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
+                <div class="relative">
+                    <select name="child[${index}][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                        <option value="1">1 Hour = ₱100</option>  
+                        <option value="2">2 Hours = ₱200</option> 
+                        <option value="3">3 Hours = ₱300</option>
+                        <option value="4">4 Hours = ₱400</option>
+                        <option value="unlimited">Unlimited = ₱500</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="h-full">
+                <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
+                <div class="relative">
+                    <select name="child[${index}][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                        <option value="0">No</option>  
+                        <option value="1">Yes</option> 
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 export function enableEditInfo (enable = true) {

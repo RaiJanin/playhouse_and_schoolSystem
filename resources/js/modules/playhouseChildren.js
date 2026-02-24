@@ -100,6 +100,13 @@ window.document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function removeFirstChild(index) {
+        childEntries = index;
+
+        document.getElementById('first-child').remove();
+    }
+    window.removeFirstChild = removeFirstChild;
+
     function countSelectedSocks() {
         const socksInputs = container.querySelectorAll('input[name$="[addSocks]"]');
 
@@ -116,19 +123,10 @@ window.document.addEventListener('DOMContentLoaded', function() {
     }
     window.countSelectedSocks = countSelectedSocks;
 
-    function updateRemoveButtons() {
-        const entries = container.querySelectorAll('.child-entry');
-        entries.forEach((e) => {
-            const btn = e.querySelector('.remove-child');
-            if (btn) btn.style.display = (entries.length > 1 ? 'inline' : 'none');
-        });
-    }
-
     addBtn.addEventListener('click', () => {
         const newEntry = createChildEntry();
         container.appendChild(newEntry.entry);
         attachSocksCheckbox(newEntry.entry, newEntry.index);
         newEntry.entry.querySelector('.child-first');
-        updateRemoveButtons();
     });
 });

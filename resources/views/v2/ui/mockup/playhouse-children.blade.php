@@ -43,35 +43,63 @@
         </p>
     </div>
     <div id="childrenForm" class="space-y-5">
-        <div class="exist-children grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-3 border border-teal-600 rounded-lg" hidden>
+        <div id="exist-children" class="flex flex-col gap-2">
             <div>
-                <p class="block text-base font-semibold text-gray-900 mb-2">Name</p>
-                <h3 class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300">Jane Abrenica</h3>
-            </div>
-            <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
-                <div class="relative">
-                    <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                        <option value="1">1 Hour = ₱100</option>  
-                        <option value="2">2 Hours = ₱200</option> 
-                        <option value="3">3 Hours = ₱300</option>
-                        <option value="4">4 Hours = ₱400</option>
-                        <option value="unlimited">Unlimited = ₱500</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
-                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-3 border border-teal-600 rounded-lg">
+                    <div>
+                        <button type="button" class="add-exist-child text-start text-teal-700 font-semibold py-0 px-4 w-25 rounded-full mb-2 hover:text-teal-500 transition-all duration-300">
+                            <i class="fa-solid fa-plus"></i> Add
+                        </button>
+                        <p hidden class="block text-base font-semibold text-gray-900 mb-2">Name</p>
+                        <h3 class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300">Jane Abrenica</h3>
                     </div>
-                </div>
-            </div>
-            <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
-                <div class="relative">
-                    <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                        <option value="0">No</option>  
-                        <option value="1">Yes</option> 
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
-                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    <script>
+                        let selectedChild = false;
+                        const addExistChildBtn = document.querySelector('.add-exist-child');
+                        
+                        document.querySelector('.add-exist-child').addEventListener('click', () => {
+                            selectedChild = !selectedChild;
+
+                            if(selectedChild) {
+                                document.querySelector('.fa-solid').classList.remove('fa-plus');
+                                addExistChildBtn.classList.remove('text-teal-700');
+                                document.querySelector('.fa-solid').classList.add('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
+                                addExistChildBtn.classList.add('text-green-500');
+                            } else {
+                                document.querySelector('.fa-solid').classList.remove('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
+                                addExistChildBtn.classList.remove('text-green-500');
+                                document.querySelector('.fa-solid').classList.add('fa-plus');
+                                addExistChildBtn.classList.add('text-teal-700');
+                            }
+                            
+                        });
+                    </script>
+                    <div hidden>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
+                        <div class="relative">
+                            <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                                <option value="1">1 Hour = ₱100</option>  
+                                <option value="2">2 Hours = ₱200</option> 
+                                <option value="3">3 Hours = ₱300</option>
+                                <option value="4">4 Hours = ₱400</option>
+                                <option value="unlimited">Unlimited = ₱500</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
+                        <div class="relative">
+                            <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                                <option value="0">No</option>  
+                                <option value="1">Yes</option> 
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

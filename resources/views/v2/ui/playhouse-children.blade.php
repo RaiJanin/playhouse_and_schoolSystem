@@ -36,51 +36,21 @@
     <div id="returnee-customer-header" hidden>
         <h1 class="text-center text-2xl text-teal-700 font-bold">
             <span>Welcome back </span>
-            <span class="text-teal-600">Janino Abrenica</span>
+            <span id="parent-name" class="text-teal-600">Janino Abrenica</span>
         </h1>
         <p class="text-center text-gray-600 mb-5 font-semibold">
             Who would you like to check in
         </p>
     </div>
     <div id="childrenForm" class="space-y-5">
-        <div class="exist-children grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-3 border border-teal-600 rounded-lg" hidden>
-            <div>
-                <p class="block text-base font-semibold text-gray-900 mb-2">Name</p>
-                <h3 class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300">Jane Abrenica</h3>
-            </div>
-            <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
-                <div class="relative">
-                    <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                        <option value="1">1 Hour = ₱100</option>  
-                        <option value="2">2 Hours = ₱200</option> 
-                        <option value="3">3 Hours = ₱300</option>
-                        <option value="4">4 Hours = ₱400</option>
-                        <option value="unlimited">Unlimited = ₱500</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
-                        <i class="fa-solid fa-chevron-down text-sm"></i>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
-                <div class="relative">
-                    <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                        <option value="0">No</option>  
-                        <option value="1">Yes</option> 
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
-                        <i class="fa-solid fa-chevron-down text-sm"></i>
-                    </div>
-                </div>
-            </div>
+        <div id="exist-children" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-3" hidden>
+
         </div>
-        <p id="exixting-children-add-m" class="text-start text-gray-600 mt-5 font-semibold" hidden>
+        <p id="existing-children-add-m" class="text-start text-gray-600 mt-5 font-semibold" hidden>
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
-            <div class="child-entry grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-3 border border-teal-600 rounded-lg">
+            <div id="first-child" class="child-entry grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-3 border border-teal-600 rounded-lg">
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Name <span class="text-red-600">*</span></label>
                     <input type="text" name="child[0][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>

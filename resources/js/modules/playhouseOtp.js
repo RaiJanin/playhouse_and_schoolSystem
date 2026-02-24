@@ -2,7 +2,8 @@ import { getOrDelete, submitData } from "../services/requestApi.js";
 
 import {oldUser, 
         autoFillFields, 
-        enableEditInfo 
+        enableEditInfo, 
+        autoFillChildren
 } from "../services/olduserState.js";
 
 import { API_ROUTES } from "../config/api.js";
@@ -112,8 +113,8 @@ function generateOtpChoices(correctOtp, otpId) {
                             
                             // Do not skip children fields, ordering happens there
                             // Auto-fill children fields (already done in autoFillFields, but ensure it's called)
-                            if (returneeData && returneeData.children) {
-                                autoFillFields(returneeData);
+                            if (returneeData && returneeData.oldUserData.children.length >= 1) {
+                                autoFillChildren(returneeData.oldUserData.children);
                             }
                             
                             // // Finally go to review step (Step 5)
