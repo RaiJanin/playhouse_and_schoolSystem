@@ -1,6 +1,10 @@
 {
   "resources/css/app.css": {
+<<<<<<< HEAD
     "file": "assets/app-TxrSMWkX.css",
+=======
+    "file": "assets/app-CqWi8J67.css",
+>>>>>>> 8126022f77b398f55bb7fdcffb16c918ace83c23
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -8,7 +12,11 @@
     ]
   },
   "resources/js/app.js": {
+<<<<<<< HEAD
     "file": "assets/app-GVm26Iij.js",
+=======
+    "file": "assets/app-CnzmpG_V.js",
+>>>>>>> 8126022f77b398f55bb7fdcffb16c918ace83c23
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

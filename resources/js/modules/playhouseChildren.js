@@ -75,7 +75,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
     }
 
     const addSocksChild = new CustomCheckbox('add-socks-child-checkbox-0', 'add-socks-child-icon-0', 'add-socks-child-info-0');
-    addSocksChild.setLabel(`Add Socks`);
+    addSocksChild.setLabel(`+ Add Socks`);
 
     addSocksChild.onChange(() => {
         const isChecked = addSocksChild.isChecked();
@@ -89,7 +89,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
        
         const addedAddSocksChild = new CustomCheckbox(`add-socks-child-checkbox-${index}`, `add-socks-child-icon-${index}`, `add-socks-child-info-${index}`);
 
-        addedAddSocksChild.setLabel(`Add Socks`);
+        addedAddSocksChild.setLabel(`+ Add Socks`);
 
         addedAddSocksChild.onChange(() => {
             const isChecked = addedAddSocksChild.isChecked();

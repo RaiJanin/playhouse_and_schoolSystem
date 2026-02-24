@@ -67,4 +67,53 @@
             </div>
         </div>
     </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check for returnee query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+        const phone = urlParams.get('phone');
+        
+        if (type === 'returnee' && phone) {
+            console.log('Returnee detected with phone:', phone);
+            
+            // Pre-fill the phone input
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+                phoneInput.value = phone;
+                phoneInput.readOnly = true;
+                
+                // Mark as returnee immediately
+                if (window.oldUser) {
+                    window.oldUser.isOldUser = true;
+                    window.oldUser.phoneNumber = phone;
+                    console.log('Set oldUser.isOldUser = true');
+                }
+                
+                // Auto-click Next button after a short delay to ensure JS is loaded
+                setTimeout(function() {
+                    const nextBtn = document.getElementById('next-btn');
+                    if (nextBtn) {
+                        console.log('Auto-clicking Next button to generate OTP');
+                        nextBtn.click();
+                    } else {
+                        console.log('Next button not found yet, waiting...');
+                        // Try again after a bit
+                        setTimeout(function() {
+                            const retryBtn = document.getElementById('next-btn');
+                            if (retryBtn) {
+                                console.log('Retrying Next button click');
+                                retryBtn.click();
+                            }
+                        }, 500);
+                    }
+                }, 500);
+            }
+            
+            // Clean up URL to remove query params (optional)
+            // window.history.replaceState({}, document.title, '/v2/registration');
+        }
+    });
+    </script>
 @endsection

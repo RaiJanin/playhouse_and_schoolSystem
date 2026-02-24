@@ -8,36 +8,69 @@
     input[type="number"] {
         -moz-appearance: textfield;
     }
+
+    /* Custom scrollbar for modal content */
+    #items-subcat-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #items-subcat-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    #items-subcat-container::-webkit-scrollbar-thumb {
+        background: #14b8a6;
+        border-radius: 4px;
+    }
+
+    #items-subcat-container::-webkit-scrollbar-thumb:hover {
+        background: #0d9488;
+    }
 </style>
 
 
 <div id="modal-container" class="fixed z-50 inset-0 overflow-y-auto hidden">
-    <div class="flex items-center justify-center min-h-screen pt-4 px-8 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-        <div class="inline-block z-50 bg-white align-middle items-center rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-5xl w-full relative">
-            <div class="flex justify-end">
-                <button type="button" class="close-modal bg-red-500 py-2 px-4 rounded-bl-lg"><i class="fa-solid fa-x text-white"></i></button>
-            </div>
-            <div class="flex flex-col bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="sm:flex sm:items-start">
-                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Category 1</h3>
-                        <div class="border-t-2 border-gray-300 w-full mt-3 mb-3"></div>
-                        <div id="items-subcat-container" class="mt-2 p-4">
-                            
-                        </div>
+        <!-- Modal Panel -->
+        <div class="inline-block z-50 bg-white align-bottom rounded-2xl shadow-2xl transform transition-all sm:my-8 sm:max-w-4xl w-full relative overflow-hidden">
+            <!-- Header with gradient -->
+            <div class="bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
                     </div>
+                    <h3 class="text-xl font-bold text-white" id="modal-title">Edit Information</h3>
                 </div>
-            </div>
-            <div class="mt-3 bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse gap-3 sm:gap-0">
-                <button type="button" id="save-btn" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-8 py-2 bg-white text-base font-medium text-gray-700 hover:border-teal-500 hover:bg-gray-100 hover:shadow-md hover:shadow-teal-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all duration-300">
-                    Save
+                <button type="button" class="close-modal bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
-                <button type="button" class="close-modal w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition">
+            </div>
+
+            <!-- Content -->
+            <div class="px-6 py-4 max-h-[60vh] overflow-y-auto" id="items-subcat-container">
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row-reverse gap-3 border-t border-gray-100">
+                <button type="button" id="save-btn" class="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-teal-700 shadow-lg shadow-teal-500/30 transition-all duration-300 transform hover:scale-[1.02]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Changes
+                </button>
+                <button type="button" class="close-modal flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-2.5 bg-white text-gray-700 font-semibold rounded-xl border-2 border-gray-200 hover:border-red-400 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     Cancel
                 </button>
             </div>

@@ -3,5 +3,6 @@ export const API_ROUTES = {
     makeOtpURL: '/api/submit/make-otp',
     verifyOtpURL: '/api/verify-otp',
     searchReturneeURL: '/api/search-returnee',
-    deleteOtpURL: '/api/delete-otp'
+    deleteOtpURL: '/api/delete-otp',
+    checkPhoneURL: '/api/check-phone'
 };

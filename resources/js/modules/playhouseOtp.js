@@ -1,5 +1,5 @@
 import { getOrDelete, submitData } from "../services/requestApi.js";
-import { oldUser } from "../services/olduserState.js";
+import { oldUser, autoFillFields } from "../services/olduserState.js";
 import { API_ROUTES } from "../config/api.js";
 
 const container = document.getElementById('otp-choices');
@@ -12,10 +12,25 @@ window.storePhone = storePhone;
 
 let otpAttempt = 0;
 
-function generateOtpChoices(correctOtp, otpId) {
+function generateOtpChoices(correctOtp, otpId, phoneNum) {
+    console.log('generateOtpChoices called with:', correctOtp, otpId);
+    
+    if (!container) {
+        console.error('OTP container not found!');
+        return;
+    }
+    
     container.innerHTML = '';
     messageDiv.textContent = '';
     messageDiv.className = 'text-center min-h-[24px] font-medium';
+    
+    // Check phone and store user type for later display
+    if (typeof window.checkPhoneAndShowMessage === 'function' && phoneNum) {
+        window.checkPhoneAndShowMessage(phoneNum, function(userData) {
+            // Store user data globally for step navigation
+            window.userDataForMessage = userData;
+        });
+    }
     
     const decoys = generateDecoys(correctOtp);
     
@@ -58,7 +73,77 @@ function generateOtpChoices(correctOtp, otpId) {
                 if(sendOtpAttempt.isOldUser) {
                     oldUser.isOldUser = sendOtpAttempt.isOldUser;
                     oldUser.phoneNumber = sendOtpAttempt.phoneNum;
+                    // Store returnee data for auto-fill
+                    if (sendOtpAttempt.returneeData) {
+                        oldUser.returneeData = sendOtpAttempt.returneeData;
+                        console.log('Returnee data found:', oldUser.returneeData);
+                    }
                 }
+
+                // Auto-advance to review step after 1 second for all users
+                setTimeout(async () => {
+                    // For old users, auto-fill fields first
+                    if (sendOtpAttempt.isOldUser) {
+                        // Get returnee data from either direct response or fetch
+                        let returneeData = null;
+                        
+                        if (sendOtpAttempt.returneeData && (sendOtpAttempt.returneeData.data || sendOtpAttempt.returneeData.parent)) {
+                            returneeData = sendOtpAttempt.returneeData;
+                        } else if (sendOtpAttempt.phoneNum) {
+                            // If no returnee data in OTP response, fetch from API
+                            try {
+                                const searchUrl = `/api/search-returnee/${sendOtpAttempt.phoneNum}`;
+                                const response = await fetch(searchUrl, {
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                                    }
+                                });
+                                returneeData = await response.json();
+                            } catch (error) {
+                                console.error('Error fetching returnee data:', error);
+                            }
+                        }
+                        
+                        // First go to parent step to populate fields
+                        if (window.showSteps) {
+                            // Step 3 = Parent
+                            window.showSteps(2, 'next');
+                            
+                            // Wait for DOM to update
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            // Auto-fill parent fields
+                            if (returneeData && returneeData.parent) {
+                                autoFillFields(returneeData);
+                            }
+                            
+                            // Then go to children step (Step 4)
+                            window.showSteps(3, 'next');
+                            
+                            // Wait for DOM to update
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            // Auto-fill children fields (already done in autoFillFields, but ensure it's called)
+                            if (returneeData && returneeData.children) {
+                                autoFillFields(returneeData);
+                            }
+                            
+                            // Finally go to review step (Step 5)
+                            window.showSteps(4, 'next');
+                            
+                            if (window.populateSummary) {
+                                window.populateSummary();
+                            }
+                        }
+                    } else {
+                        // For new users, just go to next step (+1)
+                        if (window.showSteps) {
+                            const currentStep = window.getCurrentStep ? window.getCurrentStep() : 0;
+                            window.showSteps(currentStep + 1, 'next');
+                        }
+                    }
+                }, 1000);
 
             } else {
                 button.classList.remove('border-gray-300', 'opacity-70');
@@ -112,18 +197,39 @@ function shuffleArray(array) {
 }
 
 async function generateOtp(phoneNumber) {
+    console.log('generateOtp called with:', phoneNumber);
+    console.log('Current storePhone:', storePhone);
+    
     if(storePhone !== 0 && storePhone === phoneNumber) {
+        console.log('Same phone number, skipping OTP generation');
         return;
     }
 
     storePhone = phoneNumber;
     otpAttempt = 0;
     
-    const phoneIntoJson = { phone: phoneNumber };
-    const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
-    console.log('OTP: '+otp.code);
-    
-    generateOtpChoices(otp.code, otp.id);
+    console.log('Calling makeOtp API with URL:', API_ROUTES.makeOtpURL);
+    try {
+        const phoneIntoJson = { phone: phoneNumber };
+        console.log('Sending data:', phoneIntoJson);
+        
+        const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
+        console.log('OTP response:', otp);
+        console.log('OTP: '+otp.code);
+        
+        if (otp && otp.code) {
+            generateOtpChoices(otp.code, otp.id, phoneNumber);
+        } else {
+            console.error('No OTP code returned or error:', otp);
+            messageDiv.textContent = 'Error generating OTP. Please try again.';
+            messageDiv.className = 'text-center text-red-600 font-medium';
+        }
+    } catch (error) {
+        console.error('Error calling makeOtp API:', error);
+        console.error('Error message:', error.message);
+        messageDiv.textContent = 'Error generating OTP. Please try again.';
+        messageDiv.className = 'text-center text-red-600 font-medium';
+    }
 }
 window.generateOtp = generateOtp;
 
@@ -147,4 +253,5 @@ function readAttempts(otpId) {
         
     }
 }
+
 
