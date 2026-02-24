@@ -9,30 +9,32 @@ function validatePhone(phoneInput) {
 }
 window.validatePhone = validatePhone;
 
-function checkPhoneAndShowMessage(phone, callback) {
-    // Check if phone exists and show welcome message
-    fetch(`${API_ROUTES.checkPhoneURL}/${phone}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Store the user type for later use
-        window.isReturningUser = data.isExisting;
-        window.returningUserName = data.name || '';
+
+// Redundant, already declared a request api service and old user state
+// function checkPhoneAndShowMessage(phone, callback) {
+//     // Check if phone exists and show welcome message
+//     fetch(`${API_ROUTES.checkPhoneURL}/${phone}`, {
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         // Store the user type for later use
+//         window.isReturningUser = data.isExisting;
+//         window.returningUserName = data.name || '';
         
-        // If callback provided, call it with the user data
-        if (callback && typeof callback === 'function') {
-            callback(data);
-        }
-    })
-    .catch(error => {
-        console.error('Error checking phone:', error);
-    });
-}
-window.checkPhoneAndShowMessage = checkPhoneAndShowMessage;
+//         // If callback provided, call it with the user data
+//         if (callback && typeof callback === 'function') {
+//             callback(data);
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error checking phone:', error);
+//     });
+// }
+// window.checkPhoneAndShowMessage = checkPhoneAndShowMessage;
 
 // Function to show welcome message on specific step
 function showWelcomeMessageOnStep(stepId, isReturning, userName) {

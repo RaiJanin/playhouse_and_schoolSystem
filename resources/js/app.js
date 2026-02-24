@@ -5,7 +5,7 @@ import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
 import { getOrDelete, submitData } from './services/requestApi.js'
-import { autoFillFields, autoFillChildren, enableEditInfo, openEditModal, oldUser } from './services/olduserState.js';
+import { autoFillFields, enableEditInfo, openEditModal, oldUser, autoFillChildren } from './services/olduserState.js';
 
 import { API_ROUTES } from './config/api.js';
 
@@ -190,13 +190,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     const oldUserData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
                     console.log('Returnee data:', oldUserData);
                     autoFillFields(oldUserData);
+                    autoFillChildren(oldUserData.oldUserData.children);
                     enableEditInfo();
                     parentFields.forEach(field => {
                         field.setAttribute('readonly', true);
-                    })
-                    console.log('Skipping to review step (currentStep:', currentStep, '+ 3)');
-                    showSteps(currentStep + 3,'next', 3);
-                    populateSummary();
+                    });
+                    // console.log('Skipping to review step (currentStep:', currentStep, '+ 3)');
+                    // Do not skip on the child selections, ordering happens there
+                    showSteps(currentStep + 2,'next');
+                    //populateSummary();
                     return;
                 }
             }
@@ -336,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
                     
                     // Collect children data
-                    document.querySelectorAll('.child-entry').forEach((child, idx) => {
+                    document.querySelectorAll('.child-entry').forEach((child) => {
                         const nameEl = child.querySelector('input[name*="[name]"]');
                         const birthdayEl = child.querySelector('input[name*="[birthday]"]');
                         const durationEl = child.querySelector('select[name*="[playDuration]"]');
@@ -375,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
+            console.log('Before submit: '+JSON.stringify(jsonData));
 
             replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
             console.log("Reply from Backend");
@@ -404,16 +407,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 width: 150,
                 height: 150
             });
-
-            // Add "Create Another Registration" button
-            const existingBtn = document.getElementById('create-another-btn');
-            if (!existingBtn) {
-                const btn = document.createElement('a');
-                btn.id = 'create-another-btn';
-                btn.href = '/v2/selection';
-                btn.className = 'mt-4 inline-block px-6 py-3 bg-[#0d9984] text-white font-bold rounded-lg hover:bg-[#1abc9c] transition text-center';
-                btn.textContent = '← Create Another Registration';
-                qrContainer.appendChild(btn);
-            }
         }
     });

@@ -54,3 +54,11 @@ export const confirmGuardianCheckBx = new CustomCheckbox('confirm-guardian-check
 confirmGuardianCheckBx.setLabel(`
     This guardian is allowed to pick up this child
 `);
+
+confirmGuardianCheckBx.onChange(() => {
+    if(confirmGuardianCheckBx.isChecked()) {
+        document.getElementById('guardianAuthorized').value = '1';
+    } else {
+        document.getElementById('guardianAuthorized').value = '0';
+    }
+});

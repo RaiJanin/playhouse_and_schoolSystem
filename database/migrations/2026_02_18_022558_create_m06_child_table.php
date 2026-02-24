@@ -18,11 +18,7 @@ return new class extends Migration
             $table->date('birthday');
             $table->integer('age')->nullable();
             $table->string('createdby', 50)->nullable();
-            $table->date('createddate')->nullable();
-            $table->time('createdtime')->nullable();
             $table->string('updatedby', 50)->nullable();
-            $table->date('updateddate')->nullable();
-            $table->time('updatedtime')->nullable();
             $table->string('d_code', 50);
             
             // Foreign key constraint

@@ -1,9 +1,5 @@
  import { dateToString } from '../utilities/dateString.js';
 
- import {   addguardianCheckBx, 
-            confirmGuardianCheckBx 
-} from '../modules/playhouseParent.js';
-
 export let oldUser = {
     isOldUser: false,
     phoneNumber: 0,
@@ -11,124 +7,190 @@ export let oldUser = {
     returneeData: null
 };
 
-export function autoFillFields(data) {
-    console.log('Auto-filling fields with:', data);
-    oldUser.oldUserLoaded = data.userLoaded;
+export function autoFillFields(oldUserData) {
+    console.log('Auto-filling fields with:', oldUserData);
+    oldUser.oldUserLoaded = oldUserData.userLoaded;
 
-    document.getElementById('parentName').value = data.oldUserData.firstname;
-    document.getElementById('parentLastName').value = data.oldUserData.lastname;
-    document.getElementById('parentEmail').value = data.oldUserData.email;
-    document.getElementById('parentBirthday').value = dateToString('slashDate', data.oldUserData.birthday);
-
-    if(data.oldUserData.guardians.length >= 1) {
-        data.oldUserData.guardians.forEach(guardian => {
-            document.getElementById('guardianName').value = guardian.firstname;
-            document.getElementById('guardianLastName').value = guardian.lastname;
-            document.getElementById('guardianPhone').value = guardian.mobileno;
-            document.getElementById('add-guardian-checkbox').classList.add('hidden');
-
-            if(guardian.guardianauthorized) {
-                confirmGuardianCheckBx.toggle();
+    // Handle new data structure (from verifyOTP returneeData)
+    if (oldUserData.type === 'guardian' && oldUserData.guardian) {
+        // This is a guardian user - fill in guardian info
+        document.getElementById('parentName').value = oldUserData.guardian.first_name || '';
+        document.getElementById('parentLastName').value = oldUserData.guardian.last_name || '';
+        document.getElementById('parentEmail').value = oldUserData.guardian.email || '';
+        
+        // Set parent birthday and mark as valid
+        const parentBirthdayInput = document.getElementById('parentBirthday');
+        if (parentBirthdayInput && oldUserData.guardian.birthday) {
+            const slashDate = dateToString('slashDate', oldUserData.guardian.birthday);
+            parentBirthdayInput.value = slashDate;
+            parentBirthdayInput.classList.remove('birthday-invalid');
+            parentBirthdayInput.classList.add('birthday-valid');
+            parentBirthdayInput.setAttribute('data-birthday-valid', 'true');
+            parentBirthdayInput.removeAttribute('aria-invalid');
+        }
+        const parentBirthdayHidden = document.getElementById('parentBirthday-hidden');
+        if (parentBirthdayHidden) {
+            parentBirthdayHidden.value = oldUserData.guardian.birthday || '';
+        }
+        
+        // For guardian-type users, DO NOT check the Add Guardian checkbox
+        // The guardian IS the primary contact - no need to add another guardian
+        // Only check if explicitly needed for additional linked parents
+        // if (oldUserData.parent && (oldUserData.parent.first_name || oldUserData.parent.last_name)) {
+        //     // Code to check guardian checkbox - commented out to prevent errors
+        // }
+    } else if (oldUserData.parent) {
+        // Parent or customer type
+        document.getElementById('parentName').value = oldUserData.parent.first_name || '';
+        document.getElementById('parentLastName').value = oldUserData.parent.last_name || '';
+        document.getElementById('parentEmail').value = oldUserData.parent.email || '';
+        
+        // Set parent birthday and mark as valid
+        const parentBirthdayInput = document.getElementById('parentBirthday');
+        if (parentBirthdayInput && oldUserData.parent.birthday) {
+            const slashDate = dateToString('slashDate', oldUserData.parent.birthday);
+            parentBirthdayInput.value = slashDate;
+            parentBirthdayInput.classList.remove('birthday-invalid');
+            parentBirthdayInput.classList.add('birthday-valid');
+            parentBirthdayInput.setAttribute('data-birthday-valid', 'true');
+            parentBirthdayInput.removeAttribute('aria-invalid');
+        }
+        const parentBirthdayHidden = document.getElementById('parentBirthday-hidden');
+        if (parentBirthdayHidden) {
+            parentBirthdayHidden.value = oldUserData.parent.birthday || '';
+        }
+    } else if (oldUserData.data) {
+        // Old structure: oldUserData.data.parent_name
+        if (oldUserData.type === 'parent') {
+            document.getElementById('parentName').value = oldUserData.data.parent_name;
+            document.getElementById('parentLastName').value = oldUserData.data.parent_lastname;
+            document.getElementById('parentEmail').value = oldUserData.data.parent_email || '';
+            
+            // Set parent birthday and mark as valid
+            const parentBirthdayInput = document.getElementById('parentBirthday');
+            if (parentBirthdayInput && oldUserData.data.parent_birthday) {
+                const slashDate = dateToString('slashDate', oldUserData.data.parent_birthday);
+                parentBirthdayInput.value = slashDate;
+                parentBirthdayInput.classList.remove('birthday-invalid');
+                parentBirthdayInput.classList.add('birthday-valid');
+                parentBirthdayInput.setAttribute('data-birthday-valid', 'true');
+                parentBirthdayInput.removeAttribute('aria-invalid');
             }
-        })
-        document.getElementById('guardian-form').hidden = false;
-
+            const parentBirthdayHidden = document.getElementById('parentBirthday-hidden');
+            if (parentBirthdayHidden) {
+                parentBirthdayHidden.value = oldUserData.data.parent_birthday || '';
+            }
+        } else if (oldUserData.type === 'guardian') {
+            document.getElementById('parentName').value = oldUserData.data.guardian_name;
+            document.getElementById('parentLastName').value = oldUserData.data.guardian_lastname;
+            
+            // For guardian-type users in old data structure, DO NOT check Add Guardian checkbox
+            // The guardian IS the primary contact
+            // setTimeout(() => {
+            //     if (typeof addguardianCheckBx !== 'undefined') {
+            //         if (!addguardianCheckBx.isChecked()) {
+            //             addguardianCheckBx.toggle();
+            //         }
+            //     } else {
+            //         const checkbox = document.getElementById('add-guardian-checkbox');
+            //         if (checkbox) checkbox.click();
+            //     }
+            // }, 500);
+        }
+    }
+    
+    // Auto-fill children if available
+    if (oldUserData.children && oldUserData.children.length > 0) {
+        autoFillChildren(oldUserData.children);
     }
 }
 
 export async function autoFillChildren(children) {
     const container = document.getElementById('childrenContainer');
     const addBtn = document.getElementById('addChildBtn');
-    const existedChild = document.querySelector('exist-children');
     
-    // if (!container || !addBtn) {
-    //     console.error('Children container or add button not found');
-    //     return;
-    // }
+    if (!container || !addBtn) {
+        console.error('Children container or add button not found');
+        return;
+    }
     
     // Get the first child entry (index 0) to populate
-    //const existingEntries = container.querySelectorAll('.child-entry');
-
-    children.oldUserData.children.forEach(child => {
-        existedChild.innerHTML += `
-        
-        `;
-    })
+    const existingEntries = container.querySelectorAll('.child-entry');
     
     // For each child in the data, either populate existing or create new entries
-    // for (let i = 0; i < children.length; i++) {
-    //     const child = children[i];
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
         
-    //     if (i === 0 && existingEntries.length > 0) {
-    //         // Populate the first existing entry
-    //         const firstEntry = existingEntries[0];
-    //         const nameInput = firstEntry.querySelector('input[name*="[name]"]');
-    //         const birthdayInput = firstEntry.querySelector('input[data-birthday]');
-    //         const birthdayHidden = firstEntry.querySelector('input[name*="[birthday]"]');
-    //         const durationSelect = firstEntry.querySelector('select[name*="[playDuration]"]');
-    //         const socksCheckbox = firstEntry.querySelector('[id*="add-socks-child-checkbox"]');
-    //         const socksIcon = firstEntry.querySelector('[id*="add-socks-child-icon"]');
-    //         const socksHidden = firstEntry.querySelector('input[name*="[addSocks]"]');
+        if (i === 0 && existingEntries.length > 0) {
+            // Populate the first existing entry
+            const firstEntry = existingEntries[0];
+            const nameInput = firstEntry.querySelector('input[name*="[name]"]');
+            const birthdayInput = firstEntry.querySelector('input[data-birthday]');
+            const birthdayHidden = firstEntry.querySelector('input[name*="[birthday]"]');
+            const durationSelect = firstEntry.querySelector('select[name*="[playDuration]"]');
+            const socksCheckbox = firstEntry.querySelector('[id*="add-socks-child-checkbox"]');
+            const socksIcon = firstEntry.querySelector('[id*="add-socks-child-icon"]');
+            const socksHidden = firstEntry.querySelector('input[name*="[addSocks]"]');
             
-    //         if (nameInput) nameInput.value = child.firstname || '';
-    //         if (birthdayInput && child.birthday) {
-    //             birthdayInput.value = dateToString('slashDate', child.birthday);
-    //             // Mark as valid for form validation
-    //             birthdayInput.classList.remove('birthday-invalid');
-    //             birthdayInput.classList.add('birthday-valid');
-    //             birthdayInput.setAttribute('data-birthday-valid', 'true');
-    //             birthdayInput.removeAttribute('aria-invalid');
-    //         }
-    //         if (birthdayHidden) birthdayHidden.value = child.birthday || '';
-    //         if (durationSelect && child.playtime_duration) {
-    //             durationSelect.value = child.playtime_duration.toString();
-    //         }
-    //         // Auto-fill socks if available
-    //         if (child.add_socks && socksCheckbox && socksIcon) {
-    //             socksCheckbox.classList.remove('fa-square');
-    //             socksCheckbox.classList.add('fa-check-square', 'text-green-500');
-    //             if (socksHidden) socksHidden.value = '1';
-    //         }
-    //     } else {
-    //         // Click add button to create new entry
-    //         addBtn.click();
+            if (nameInput) nameInput.value = child.name || '';
+            if (birthdayInput && child.birthday) {
+                birthdayInput.value = dateToString('slashDate', child.birthday);
+                // Mark as valid for form validation
+                birthdayInput.classList.remove('birthday-invalid');
+                birthdayInput.classList.add('birthday-valid');
+                birthdayInput.setAttribute('data-birthday-valid', 'true');
+                birthdayInput.removeAttribute('aria-invalid');
+            }
+            if (birthdayHidden) birthdayHidden.value = child.birthday || '';
+            if (durationSelect && child.playtime_duration) {
+                durationSelect.value = child.playtime_duration.toString();
+            }
+            // Auto-fill socks if available
+            if (child.add_socks && socksCheckbox && socksIcon) {
+                socksCheckbox.classList.remove('fa-square');
+                socksCheckbox.classList.add('fa-check-square', 'text-green-500');
+                if (socksHidden) socksHidden.value = '1';
+            }
+        } else {
+            // Click add button to create new entry
+            addBtn.click();
             
-    //         // Wait for DOM update then populate the new entry
-    //         await new Promise(resolve => setTimeout(resolve, 100));
+            // Wait for DOM update then populate the new entry
+            await new Promise(resolve => setTimeout(resolve, 100));
             
-    //         const updatedEntries = container.querySelectorAll('.child-entry');
-    //         if (updatedEntries.length > i) {
-    //             const entry = updatedEntries[i];
-    //             const nameInput = entry.querySelector('input[name*="[name]"]');
-    //             const birthdayInput = entry.querySelector('input[data-birthday]');
-    //             const birthdayHidden = entry.querySelector('input[name*="[birthday]"]');
-    //             const durationSelect = entry.querySelector('select[name*="[playDuration]"]');
-    //             const socksCheckbox = entry.querySelector('[id*="add-socks-child-checkbox"]');
-    //             const socksIcon = entry.querySelector('[id*="add-socks-child-icon"]');
-    //             const socksHidden = entry.querySelector('input[name*="[addSocks]"]');
+            const updatedEntries = container.querySelectorAll('.child-entry');
+            if (updatedEntries.length > i) {
+                const entry = updatedEntries[i];
+                const nameInput = entry.querySelector('input[name*="[name]"]');
+                const birthdayInput = entry.querySelector('input[data-birthday]');
+                const birthdayHidden = entry.querySelector('input[name*="[birthday]"]');
+                const durationSelect = entry.querySelector('select[name*="[playDuration]"]');
+                const socksCheckbox = entry.querySelector('[id*="add-socks-child-checkbox"]');
+                const socksIcon = entry.querySelector('[id*="add-socks-child-icon"]');
+                const socksHidden = entry.querySelector('input[name*="[addSocks]"]');
                 
-    //             if (nameInput) nameInput.value = child.name || '';
-    //             if (birthdayInput && child.birthday) {
-    //                 birthdayInput.value = dateToString('slashDate', child.birthday);
-    //                 // Mark as valid for form validation
-    //                 birthdayInput.classList.remove('birthday-invalid');
-    //                 birthdayInput.classList.add('birthday-valid');
-    //                 birthdayInput.setAttribute('data-birthday-valid', 'true');
-    //                 birthdayInput.removeAttribute('aria-invalid');
-    //             }
-    //             if (birthdayHidden) birthdayHidden.value = child.birthday || '';
-    //             if (durationSelect && child.playtime_duration) {
-    //                 durationSelect.value = child.playtime_duration.toString();
-    //             }
-    //             // Auto-fill socks if available
-    //             if (child.add_socks && socksCheckbox && socksIcon) {
-    //                 socksCheckbox.classList.remove('fa-square');
-    //                 socksCheckbox.classList.add('fa-check-square', 'text-green-500');
-    //                 if (socksHidden) socksHidden.value = '1';
-    //             }
-    //         }
-    //     }
-    // }
+                if (nameInput) nameInput.value = child.name || '';
+                if (birthdayInput && child.birthday) {
+                    birthdayInput.value = dateToString('slashDate', child.birthday);
+                    // Mark as valid for form validation
+                    birthdayInput.classList.remove('birthday-invalid');
+                    birthdayInput.classList.add('birthday-valid');
+                    birthdayInput.setAttribute('data-birthday-valid', 'true');
+                    birthdayInput.removeAttribute('aria-invalid');
+                }
+                if (birthdayHidden) birthdayHidden.value = child.birthday || '';
+                if (durationSelect && child.playtime_duration) {
+                    durationSelect.value = child.playtime_duration.toString();
+                }
+                // Auto-fill socks if available
+                if (child.add_socks && socksCheckbox && socksIcon) {
+                    socksCheckbox.classList.remove('fa-square');
+                    socksCheckbox.classList.add('fa-check-square', 'text-green-500');
+                    if (socksHidden) socksHidden.value = '1';
+                }
+            }
+        }
+    }
     
     console.log('Children auto-filled successfully');
 }

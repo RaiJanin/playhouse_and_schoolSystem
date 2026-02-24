@@ -17,16 +17,14 @@ return new class extends Migration
             $table->string('lastname', 100);
             $table->string('firstname', 100);
             $table->string('mi', 10)->nullable(); // Middle Initial
-            $table->string('mobileno', 20)->unique();
-            //$table->foreign('mobileno')->references('phone_number')->on('phone_numbers')->onDelete('restrict');
+            $table->date('birthday')->nullable();
+            $table->string('mobileno', 20);
+            $table->string('email')->nullable();
             $table->boolean('isparent')->default(true);
             $table->boolean('isguardian')->default(false);
+            $table->boolean('guardianauthorized')->default(false);
             $table->string('createdby', 50)->nullable();
-            $table->date('createddate')->nullable();
-            $table->time('createdtime')->nullable();
             $table->string('updatedby', 50)->nullable();
-            $table->date('updateddate')->nullable();
-            $table->time('updatedtime')->nullable();
             $table->timestamps(); // Adds created_at and updated_at
         });
     }
