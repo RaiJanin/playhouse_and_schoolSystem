@@ -132,6 +132,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
+                // Update next button enablement when step changes (e.g., back to phone step)
+                if (window.updateNextBtnState) window.updateNextBtnState();
             }, 300);
 
         }
@@ -212,6 +214,49 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         prevBtn.addEventListener('click', () => showSteps(currentStep - 1,'prev'));
 
+        // Terms checkbox on phone step: enable/disable Next button until phone valid and checkbox checked
+        const phoneInputEl = document.getElementById('phone');
+        const nextBtnEl = document.getElementById('next-btn');
+        // Disable next by default if phone step present
+        if (phoneInputEl && nextBtnEl) {
+            nextBtnEl.disabled = true;
+        }
+
+        const phoneTermsCheckbox = (() => {
+            try {
+                return new CustomCheckbox('agree-checkbox-phone', 'check-agree-icon-phone', 'check-agree-info-phone');
+            } catch (e) {
+                return null;
+            }
+        })();
+
+        window.updateNextBtnState = function() {
+            const current = getCurrentStepName();
+            if (current !== 'phone') {
+                // Ensure enabled when not on phone step
+                if (nextBtnEl) nextBtnEl.disabled = false;
+                return;
+            }
+
+            const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
+            const agreed = phoneTermsCheckbox ? phoneTermsCheckbox.isChecked() : false;
+            if (nextBtnEl) {
+                nextBtnEl.disabled = !(phoneValid && agreed);
+            }
+        };
+
+        if (phoneInputEl) {
+            phoneInputEl.addEventListener('input', () => {
+                if (window.updateNextBtnState) window.updateNextBtnState();
+            });
+        }
+
+        if (phoneTermsCheckbox) {
+            phoneTermsCheckbox.onChange(() => {
+                if (window.updateNextBtnState) window.updateNextBtnState();
+            });
+        }
+
         function populateSummary() {
             const summary = document.getElementById('summaryContainer');
             const data = new FormData(document.getElementById('playhouse-registration-form'));
@@ -234,12 +279,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const nameEl = child.querySelector('input[name*="[name]"]');
                 const birthdayEl = child.querySelector('input[name*="[birthday]"]');
                 const durationEl = child.querySelector('select[name*="[playDuration]"]');
-                const addedSocks = child.querySelector('input[name*="[addSocks]"]');
+                const addedSocksEl = child.querySelector('select[name*="[addSocks]"]');
 
                 const name = nameEl ? nameEl.value : 'Child';
                 const birthday = birthdayEl ? birthdayEl.value : '-';
-                const duration = durationEl.value;
-                const parseSocksBool = addedSocks.value === '1' ? 'Socks added' : '';
+                const duration = durationEl ? durationEl.value : '';
+                const socksBool = addedSocksEl ? (addedSocksEl.value === '1' ? 'Yes' : 'No') : 'No';
 
                 // playtime durations should fetch from the master file (database or disk storage)
                 const durationMap = {
@@ -262,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name}</span></p> 
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
-                            <p class="text-sm font-bold text-gray-900 mt-1">${parseSocksBool}</p>
+                            <p class="text-sm text-gray-600 mt-1">Add Socks: <span class="font-bold text-gray-900">${socksBool}</span></p>
                         </div>
                 `;
             });
@@ -342,11 +387,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         const nameEl = child.querySelector('input[name*="[name]"]');
                         const birthdayEl = child.querySelector('input[name*="[birthday]"]');
                         const durationEl = child.querySelector('select[name*="[playDuration]"]');
-                        const addedSocks = child.querySelector('input[name*="[addSocks]"]');
+                        const addedSocksEl = child.querySelector('select[name*="[addSocks]"]');
                         const socksIcon = child.querySelector('[id*="add-socks-child-icon"]');
-                        
-                        // Check if socks are added - either from hidden input value or from icon class
-                        const hasSocks = (addedSocks && addedSocks.value === '1') || 
+
+                        // Check if socks are added - either from select value or from icon class (backwards compat)
+                        const hasSocks = (addedSocksEl && addedSocksEl.value === '1') || 
                                          (socksIcon && socksIcon.classList.contains('fa-check-square'));
                         
                         reviewData.children.push({

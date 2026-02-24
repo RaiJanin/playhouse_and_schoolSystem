@@ -1,5 +1,4 @@
 import { attachBirthdayInput } from '../components/birthdayInput.js';
-import { CustomCheckbox } from '../components/customCheckbox.js';
 
 window.document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
@@ -41,13 +40,18 @@ window.document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 </div>
-                <button id="add-socks-child-checkbox-${childEntries}" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-                    <span class="flex items-center">
-                        <i id="add-socks-child-icon-${childEntries}" class="fa-regular fa-square text-red-500 text-xl"></i>
-                        <p id="add-socks-child-info-${childEntries}" class="ml-2"></p>
-                    </span>
-                </button>
-                <input type="hidden" name="child[${childEntries}][addSocks]" id="addSocks" class="addSocks hidden">
+                <div>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
+                    <div class="relative">
+                        <select name="child[${childEntries}][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                            <i class="fa-solid fa-chevron-down text-sm"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="flex justify-start pt-2">
@@ -74,31 +78,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    const addSocksChild = new CustomCheckbox('add-socks-child-checkbox-0', 'add-socks-child-icon-0', 'add-socks-child-info-0');
-    addSocksChild.setLabel(`+ Add Socks`);
-
-    addSocksChild.onChange(() => {
-        const isChecked = addSocksChild.isChecked();
-
-            let hidden = document.getElementById('addSocks');
-
-            hidden.value = isChecked ? '1' : '0';
-    })
-
-    function attachSocksCheckbox(entry, index) {
-       
-        const addedAddSocksChild = new CustomCheckbox(`add-socks-child-checkbox-${index}`, `add-socks-child-icon-${index}`, `add-socks-child-info-${index}`);
-
-        addedAddSocksChild.setLabel(`+ Add Socks`);
-
-        addedAddSocksChild.onChange(() => {
-            const isChecked = addedAddSocksChild.isChecked();
-
-            let hidden = entry.querySelector('.addSocks');
-
-            hidden.value = isChecked ? '1' : '0';
-        });
-    }
+    // Add Socks is now a select dropdown in each child entry; checkbox helper removed.
 
     function removeFirstChild(index) {
         childEntries = index;
@@ -108,25 +88,20 @@ window.document.addEventListener('DOMContentLoaded', function() {
     window.removeFirstChild = removeFirstChild;
 
     function countSelectedSocks() {
-        const socksInputs = container.querySelectorAll('input[name$="[addSocks]"]');
+        const socksSelects = container.querySelectorAll('select[name$="[addSocks]"]');
 
         let count = 0;
-        let subTotal;
-        socksInputs.forEach(input => {
-            if (input.value === '1') {
-                count++;
-            }
-            subTotal = count * 100;
+        socksSelects.forEach(sel => {
+            if (sel && sel.value === '1') count++;
         });
 
-        return subTotal;
+        return count * 100;
     }
     window.countSelectedSocks = countSelectedSocks;
 
     addBtn.addEventListener('click', () => {
         const newEntry = createChildEntry();
         container.appendChild(newEntry.entry);
-        attachSocksCheckbox(newEntry.entry, newEntry.index);
         newEntry.entry.querySelector('.child-first');
     });
 });

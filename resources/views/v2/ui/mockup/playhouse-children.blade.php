@@ -136,14 +136,18 @@
                     </div>
                 </div>
 
-                <button id="add-socks-child-checkbox-0" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-                    <span class="flex items-center">
-                        <i id="add-socks-child-icon-0" class="fa-regular fa-square text-red-500 text-xl"></i>
-                        <p id="add-socks-child-info-0" class="ml-2"></p>
-                    </span>
-                </button>
-
-                <input type="hidden" name="child[0][addSocks]" id="addSocks" class="addSocks hidden">
+                <div>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (₱50)</label>
+                    <div class="relative">
+                        <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                            <i class="fa-solid fa-chevron-down text-sm"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

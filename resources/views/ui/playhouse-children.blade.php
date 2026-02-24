@@ -45,8 +45,16 @@
                 </div>
 
                 <div>
-                    <label for="addSocks" class="p-2">Add Socks</label>
-                    <input type="checkbox" name="addSocks" class="p-2">
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (₱50)</label>
+                    <div class="relative">
+                        <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                            <i class="fa-solid fa-chevron-down text-sm"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

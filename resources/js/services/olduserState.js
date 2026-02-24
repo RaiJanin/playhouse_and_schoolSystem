@@ -120,7 +120,7 @@ function attachFields(data, index) {
             <div class="h-full">
                 <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
                 <div class="relative">
-                    <select name="child[${index}][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                    <select name="child[${index}][addSocks]" data-child-index="${index}" class="edit-child-socks child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                         <option value="0">No</option>  
                         <option value="1">Yes</option> 
                     </select>
@@ -311,11 +311,12 @@ export function openEditModal(reviewData = null) {
                                 <option value="unlimited" ${child.playtime_duration === 'unlimited' ? 'selected' : ''}>Unlimited = &#8369;500</option>
                             </select>
                         </div>
-                        <div class="flex items-center">
-                            <label class="flex items-center cursor-pointer bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
-                                <input type="checkbox" class="edit-child-socks w-5 h-5 text-amber-500 border-gray-300 rounded focus:ring-amber-500" data-child-index="${index}" ${child.add_socks ? 'checked' : ''}>
-                                <span class="ml-3 text-gray-700 font-medium">+ Add Socks (&#8369;50)</span>
-                            </label>
+                        <div>
+                            <label class="text-sm font-semibold text-gray-600 block mb-1">Add Socks (&#8369;50)</label>
+                            <select class="edit-child-socks w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all bg-white" data-child-index="${index}">
+                                <option value="0" ${!child.add_socks ? 'selected' : ''}>No</option>
+                                <option value="1" ${child.add_socks ? 'selected' : ''}>Yes</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -442,20 +443,16 @@ export function openEditModal(reviewData = null) {
             }
         });
         
-        document.querySelectorAll('.edit-child-socks').forEach((checkbox) => {
-            const index = checkbox.dataset.childIndex;
+        document.querySelectorAll('.edit-child-socks').forEach((selectEl) => {
+            const index = selectEl.dataset.childIndex;
             const childEntries = document.querySelectorAll('.child-entry');
             if (childEntries[index]) {
-                const socksHidden = childEntries[index].querySelector('input[name*="[addSocks]"]');
-                if (socksHidden) socksHidden.value = checkbox.checked ? '1' : '0';
-                
-                const socksCheckbox = childEntries[index].querySelector('[id*="add-socks-child-checkbox"]');
-                if (checkbox.checked) {
-                    socksCheckbox.classList.remove('fa-square');
-                    socksCheckbox.classList.add('fa-check-square', 'text-green-500');
+                const socksSelect = childEntries[index].querySelector('select[name*="[addSocks]"]');
+                if (socksSelect) {
+                    socksSelect.value = selectEl.value;
                 } else {
-                    socksCheckbox.classList.remove('fa-check-square', 'text-green-500');
-                    socksCheckbox.classList.add('fa-square');
+                    const socksHidden = childEntries[index].querySelector('input[name*="[addSocks]"]');
+                    if (socksHidden) socksHidden.value = selectEl.value;
                 }
             }
         });

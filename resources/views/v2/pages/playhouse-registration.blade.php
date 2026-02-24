@@ -56,7 +56,7 @@
                     <div class="flex items-center justify-center mb-3">
                         <div class="flex space-x-4 mt-8">
                             <button type="button" id="prev-btn" class="bg-gray-400 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-gray-300 focus:ring-2 focus:ring-offset-2 ring-gray-500 focus:text-gray-800 transition-all duration-300 hidden">Previous</button>
-                            <button type="button" id="next-btn" class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 transition-all duration-300">Next</button>
+                            <button type="button" id="next-btn" class="bg-teal-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-teal-500 focus:ring-2 focus:ring-offset-2 ring-teal-500 disabled:cursor-not-allowed disabled:bg-teal-400 disabled:shadow-none transition-all duration-300">Next</button>
                             <button type="submit" id="submit-btn" class="bg-cyan-600 text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-cyan-500 focus:ring-2 focus:ring-offset-2 ring-cyan-500 disabled:cursor-not-allowed disabled:bg-cyan-400 disabled:shadow-none transition-all duration-300 hidden" disabled>Submit</button>
                         </div>
                     </div>

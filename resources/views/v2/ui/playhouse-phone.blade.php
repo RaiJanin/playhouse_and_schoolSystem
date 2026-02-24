@@ -20,7 +20,15 @@
         <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
             Accepts: 09XXXXXXXXX, +639XXXXXXXXX, or 9XXXXXXXXX
         </small>
-        
+        <div class="mt-3 flex items-center">
+            <button id="agree-checkbox-phone" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+                <span class="flex items-center">
+                    <i id="check-agree-icon-phone" class="fa-regular fa-square text-red-500 text-xl"></i>
+                    <p id="check-agree-info-phone" class="ml-2 text-gray-700 text-sm">I agree to the <a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></p>
+                </span>
+            </button>
+        </div>
+
     </div>
 </div>
 
