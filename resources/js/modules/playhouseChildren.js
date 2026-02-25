@@ -1,5 +1,9 @@
-import { attachBirthdayInput, attachBirthdayDropdown } from '../utilities/birthdayInput.js';
+import { 
+    attachBirthdayInput, 
+    attachBirthdayDropdown
+} from '../utilities/birthdayInput.js';
 import { attachCameraCapture } from '../utilities/cameraCapture.js';
+import { selectedSocksExistChild } from '../services/autoFill.js';
 
 window.document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');

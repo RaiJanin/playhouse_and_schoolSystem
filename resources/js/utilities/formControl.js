@@ -1,10 +1,13 @@
 export function disableBirthdayonSubmit(disable = true) {
     const inputField = document.getElementById('parentBirthday');
+    const hiddenInput = document.getElementById('parentBirthday-hidden');
 
     if(disable) {
         inputField.disabled = true;
+        hiddenInput.disabled = false;
     } else {
         inputField.disabled = false;
+        hiddenInput.disabled = true;
     }
 }
 

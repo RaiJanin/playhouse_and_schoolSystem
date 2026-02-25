@@ -2,6 +2,8 @@
 // Usage: Add data-camera-input attribute to a container element
 // The container should have a data-name attribute for the hidden input name
 
+import { showConsole } from "../config/debug";
+
 export function attachCameraCapture(container) {
     if (!container || container.dataset.cameraAttached) return;
 
@@ -148,7 +150,7 @@ export function attachCameraCapture(container) {
             modalVideo.style.display = 'block';
             cameraModal.classList.remove('hidden');
         } catch (err) {
-            console.error('Error accessing camera:', err);
+            showConsole('error', 'Error accessing camera:', err)
             let errorMessage = 'Unable to access camera.';
             
             if (err.name === 'NotReadableError') {

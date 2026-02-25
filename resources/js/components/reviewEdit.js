@@ -1,50 +1,5 @@
-import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
+import { createBirthdayDropdownHtml } from "../utilities/birthdayInput.js";
 
-// Helper function to generate birthday dropdown HTML
-export function createBirthdayDropdownHtml(name, existingValue = '') {
-    let currentMM = '', currentDD = '', currentYYYY = '';
-    if (existingValue && /^\d{4}-\d{2}-\d{2}$/.test(existingValue)) {
-        currentYYYY = existingValue.slice(0, 4);
-        currentMM = existingValue.slice(5, 7);
-        currentDD = existingValue.slice(8, 10);
-    }
-
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let monthOptions = '<option value="">Month</option>';
-    monthNames.forEach((name, idx) => {
-        const val = String(idx + 1).padStart(2, '0');
-        const selected = (val === currentMM) ? ' selected' : '';
-        monthOptions += `<option value="${val}"${selected}>${name}</option>`;
-    });
-
-    let dayOptions = '<option value="">Day</option>';
-    for (let d = 1; d <= 31; d++) {
-        const val = String(d).padStart(2, '0');
-        const selected = (val === currentDD) ? ' selected' : '';
-        dayOptions += `<option value="${val}"${selected}>${d}</option>`;
-    }
-
-    const currentYear = new Date().getFullYear();
-    let yearOptions = '<option value="">Year</option>';
-    for (let y = currentYear; y >= currentYear - 100; y--) {
-        const selected = (String(y) === currentYYYY) ? ' selected' : '';
-        yearOptions += `<option value="${y}"${selected}>${y}</option>`;
-    }
-
-    return `
-        <div class="birthday-dropdown-wrapper flex gap-2">
-            <select class="birthday-month-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[month]">
-                ${monthOptions}
-            </select>
-            <select class="birthday-day-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[day]">
-                ${dayOptions}
-            </select>
-            <select class="birthday-year-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[year]">
-                ${yearOptions}
-            </select>
-        </div>
-    `;
-}
 
 export function openEditModal(reviewData = null) {
     const modal = document.getElementById('modal-container');
@@ -134,15 +89,10 @@ export function openEditModal(reviewData = null) {
                 <input type="tel" id="edit-phone" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${reviewData?.phone || ''}">
             </div>
             <div>
-<<<<<<< HEAD
                 <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday</label>
                 <div id="edit-parentBirthday">
                     ${createBirthdayDropdownHtml('parentBirthday', parentData.birthday)}
                 </div>
-=======
-                <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
-                <input type="text" id="edit-parentBirthday" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${dateToString('slashDate', parentData.birthday)}" placeholder="MM / DD / YYYY">
->>>>>>> 92713b5958926cc876bdfc876c61366aa4afd8e2
             </div>
         </div>
     `;
@@ -208,15 +158,10 @@ export function openEditModal(reviewData = null) {
                             <input type="text" class="edit-child-name w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${child.name || ''}">
                         </div>
                         <div>
-<<<<<<< HEAD
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday</label>
                             <div class="birthday-edit-wrapper" data-child-index="${index}">
                                 ${createBirthdayDropdownHtml(`childBirthday${index}`, child.birthday)}
                             </div>
-=======
-                            <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
-                            <input type="text" class="edit-child-birthday w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${dateToString('slashDate',child.birthday)}" placeholder="MM / DD / YYYY">
->>>>>>> 92713b5958926cc876bdfc876c61366aa4afd8e2
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Play Duration</label>

@@ -6,6 +6,8 @@ use App\Http\Requests\StorePlayhouseFormRequest;
 use App\Models\PhoneNumber;
 use App\Models\M06;
 use App\Models\M06Child;
+use App\Models\Orders;
+use App\Models\OrderItems;
 use App\Models\ParentInfo;
 use App\Models\Guardian;
 use App\Models\Child;
@@ -43,6 +45,7 @@ class PlayHouseController extends Controller
                 'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
             ]);
 
+
             if($request->filled('guardianName'))
             {
                 M06::updateOrCreate(['mobileno' => $data['guardianPhone']],[
@@ -57,6 +60,10 @@ class PlayHouseController extends Controller
                     'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
                 ]);
             }
+
+            $totalPrice = 0;
+            $pricePerDuration = 100;
+            $socksPrice = 100;
 
             if($request->has('child'))
             {
@@ -74,13 +81,44 @@ class PlayHouseController extends Controller
                             'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
                         ]
                     );
+
+                    $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
+                    $totalPrice = ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice);
+                }
+            }
+
+            $order = Orders::create([
+                'guardian' => $parent->d_name,
+                'd_code' => $parent->d_code,
+                'totalprice' => $totalPrice
+            ]);
+
+            if(is_array($data['child']) && $request->has('child'))
+            {
+                foreach($data['child'] as $child) {
+                    $childModel = M06Child::where('firstname', $child['name'])
+                                    ->where('birthday', $child['birthday'])
+                                    ->first();
+
+                    $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
+
+                    OrderItems::create([
+                        'order_id' => $order->id,
+                        'd_code_child' => $childModel->d_code_c,
+                        'durationhours' => $duration,
+                        'durationsubtotal' => $duration * $pricePerDuration,
+                        'issocksadded' => $child['addSocks'],
+                        'socksprice' => $child['addSocks'] * $socksPrice,
+                        'subtotal' => ($duration * $pricePerDuration) * ($child['addSocks'] * $socksPrice)
+                    ]);
                 }
             }
 
             DB::commit();
 
             return response()->json([
-                'isFormSubmitted' => true
+                'isFormSubmitted' => true,
+                'orderNum' => $order->order_no
             ]);
 
         } catch (\Exception $e) {

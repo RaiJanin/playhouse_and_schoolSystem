@@ -55,6 +55,7 @@
         <div>
             <label for="parentBirthday" class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
             <div id="parentBirthday" data-birthday-dropdown data-name="parentBirthday" required class="bg-teal-100 rounded-lg"></div>
+            <input type="hidden" id="parentBirthday-hidden" name="parentBirthday">
         </div>
     </div>
 

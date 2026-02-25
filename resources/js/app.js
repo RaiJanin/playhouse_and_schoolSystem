@@ -277,9 +277,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = new FormData(document.getElementById('playhouse-registration-form'));
             let parentEmail = data.get('parentEmail') ? `(${data.get('parentEmail')})` : '';
             let guardianPhone = data.get('guardianPhone') ? `(${data.get('guardianPhone')})` : '';
+            const hiddenParentBirthday = document.getElementById('parentBirthday-hidden');
+            const hiPVal = hiddenParentBirthday.value ? dateToString('shortDate', hiddenParentBirthday.value) : '-';
             let childrenItems = '';
             let guardianInfo = '';
             let childrenTotalCost = 0;
+            let parentBirthdayIsFilled = false;
 
             const durationPriceMap = {
                 '1': 100,
@@ -351,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="flex items-center border-b border-cyan-400 py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${dateToString('shortDate', data.get('parentBirthday'))  || '   - '}</span>
+                        <span class="text-gray-900 font-medium">${data.get('parentBirthday') ? dateToString('shortDate', data.get('parentBirthday')) : hiPVal}</span>
                     </div>
                     ${guardianInfo}
                     <div class="pb-3">
@@ -372,6 +375,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         </button>
                     </div>
             `;
+
+            if(data.get('parentBirthday')) parentBirthdayIsFilled = true;
             
             // Add event listener for edit button
             const editBtn = document.getElementById('edit-review-btn');
@@ -421,7 +426,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if(phoneTermsCheckbox.isChecked()) {
                 submitBtn.disabled = false;
             }
-            disableBirthdayonSubmit();
+
+            showConsole('log', 'Is Parent Birthdate filled? ', parentBirthdayIsFilled);
+
+            if(parentBirthdayIsFilled) {
+                disableBirthdayonSubmit(false);
+            } else {
+                disableBirthdayonSubmit();
+            }
         }
 
         form.addEventListener('submit', async (e) => {

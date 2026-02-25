@@ -7,13 +7,4 @@
 			<!-- Summary items will be loaded here -->
 		</div>
 	</div>
-
-	<div class="flex items-center mb-2">
-		<button id="agree-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-			<span class="flex items-center">
-				<i id="check-agree-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
-				<p id="check-agree-info" class="ml-2"></p>
-			</span>
-		</button>
-	</div>
 </div>

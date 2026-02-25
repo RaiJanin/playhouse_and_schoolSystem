@@ -27,8 +27,20 @@ export function autoFillFields(data) {
     document.getElementById('parentName').value = data.oldUserData.firstname;
     document.getElementById('parentLastName').value = data.oldUserData.lastname;
     document.getElementById('parentEmail').value = data.oldUserData.email;
-    document.getElementById('parentBirthday').value = dateToString('slashDate', data.oldUserData.birthday);
     document.getElementById('parentBirthday-hidden').value = dateToString('iso', data.oldUserData.birthday);
+
+    const birthdayContainer = document.getElementById('parentBirthday');
+    const birthday = dateToString('iso',  data.oldUserData.birthday);
+
+    if (birthday && /^\d{4}-\d{2}-\d{2}$/.test(birthday)) {
+        const yyyy = birthday.slice(0, 4);
+        const mm = birthday.slice(5, 7);
+        const dd = birthday.slice(8, 10);
+
+        birthdayContainer.querySelector('.birthday-month-select').value = mm;
+        birthdayContainer.querySelector('.birthday-day-select').value = dd;
+        birthdayContainer.querySelector('.birthday-year-select').value = yyyy;
+    }
 
     if(data.oldUserData.guardians.length >= 1) {
         data.oldUserData.guardians.forEach(guardian => {
