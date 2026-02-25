@@ -56,12 +56,12 @@ window.document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Child Photo Camera Capture -->
-            <div class="px-3 mb-3">
-                <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
-                <div id="child-${childEntries}-photo" data-camera-input data-name="child[${childEntries}][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
+
+                <!-- Child Photo Camera Capture -->
+                <div>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
+                    <div id="child-${childEntries}-photo" data-camera-input data-name="child[${childEntries}][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
+                </div>
             </div>
             
             <div class="flex justify-start pt-2">

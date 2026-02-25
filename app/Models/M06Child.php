@@ -20,6 +20,7 @@ class M06Child extends Model
         'birthday',
         'age',
         'phoneno',
+        'photo',
         'createdby',
         'updatedby',
         'd_code',

@@ -77,6 +77,7 @@ class PlayHouseController extends Controller
                         [
                             'lastname' => $parent->lastname,
                             'age' => Carbon::parse($child['birthday'])->age,
+                            'photo' => $child['photo'] ?? null,
                             'createdby' => $parent->d_name,
                             'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
                         ]
@@ -258,6 +259,14 @@ class PlayHouseController extends Controller
     public function searchReturnee($phoneNumber)
     {
         $oldUserData = M06::with(['children', 'guardians'])->where('mobileno', $phoneNumber)->first();
+
+        // Get children with photo data
+        if ($oldUserData && $oldUserData->children) {
+            foreach ($oldUserData->children as $child) {
+                // Ensure photo field is included
+                $child->makeVisible('photo');
+            }
+        }
 
         return response()->json([
             'oldUserData' => $oldUserData,

@@ -3,11 +3,25 @@ export let selectedChildState = {
 };
 
 export function attachFields(data, index) {
+    const hasPhoto = data.photo && data.photo.length > 0;
+    const photoHtml = hasPhoto 
+        ? `<img src="${data.photo}" alt="${data.firstname}'s photo" class="w-24 h-24 rounded-full object-cover border-2 border-teal-500 mx-auto mb-2">`
+        : `<div class="w-24 h-24 rounded-full bg-gray-200 border-2 border-gray-300 mx-auto mb-2 flex items-center justify-center">
+            <i class="fa-solid fa-user text-3xl text-gray-400"></i>
+          </div>`;
     
     return `
         <div class="attached-fields child-entry flex flex-col">
             <input type="name" name="child[${index}][name]" value="${data.firstname}" hidden required/>
             <input type="hidden" name="child[${index}][birthday]" value="${data.birthday}"/>
+            <input type="hidden" name="child[${index}][photo]" value="${data.photo || ''}"/>
+            
+            <!-- Photo Display for Returning Users -->
+            <div class="text-center mb-3">
+                ${photoHtml}
+                <p class="text-sm font-semibold text-gray-700">${data.firstname}</p>
+            </div>
+            
             <div class="h-full">
                 <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                 <div class="relative">

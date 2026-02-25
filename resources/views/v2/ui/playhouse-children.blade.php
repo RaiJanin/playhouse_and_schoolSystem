@@ -90,13 +90,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Child Photo Camera Capture -->
-            {{-- <div class="px-3 mb-3">
-                <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
-                <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
-            </div> --}}
+                <!-- Child Photo Camera Capture -->
+                <div>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
+                    <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
+                </div>
+            </div>
         </div>
 
         <div class="pt-4 pb-4 flex flex-col gap-3">
