@@ -264,4 +264,15 @@ class PlayHouseController extends Controller
             'userLoaded' => true,
         ]);
     }
+
+    public function orderInfo($orderNo)
+    {
+        $order = Orders::with(['parent', 'orderItems'])->where('order_no', $orderNo)->firstOrFail();
+
+        $order->orderItems->each(function ($item) {
+            $item->child = M06Child::find($item->d_code_child);
+        });
+
+        return view('v2.pages.order-info', compact('order'));
+    }
 }
