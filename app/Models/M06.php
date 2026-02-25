@@ -44,7 +44,8 @@ class M06 extends Model
     public function guardians()
     {
         return $this->hasMany(M06::class, 'createdby', 'd_name')
-                    ->where('isguardian', true);
+                    ->where('isguardian', true)
+                    ->where('isparent', false);
     }
 
     protected static function boot()

@@ -1,12 +1,20 @@
-import { getOrDelete, submitData } from "../services/requestApi.js";
-
-import {oldUser, 
-        autoFillFields, 
-        enableEditInfo, 
-        autoFillChildren
-} from "../services/olduserState.js";
-
 import { API_ROUTES } from "../config/api.js";
+
+import { oldUser } from "../services/olduserState.js";
+
+import { enableEditInfo } from "../utilities/formControl.js";
+
+import { 
+    autoFillChildren, 
+    autoFillFields 
+} from '../services/autoFill.js';
+
+import { 
+    getOrDelete, 
+    submitData 
+} from "../services/requestApi.js";
+
+
 
 const container = document.getElementById('otp-choices');
 const messageDiv = document.getElementById('otp-message');
@@ -75,65 +83,65 @@ function generateOtpChoices(correctOtp, otpId) {
                 }
 
                 // Auto-advance to review step after 1 second for all users
-                setTimeout(async () => {
-                    // For old users, auto-fill fields first
-                    if (sendOtpAttempt.isOldUser) {
-                        // Get returnee data from either direct response or fetch
-                        let returneeData = null;
-                        
-                        if (sendOtpAttempt.returneeData && (sendOtpAttempt.returneeData.data || sendOtpAttempt.returneeData.parent)) {
-                            returneeData = sendOtpAttempt.returneeData;
-                        } else if (sendOtpAttempt.phoneNum) {
-                            // If no returnee data in OTP response, fetch from API
-                            // Gi ilisan nako sa akoang gigama nga request api service, para one line nalang - janin
-                            returneeData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
-                            console.log("Returnee data: ");
-                            console.log(returneeData);
-                        }
-                        
-                        // First go to parent step to populate fields
-                        if (window.showSteps) {
-                            // Step 3 = Parent
-                            window.showSteps(2, 'next');
+                if(!oldUser.oldUserLoaded) {
+                    setTimeout(async () => {
+                        // For old users, auto-fill fields first
+                        if (sendOtpAttempt.isOldUser) {
+                            // Get returnee data from either direct response or fetch
+                            let returneeData = null;
                             
-                            // Wait for DOM to update
-                            await new Promise(resolve => setTimeout(resolve, 300));
-                            
-                            // Auto-fill parent fields
-                            if (returneeData) {
-                                autoFillFields(returneeData);
-                                enableEditInfo();
+                            if (sendOtpAttempt.returneeData && (sendOtpAttempt.returneeData.data || sendOtpAttempt.returneeData.parent)) {
+                                returneeData = sendOtpAttempt.returneeData;
+                            } else if (sendOtpAttempt.phoneNum) {
+                                // If no returnee data in OTP response, fetch from API
+                                // Gi ilisan nako sa akoang gigama nga request api service, para one line nalang - janin
+                                returneeData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
+                                console.log("Returnee data: ");
+                                console.log(returneeData);
                             }
                             
-                            // Then go to children step (Step 4)
-                            window.showSteps(3, 'next');
-                            
-                            // Wait for DOM to update
-                            await new Promise(resolve => setTimeout(resolve, 300));
-                            
-                            // Do not skip children fields, ordering happens there
-                            // Auto-fill children fields (already done in autoFillFields, but ensure it's called)
-                            if (returneeData && returneeData.oldUserData.children.length >= 1) {
-                                autoFillChildren(returneeData.oldUserData.children);
+                            // First go to parent step to populate fields
+                            if (window.showSteps) {
+                                // Step 3 = Parent
+                                // Auto-fill parent fields
+                                if (returneeData) {
+                                    autoFillFields(returneeData);
+                                    enableEditInfo();
+                                }
+                                window.showSteps(2, 'next');
+                                
+                                // Wait for DOM to update
+                                await new Promise(resolve => setTimeout(resolve, 300));
+                                
+                                // Then go to children step (Step 4)
+                                window.showSteps(3, 'next');
+                                
+                                // Wait for DOM to update
+                                await new Promise(resolve => setTimeout(resolve, 300));
+                                
+                                // Do not skip children fields, ordering happens there
+                                // Auto-fill children fields (already done in autoFillFields, but ensure it's called)
+                                if (returneeData && returneeData.oldUserData.children.length >= 1) {
+                                    autoFillChildren(returneeData.oldUserData.children);
+                                }
+                                
+                                // // Finally go to review step (Step 5)
+                                // window.showSteps(4, 'next');
+                                
+                                // if (window.populateSummary) {
+                                //     window.populateSummary();
+                                // }
                             }
-                            
-                            // // Finally go to review step (Step 5)
-                            // window.showSteps(4, 'next');
-                            
-                            // if (window.populateSummary) {
-                            //     window.populateSummary();
-                            // }
+                        } else {
+                            // For new users, just go to next step (+1)
+                            if (window.showSteps) {
+                                const currentStep = window.getCurrentStep ? window.getCurrentStep() : 0;
+                                window.showSteps(currentStep + 1, 'next');
+                            }
                         }
-                    } else {
-                        // For new users, just go to next step (+1)
-                        if (window.showSteps) {
-                            const currentStep = window.getCurrentStep ? window.getCurrentStep() : 0;
-                            window.showSteps(currentStep + 1, 'next');
-                        }
-                    }
-                    oldUser.oldUserLoaded = true;
-                }, 500);
-
+                        
+                    }, 500);
+                }
             } else {
                 button.classList.remove('border-gray-300', 'opacity-70');
                 button.classList.add('border-red-500', 'bg-red-50');

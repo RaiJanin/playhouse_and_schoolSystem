@@ -1,6 +1,6 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
 
-const guardianFields = [
+export const guardianFields = [
     document.getElementById('guardianName'),
     document.getElementById('guardianLastName'),
     document.getElementById('guardianPhone')

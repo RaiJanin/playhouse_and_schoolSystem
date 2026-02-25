@@ -1,4 +1,4 @@
-import { attachBirthdayInput } from '../components/birthdayInput.js';
+import { attachBirthdayInput } from '../utilities/birthdayInput.js';
 
 window.document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');

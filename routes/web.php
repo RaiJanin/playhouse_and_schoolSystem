@@ -20,8 +20,8 @@ Route::prefix('v2')->group(function () {
 
 });
 
-// Naa sa api.php na ang para submit/get routes
-//REMEMBER: when calling a route url, put `/api` first before your URL
+
+
 //----- mock ups
 Route::get('/mockup-children', function () {
     return view('v2.pages.mockup.playhouse-registration');

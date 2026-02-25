@@ -79,7 +79,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (₱50)</label>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (₱100)</label>
                     <div class="relative">
                         <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
                             <option value="0">No</option>

@@ -1,24 +1,39 @@
 import './bootstrap';
+
+import { API_ROUTES } from './config/api.js';
+
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
-import { getOrDelete, submitData } from './services/requestApi.js'
-import { autoFillFields, enableEditInfo, openEditModal, oldUser, autoFillChildren } from './services/olduserState.js';
-
-import { API_ROUTES } from './config/api.js';
+import { submitData } from './services/requestApi.js'
+import { oldUser } from './services/olduserState.js';
 
 import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './utilities/parseFlatJson.js';
+import { requestBirthdayValidation } from './utilities/birthdayInput.js';
 
 import { CustomCheckbox } from './components/customCheckbox.js';
-import { requestBirthdayValidation } from './components/birthdayInput.js';
+import { openEditModal } from './components/reviewEdit.js';
 
-import {    addguardianCheckBx, 
-            confirmGuardianCheckBx, 
-            parentFields,
+import {    
+    addguardianCheckBx, 
+    confirmGuardianCheckBx, 
+    parentFields,
 } from './modules/playhouseParent.js';
+
+import { 
+    autoFillFields,
+    autoFillChildren
+} from './services/autoFill.js';
+
+import { 
+    disableBirthdayonSubmit, 
+    enableEditInfo 
+} from './utilities/formControl.js';
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('playhouse-registration-form');
@@ -121,16 +136,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Show welcome message based on user type
                 // Step 3 (index 2) = Parent Info - for new users
                 // Step 5 (index 4) = Review - for returning users
-                if (window.userDataForMessage) {
-                    const userData = window.userDataForMessage;
-                    if (currentStep === 2 && !userData.isExisting) {
-                        // New user on Parent Info step
-                        window.showWelcomeMessageOnStep('step3', false, '');
-                    } else if (currentStep === 4 && userData.isExisting) {
-                        // Returning user on Review step
-                        window.showWelcomeMessageOnStep('step5', true, userData.name || '');
-                    }
-                }
+                // if (window.userDataForMessage) {
+                //     const userData = window.userDataForMessage;
+                //     if (currentStep === 2 && !userData.isExisting) {
+                //         // New user on Parent Info step
+                //         window.showWelcomeMessageOnStep('step3', false, '');
+                //     } else if (currentStep === 4 && userData.isExisting) {
+                //         // Returning user on Review step
+                //         window.showWelcomeMessageOnStep('step5', true, userData.name || '');
+                //     }
+                // }
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
                 // Update next button enablement when step changes (e.g., back to phone step)
                 if (window.updateNextBtnState) window.updateNextBtnState();
@@ -188,19 +203,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
                 
                 if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
-                    console.log('Returnee detected, fetching user data...');
-                    const oldUserData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
-                    console.log('Returnee data:', oldUserData);
-                    autoFillFields(oldUserData);
-                    autoFillChildren(oldUserData.oldUserData.children);
-                    enableEditInfo();
-                    parentFields.forEach(field => {
-                        field.setAttribute('readonly', true);
-                    });
-                    // console.log('Skipping to review step (currentStep:', currentStep, '+ 3)');
-                    // Do not skip on the child selections, ordering happens there
-                    showSteps(currentStep + 2,'next');
-                    //populateSummary();
+                    //Return to avoid conflicts with the auto scroll
+                    
                     return;
                 }
             }
@@ -212,12 +216,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (currentStep + 1 === steps.length -1) populateSummary();
             }
         });
-        prevBtn.addEventListener('click', () => showSteps(currentStep - 1,'prev'));
+        prevBtn.addEventListener('click', () => {
+            if(getCurrentStepName() === 'children') {
+                disableBirthdayonSubmit(false);
+            }
+            showSteps(currentStep - 1,'prev');
+        });
 
-        // Terms checkbox on phone step: enable/disable Next button until phone valid and checkbox checked
         const phoneInputEl = document.getElementById('phone');
         const nextBtnEl = document.getElementById('next-btn');
-        // Disable next by default if phone step present
+        
         if (phoneInputEl && nextBtnEl) {
             nextBtnEl.disabled = true;
         }
@@ -233,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.updateNextBtnState = function() {
             const current = getCurrentStepName();
             if (current !== 'phone') {
-                // Ensure enabled when not on phone step
                 if (nextBtnEl) nextBtnEl.disabled = false;
                 return;
             }
@@ -266,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let guardianInfo = '';
             let childrenTotalCost = 0;
 
-            // Price map for durations
             const durationPriceMap = {
                 '1': 100,
                 '2': 200, 
@@ -284,9 +290,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const name = nameEl ? nameEl.value : 'Child';
                 const birthday = birthdayEl ? birthdayEl.value : '-';
                 const duration = durationEl ? durationEl.value : '';
-                const socksBool = addedSocksEl ? (addedSocksEl.value === '1' ? 'Yes' : 'No') : 'No';
+                const socksBool = addedSocksEl ? (addedSocksEl.value === '1' ? 'Socks Added' : '') : '';
 
-                // playtime durations should fetch from the master file (database or disk storage)
                 const durationMap = {
                     '1': '1 hr = ₱100',
                     '2': '2 hrs = ₱200', 
@@ -297,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const durationDefs = durationMap[duration] || duration;
                 
-                // Add to children total cost
                 if (durationPriceMap[duration]) {
                     childrenTotalCost += durationPriceMap[duration];
                 }
@@ -307,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name}</span></p> 
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
-                            <p class="text-sm text-gray-600 mt-1">Add Socks: <span class="font-bold text-gray-900">${socksBool}</span></p>
+                            <p class="text-sm text-gray-900 font-bold mt-1">${socksBool}</p>
                         </div>
                 `;
             });
@@ -406,13 +410,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
 
-            const termsCheckBx = new CustomCheckbox('agree-checkbox', 'check-agree-icon', 'check-agree-info');
-            termsCheckBx.setLabel(`
-                I agree to the <span><a target="__blank" href="https://termly.io/html_document/website-terms-and-conditions-text-format/" class="text-blue-500">terms and conditions.</a></span>
-            `);
-            termsCheckBx.onChange(checked => {
-                submitBtn.disabled = !checked;
-            });
+            if(phoneTermsCheckbox.isChecked()) {
+                submitBtn.disabled = false;
+            }
+            disableBirthdayonSubmit();
         }
 
         form.addEventListener('submit', async (e) => {

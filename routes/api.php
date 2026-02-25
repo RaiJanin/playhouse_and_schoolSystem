@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\PlayHouseController;
-use App\Http\Controllers\FamilyController;
+//use App\Http\Controllers\FamilyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,27 +30,27 @@ Route::get('/search-returnee/{phoneNumber}', [PlayHouseController::class, 'searc
 */
 
 // Parent (ParentInfo) routes - table: parent_info
-Route::get('/parents', [FamilyController::class, 'getParents']);
-Route::post('/parents', [FamilyController::class, 'createParent']);
-Route::get('/parents/{id}', [FamilyController::class, 'getParent']);
-Route::put('/parents/{id}', [FamilyController::class, 'updateParent']);
-Route::delete('/parents/{id}', [FamilyController::class, 'deleteParent']);
-Route::get('/parents/{id}/children', [FamilyController::class, 'getParentChildren']);
+// Route::get('/parents', [FamilyController::class, 'getParents']);
+// Route::post('/parents', [FamilyController::class, 'createParent']);
+// Route::get('/parents/{id}', [FamilyController::class, 'getParent']);
+// Route::put('/parents/{id}', [FamilyController::class, 'updateParent']);
+// Route::delete('/parents/{id}', [FamilyController::class, 'deleteParent']);
+// Route::get('/parents/{id}/children', [FamilyController::class, 'getParentChildren']);
 
-// Guardian routes - table: guardians
-Route::get('/guardians', [FamilyController::class, 'getGuardians']);
-Route::post('/guardians', [FamilyController::class, 'createGuardian']);
-Route::get('/guardians/{id}', [FamilyController::class, 'getGuardian']);
-Route::put('/guardians/{id}', [FamilyController::class, 'updateGuardian']);
-Route::delete('/guardians/{id}', [FamilyController::class, 'deleteGuardian']);
-Route::get('/guardians/{id}/children', [FamilyController::class, 'getGuardianChildren']);
+// // Guardian routes - table: guardians
+// Route::get('/guardians', [FamilyController::class, 'getGuardians']);
+// Route::post('/guardians', [FamilyController::class, 'createGuardian']);
+// Route::get('/guardians/{id}', [FamilyController::class, 'getGuardian']);
+// Route::put('/guardians/{id}', [FamilyController::class, 'updateGuardian']);
+// Route::delete('/guardians/{id}', [FamilyController::class, 'deleteGuardian']);
+// Route::get('/guardians/{id}/children', [FamilyController::class, 'getGuardianChildren']);
 
-// Child routes with loop support - table: children
-Route::get('/children', [FamilyController::class, 'getChildren']);
-Route::post('/children', [FamilyController::class, 'createChild']);
-Route::get('/children/{id}', [FamilyController::class, 'getChild']);
-Route::put('/children/{id}', [FamilyController::class, 'updateChild']);
-Route::delete('/children/{id}', [FamilyController::class, 'deleteChild']);
+// // Child routes with loop support - table: children
+// Route::get('/children', [FamilyController::class, 'getChildren']);
+// Route::post('/children', [FamilyController::class, 'createChild']);
+// Route::get('/children/{id}', [FamilyController::class, 'getChild']);
+// Route::put('/children/{id}', [FamilyController::class, 'updateChild']);
+// Route::delete('/children/{id}', [FamilyController::class, 'deleteChild']);
 
-// Link parent and guardian
-Route::post('/link-parent-guardian', [FamilyController::class, 'linkParentGuardian']);
+// // Link parent and guardian
+// Route::post('/link-parent-guardian', [FamilyController::class, 'linkParentGuardian']);
