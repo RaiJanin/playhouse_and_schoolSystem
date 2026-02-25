@@ -13,7 +13,8 @@ import { oldUser } from './services/olduserState.js';
 
 import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './utilities/parseFlatJson.js';
-import { requestBirthdayValidation } from './utilities/birthdayInput.js';
+import { requestBirthdayValidation, requestBirthdayDropdownValidation } from './utilities/birthdayInput.js';
+import { initCameraCaptures } from './utilities/cameraCapture.js';
 
 import { CustomCheckbox } from './components/customCheckbox.js';
 import { openEditModal } from './components/reviewEdit.js';
