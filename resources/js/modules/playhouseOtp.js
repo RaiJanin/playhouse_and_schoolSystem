@@ -122,7 +122,7 @@ function generateOtpChoices(correctOtp, otpId) {
                                 // Do not skip children fields, ordering happens there
                                 // Auto-fill children fields (already done in autoFillFields, but ensure it's called)
                                 if (returneeData && returneeData.oldUserData.children.length >= 1) {
-                                    autoFillChildren(returneeData.oldUserData.children);
+                                    autoFillChildren(returneeData.oldUserData.children, returneeData.oldUserData.d_name);
                                 }
                                 
                                 // // Finally go to review step (Step 5)

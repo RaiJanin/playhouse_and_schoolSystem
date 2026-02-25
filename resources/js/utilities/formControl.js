@@ -17,3 +17,13 @@ export function enableEditInfo (enable = true) {
         editParentCheckbxEl.classList.add('hidden');
     }
 }
+
+export function enableReadonly(fields, readOnly) {
+    fields.forEach(field => {
+        if(!readOnly && field.hasAttribute('required')) {
+            field.removeAttribute('readonly');
+        } else {
+            field.setAttribute('readonly', true);
+        }
+    });
+}

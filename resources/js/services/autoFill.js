@@ -1,12 +1,18 @@
 import { dateToString } from '../utilities/dateString.js';
 
-import { attachFields } from '../components/existingChild.js';
+import { 
+    attachFields,
+    selectedChildState,
+    validateSelectedChild
+} from '../components/existingChild.js';
 
 import { oldUser } from './olduserState.js';
 
 import {   
     addguardianCheckBx, 
-    confirmGuardianCheckBx 
+    confirmGuardianCheckBx, 
+    guardianFields,
+    parentFields
 } from '../modules/playhouseParent.js';
 
 
@@ -36,17 +42,25 @@ export function autoFillFields(data) {
             }
         })
         document.getElementById('guardian-form').hidden = false;
-
+        guardianFields.forEach(fields => {
+            fields.setAttribute('readonly', true);
+        })
     }
+    parentFields.forEach(fields => {
+        fields.setAttribute('readonly', true);
+    })
+
 }
 
-export function autoFillChildren(data) {
+export function autoFillChildren(data, parent) {
     console.log("Children data: ");
     console.log(data);
     
     const newCustomer = document.getElementById('new-customer-header');
     const returneeCustomer = document.getElementById('returnee-customer-header');
     const addAnotherMessage = document.getElementById('existing-children-add-m');
+
+    document.getElementById('parent-name').textContent = parent;
 
     existedChild.hidden = false;
     newCustomer.hidden = true;
@@ -81,6 +95,8 @@ export function autoFillChildren(data) {
                 addExistChildBtn.classList.add('text-green-500');
 
                 wrapper.insertAdjacentHTML('beforeend', attachFields(child, index));
+                selectedChildState.selectCount++;
+                validateSelectedChild();
             } else {
                 checkIcon.classList.remove('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
                 addExistChildBtn.classList.remove('text-green-500');
@@ -89,6 +105,7 @@ export function autoFillChildren(data) {
 
                 const fields = wrapper.querySelector('.attached-fields');
                 if (fields) fields.remove();
+                selectedChildState.selectCount--;
             }
         });
     });
@@ -106,8 +123,4 @@ export function selectedSocksExistChild() {
     });
 
     return count;
-}
-
-export function validateSelectedChild() {
-
 }

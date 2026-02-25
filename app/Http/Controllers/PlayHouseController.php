@@ -21,12 +21,14 @@ class PlayHouseController extends Controller
         return view('pages.playhouse-landing');
     }
 
-    public function store(Request $request)
+    public function store(StorePlayhouseFormRequest $request)
     {
-        $data = $request->all();
-
         try {
             DB::beginTransaction();
+
+            $data = $request->validated();
+
+            $parentAsGuardian = !$request->filled('guardianName') ? '1' : '0';
 
             $parent = M06::updateOrCreate(['mobileno' => $data['phone']],[
                 'd_name' => $data['parentName'] . ' ' . $data['parentLastName'],
@@ -36,6 +38,7 @@ class PlayHouseController extends Controller
                 'mobileno' => $data['phone'],
                 'email' => $data['parentEmail'],
                 'isparent' => true,
+                'isguardian' => $parentAsGuardian,
                 'createdby' => $data['parentName'] . ' ' . $data['parentLastName'],
                 'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
             ]);
@@ -136,29 +139,6 @@ class PlayHouseController extends Controller
             $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
             $phone = $request->phone;
 
-            // Check if phone number already exists
-            // $existingPhone = PhoneNumber::where('phone_number', $phone)->first();
-            
-            // if ($existingPhone) {
-            //     // Update existing record with new OTP
-            //     $existingPhone->update([
-            //         'otp_code' => $OTP,
-            //         'otp_expires_at' => Carbon::now()->addMinutes(5),
-            //         'is_verified' => false
-            //     ]);
-                
-            //     return response()->json([
-            //         'generated' => true,
-            //         'id' => $existingPhone->id,
-            //         'code' => $OTP
-            //     ]);
-            // }
-
-            //Allow multiple otp storing for same phone numbers, 
-            // so mag duplicate tanan numbers, 
-            // kay nagbutang kog delete otp if mulapas ug multiple attempts
-
-            // Create new OTP record
             $phoneRecord = PhoneNumber::create([
                 'phone_number' => $phone,
                 'otp_code' => $OTP,

@@ -1,4 +1,6 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
+import { oldUser } from '../services/olduserState.js';
+import { enableReadonly } from '../utilities/formControl.js';
 
 export const guardianFields = [
     document.getElementById('guardianName'),
@@ -37,16 +39,13 @@ addguardianCheckBx.onChange(checked => {
 export const editParentChkBx = new CustomCheckbox(`edit-parent-checkbox`, `edit-parent-icon`, `edit-parent-info`);
 editParentChkBx.setLabel(`Edit info`);
 
-editParentChkBx.onChange(() => {
+editParentChkBx.onChange(checked => {
 
-    parentFields.forEach(field => {
-        if(editParentChkBx.isChecked() && field.hasAttribute('required')) {
-            field.removeAttribute('readonly');
-        }
-        else {
-            field.setAttribute('readonly', true);
-        }
-    });
+    enableReadonly(parentFields, checked);
+
+    if(oldUser.oldUserData.guardians.length >=1) {
+        enableReadonly(guardianFields, checked);
+    }
     
 });
 

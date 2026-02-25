@@ -19,6 +19,7 @@ class M06Child extends Model
         'mi',
         'birthday',
         'age',
+        'phoneno',
         'createdby',
         'updatedby',
         'd_code',

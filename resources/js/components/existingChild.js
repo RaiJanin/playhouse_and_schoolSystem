@@ -1,4 +1,9 @@
+export let selectedChildState = {
+    selectCount: 0
+};
+
 export function attachFields(data, index) {
+    
     return `
         <div class="attached-fields child-entry flex flex-col">
             <input type="name" name="child[${index}][name]" value="${data.firstname}" hidden required/>
@@ -32,4 +37,20 @@ export function attachFields(data, index) {
             </div>
         </div>
     `;
+}
+
+export function validateSelectedChild() {
+    let validated = true;
+    const addChildPrompt = document.getElementById('add-child-prompt');
+
+    if(selectedChildState.selectCount === 0) {
+        addChildPrompt.hidden = false;
+        addChildPrompt.textContent = 'You need to add at least one child to continue.';
+        validated = false;
+    } else {
+        addChildPrompt.textContent = '';
+        addChildPrompt.hidden = true;
+    }
+
+    return validated;
 }

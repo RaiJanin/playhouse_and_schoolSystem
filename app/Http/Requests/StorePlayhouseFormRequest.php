@@ -30,10 +30,12 @@ class StorePlayhouseFormRequest extends FormRequest
             'guardianName' => 'nullable|string|max:255',
             'guardianLastName' => 'nullable|string|max:255',
             'guardianPhone' => 'nullable|string|max:20',
+            'guardianAuthorized' => 'nullable|boolean',
             'child' => 'required|array|min:1',
             'child.*.name' => 'required|string|max:255',
             'child.*.birthday' => 'required|date',
             'child.*.playDuration' => 'required',
+            'child.*.addSocks' => 'nullable|boolean'
         ];
     }
 }

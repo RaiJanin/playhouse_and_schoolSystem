@@ -32,6 +32,7 @@ import {
     disableBirthdayonSubmit, 
     enableEditInfo 
 } from './utilities/formControl.js';
+import { validateSelectedChild } from './components/existingChild.js';
 
 
 
@@ -206,6 +207,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     //Return to avoid conflicts with the auto scroll
                     
                     return;
+                }
+            }
+
+            if(getCurrentStepName() === 'children') {
+                if(oldUser.isOldUser) {
+                    valid = validateSelectedChild();
                 }
             }
             
