@@ -1,3 +1,4 @@
+import { selectedSocksExistChild } from '../services/autoFill.js';
 import { attachBirthdayInput } from '../utilities/birthdayInput.js';
 
 window.document.addEventListener('DOMContentLoaded', function() {
@@ -95,7 +96,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
             if (sel && sel.value === '1') count++;
         });
 
-        return count * 100;
+        return(count + selectedSocksExistChild())  * 100;
     }
     window.countSelectedSocks = countSelectedSocks;
 

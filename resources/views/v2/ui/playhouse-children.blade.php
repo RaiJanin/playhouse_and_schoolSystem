@@ -36,7 +36,7 @@
     <div id="returnee-customer-header" hidden>
         <h1 class="text-center text-2xl text-teal-700 font-bold">
             <span>Welcome back </span>
-            <span id="parent-name" class="text-teal-600">Janino Abrenica</span>
+            <span id="parent-name" class="text-teal-600"></span>
         </h1>
         <p class="text-center text-gray-600 mb-5 font-semibold">
             Who would you like to check in

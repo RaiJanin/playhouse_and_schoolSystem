@@ -10,6 +10,9 @@ import {
 } from '../modules/playhouseParent.js';
 
 
+const existedChild = document.getElementById('exist-children');
+
+
 export function autoFillFields(data) {
     console.log('Auto-filling fields with:', data);
     oldUser.oldUserLoaded = data.userLoaded;
@@ -41,7 +44,6 @@ export function autoFillChildren(data) {
     console.log("Children data: ");
     console.log(data);
     
-    const existedChild = document.getElementById('exist-children');
     const newCustomer = document.getElementById('new-customer-header');
     const returneeCustomer = document.getElementById('returnee-customer-header');
     const addAnotherMessage = document.getElementById('existing-children-add-m');
@@ -93,6 +95,17 @@ export function autoFillChildren(data) {
 
     console.log('Children auto-filled successfully');
     removeFirstChild(data.length);
+}
+
+export function selectedSocksExistChild() {
+    const selectedSocks = existedChild.querySelectorAll('.edit-child-socks');
+
+    let count = 0;
+    selectedSocks.forEach(socksSel => {
+        if(socksSel && socksSel.value === '1') count++;
+    });
+
+    return count;
 }
 
 export function validateSelectedChild() {

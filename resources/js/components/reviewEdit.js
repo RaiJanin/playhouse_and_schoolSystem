@@ -1,3 +1,5 @@
+import { dateToString } from "../utilities/dateString";
+
 export function openEditModal(reviewData = null) {
     const modal = document.getElementById('modal-container');
     const modalTitle = document.getElementById('modal-title');
@@ -87,7 +89,7 @@ export function openEditModal(reviewData = null) {
             </div>
             <div>
                 <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
-                <input type="text" id="edit-parentBirthday" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${formatDateForInput(parentData.birthday)}" placeholder="MM / DD / YYYY">
+                <input type="text" id="edit-parentBirthday" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${dateToString('slashDate', parentData.birthday)}" placeholder="MM / DD / YYYY">
             </div>
         </div>
     `;
@@ -154,7 +156,7 @@ export function openEditModal(reviewData = null) {
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
-                            <input type="text" class="edit-child-birthday w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${formatDateForInput(child.birthday)}" placeholder="MM / DD / YYYY">
+                            <input type="text" class="edit-child-birthday w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${dateToString('slashDate',child.birthday)}" placeholder="MM / DD / YYYY">
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Play Duration</label>

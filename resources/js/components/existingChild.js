@@ -21,7 +21,7 @@ export function attachFields(data, index) {
             <div class="h-full">
                 <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks</label>
                 <div class="relative">
-                    <select name="child[${index}][addSocks]" data-child-index="${index}" class="edit-child-socks child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                    <select name="child[${index}][addSocks]" data-child-index="${index}" class="edit-child-socks bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                         <option value="0">No</option>  
                         <option value="1">Yes</option> 
                     </select>
