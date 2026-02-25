@@ -52,7 +52,7 @@ export function openEditModal(reviewData = null) {
     const itemsContainer = document.getElementById('items-subcat-container');
     
     if (!modal) {
-        console.error('Modal container not found');
+        showConsole('error', 'Modal container not found');
         return;
     }
     
@@ -134,10 +134,15 @@ export function openEditModal(reviewData = null) {
                 <input type="tel" id="edit-phone" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${reviewData?.phone || ''}">
             </div>
             <div>
+<<<<<<< HEAD
                 <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday</label>
                 <div id="edit-parentBirthday">
                     ${createBirthdayDropdownHtml('parentBirthday', parentData.birthday)}
                 </div>
+=======
+                <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
+                <input type="text" id="edit-parentBirthday" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${dateToString('slashDate', parentData.birthday)}" placeholder="MM / DD / YYYY">
+>>>>>>> 92713b5958926cc876bdfc876c61366aa4afd8e2
             </div>
         </div>
     `;
@@ -203,10 +208,15 @@ export function openEditModal(reviewData = null) {
                             <input type="text" class="edit-child-name w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${child.name || ''}">
                         </div>
                         <div>
+<<<<<<< HEAD
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday</label>
                             <div class="birthday-edit-wrapper" data-child-index="${index}">
                                 ${createBirthdayDropdownHtml(`childBirthday${index}`, child.birthday)}
                             </div>
+=======
+                            <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
+                            <input type="text" class="edit-child-birthday w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${dateToString('slashDate',child.birthday)}" placeholder="MM / DD / YYYY">
+>>>>>>> 92713b5958926cc876bdfc876c61366aa4afd8e2
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Play Duration</label>

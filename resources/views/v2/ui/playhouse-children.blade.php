@@ -36,11 +36,12 @@
     <div id="returnee-customer-header" hidden>
         <h1 class="text-center text-2xl text-teal-700 font-bold">
             <span>Welcome back </span>
-            <span id="parent-name" class="text-teal-600">Janino Abrenica</span>
+            <span id="parent-name" class="text-teal-600"></span>
         </h1>
         <p class="text-center text-gray-600 mb-5 font-semibold">
             Who would you like to check in
         </p>
+        <p id="add-child-prompt" class="text-center text-sm text-red-600 mb-5 font-semibold" hidden></p>
     </div>
     <div id="childrenForm" class="space-y-5">
         <div id="exist-children" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-3" hidden>

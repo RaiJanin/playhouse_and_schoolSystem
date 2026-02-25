@@ -1,17 +1,27 @@
 import { dateToString } from '../utilities/dateString.js';
 
-import { attachFields } from '../components/existingChild.js';
+import { 
+    attachFields,
+    selectedChildState,
+    validateSelectedChild
+} from '../components/existingChild.js';
 
 import { oldUser } from './olduserState.js';
 
 import {   
     addguardianCheckBx, 
-    confirmGuardianCheckBx 
+    confirmGuardianCheckBx, 
+    guardianFields,
+    parentFields
 } from '../modules/playhouseParent.js';
+import { showConsole } from '../config/debug.js';
+
+
+const existedChild = document.getElementById('exist-children');
 
 
 export function autoFillFields(data) {
-    console.log('Auto-filling fields with:', data);
+    showConsole('log', 'Auto-filling fields with:', data);
     oldUser.oldUserLoaded = data.userLoaded;
 
     document.getElementById('parentName').value = data.oldUserData.firstname;
@@ -33,18 +43,24 @@ export function autoFillFields(data) {
             }
         })
         document.getElementById('guardian-form').hidden = false;
-
+        guardianFields.forEach(fields => {
+            fields.setAttribute('readonly', true);
+        })
     }
+    parentFields.forEach(fields => {
+        fields.setAttribute('readonly', true);
+    })
+
 }
 
-export function autoFillChildren(data) {
-    console.log("Children data: ");
-    console.log(data);
+export function autoFillChildren(data, parent) {
+    showConsole('log', "Children data: ", data)
     
-    const existedChild = document.getElementById('exist-children');
     const newCustomer = document.getElementById('new-customer-header');
     const returneeCustomer = document.getElementById('returnee-customer-header');
     const addAnotherMessage = document.getElementById('existing-children-add-m');
+
+    document.getElementById('parent-name').textContent = parent;
 
     existedChild.hidden = false;
     newCustomer.hidden = true;
@@ -79,6 +95,8 @@ export function autoFillChildren(data) {
                 addExistChildBtn.classList.add('text-green-500');
 
                 wrapper.insertAdjacentHTML('beforeend', attachFields(child, index));
+                selectedChildState.selectCount++;
+                validateSelectedChild();
             } else {
                 checkIcon.classList.remove('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
                 addExistChildBtn.classList.remove('text-green-500');
@@ -87,14 +105,22 @@ export function autoFillChildren(data) {
 
                 const fields = wrapper.querySelector('.attached-fields');
                 if (fields) fields.remove();
+                selectedChildState.selectCount--;
             }
         });
     });
 
-    console.log('Children auto-filled successfully');
+    showConsole('log', 'Children auto-filled successfully');
     removeFirstChild(data.length);
 }
 
-export function validateSelectedChild() {
+export function selectedSocksExistChild() {
+    const selectedSocks = existedChild.querySelectorAll('.edit-child-socks');
 
+    let count = 0;
+    selectedSocks.forEach(socksSel => {
+        if(socksSel && socksSel.value === '1') count++;
+    });
+
+    return count;
 }
