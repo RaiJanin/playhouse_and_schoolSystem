@@ -1,4 +1,5 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
+import { showConsole } from '../config/debug.js';
 import { oldUser } from '../services/olduserState.js';
 import { enableReadonly } from '../utilities/formControl.js';
 
@@ -41,10 +42,11 @@ editParentChkBx.setLabel(`Edit info`);
 
 editParentChkBx.onChange(checked => {
 
-    enableReadonly(parentFields, checked);
+    enableReadonly(parentFields, !checked);
+    showConsole('log', 'Returnee Data: ', oldUser.returneeData);
 
-    if(oldUser.oldUserData.guardians.length >=1) {
-        enableReadonly(guardianFields, checked);
+    if(oldUser.returneeData.oldUserData.guardians.length >=1) {
+        enableReadonly(guardianFields, !checked);
     }
     
 });

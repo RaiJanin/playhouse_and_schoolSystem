@@ -62,11 +62,8 @@ function generateOtpChoices(correctOtp, otpId) {
                 btn.classList.add('border-gray-300', 'opacity-70');
             });
             
-            //Test verify OTP on backend
-            
             const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", storePhone);
 
-            // if (otp === correctOtp) {
             if(sendOtpAttempt.isCorrectOtp) {
                 button.classList.remove('border-gray-300', 'opacity-70');
                 button.classList.add('border-green-500', 'bg-green-50');
@@ -79,60 +76,40 @@ function generateOtpChoices(correctOtp, otpId) {
                 if(sendOtpAttempt.isOldUser) {
                     oldUser.isOldUser = sendOtpAttempt.isOldUser;
                     oldUser.phoneNumber = sendOtpAttempt.phoneNum;
-                    // Store returnee data for auto-fill
                 }
 
-                // Auto-advance to review step after 1 second for all users
                 if(!oldUser.oldUserLoaded) {
                     setTimeout(async () => {
-                        // For old users, auto-fill fields first
                         if (sendOtpAttempt.isOldUser) {
-                            // Get returnee data from either direct response or fetch
                             let returneeData = null;
                             
                             if (sendOtpAttempt.returneeData && (sendOtpAttempt.returneeData.data || sendOtpAttempt.returneeData.parent)) {
                                 returneeData = sendOtpAttempt.returneeData;
                             } else if (sendOtpAttempt.phoneNum) {
-                                // If no returnee data in OTP response, fetch from API
-                                // Gi ilisan nako sa akoang gigama nga request api service, para one line nalang - janin
                                 returneeData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
+                                oldUser.returneeData = returneeData;
                                 showConsole('log', 'Returnee data: ', returneeData);
                             }
-                            
-                            // First go to parent step to populate fields
+                        
                             if (window.showSteps) {
-                                // Step 3 = Parent
-                                // Auto-fill parent fields
+                                
                                 if (returneeData) {
                                     autoFillFields(returneeData);
                                     enableEditInfo();
                                 }
                                 window.showSteps(2, 'next');
                                 
-                                // Wait for DOM to update
                                 await new Promise(resolve => setTimeout(resolve, 300));
                                 
-                                // Then go to children step (Step 4)
                                 window.showSteps(3, 'next');
                                 
-                                // Wait for DOM to update
                                 await new Promise(resolve => setTimeout(resolve, 300));
                                 
-                                // Do not skip children fields, ordering happens there
-                                // Auto-fill children fields (already done in autoFillFields, but ensure it's called)
                                 if (returneeData && returneeData.oldUserData.children.length >= 1) {
                                     autoFillChildren(returneeData.oldUserData.children, returneeData.oldUserData.d_name);
                                 }
-                                
-                                // // Finally go to review step (Step 5)
-                                // window.showSteps(4, 'next');
-                                
-                                // if (window.populateSummary) {
-                                //     window.populateSummary();
-                                // }
                             }
                         } else {
-                            // For new users, just go to next step (+1)
                             if (window.showSteps) {
                                 const currentStep = window.getCurrentStep ? window.getCurrentStep() : 0;
                                 window.showSteps(currentStep + 1, 'next');

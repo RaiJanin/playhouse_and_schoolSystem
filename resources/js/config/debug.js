@@ -1,4 +1,4 @@
-const debugMode = false; //change this to view console.logs
+const debugMode = true; //change this to view console.logs
 /**
  * 
  * @param {'error'|'log'} options - Console Options
