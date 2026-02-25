@@ -1,6 +1,7 @@
 import './bootstrap';
 
 import { API_ROUTES } from './config/api.js';
+import { showConsole } from './config/debug.js';
 
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
@@ -33,7 +34,6 @@ import {
     enableEditInfo 
 } from './utilities/formControl.js';
 import { validateSelectedChild } from './components/existingChild.js';
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -171,14 +171,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             inputs.forEach(input => {
                 if (input.id === 'phone') {
-                    console.log('Phone input detected, validating...');
+                    showConsole('log', 'Phone input detected, validating...');
                     if (!validatePhone(input)) {
-                        console.log('Phone validation failed');
+                        showConsole('log', 'Phone validation failed');
                         input.classList.remove('border-teal-500');
                         input.classList.add('border-red-500');
                         valid = false;
                     } else {
-                        console.log('Phone validation passed, calling generateOtp');
+                        showConsole('log', 'Phone validation passed, calling generateOtp');
                         input.classList.remove('border-red-500');
                         generateOtp(input.value);
                     }
@@ -198,10 +198,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(!correctCode) {
                     valid = false;
                 }
-                
-                console.log('OTP step - oldUser.isOldUser:', oldUser.isOldUser);
-                console.log('OTP step - oldUser.oldUserLoaded:', oldUser.oldUserLoaded);
-                console.log('OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
+            
+                showConsole('log', 'OTP step - oldUser.isOldUser:', oldUser.isOldUser);
+                showConsole('log', 'OTP step - oldUser.oldUserLoaded:', oldUser.oldUserLoaded);
+                showConsole('log', 'OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
                 
                 if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
                     //Return to avoid conflicts with the auto scroll
@@ -426,15 +426,14 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            console.log('Form submition active');
+            showConsole('log', 'Form submition active');
 
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
-            console.log('Before submit: '+JSON.stringify(jsonData));
+            showConsole('log', 'Before submit: ', jsonData);
 
             replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
-            console.log("Reply from Backend");
-            console.log(replyFromBackend);
+            showConsole('log', "Reply from Backend", replyFromBackend);
 
             if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
 

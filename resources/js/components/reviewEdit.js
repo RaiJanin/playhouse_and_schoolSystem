@@ -1,3 +1,4 @@
+import { showConsole } from "../config/debug";
 import { dateToString } from "../utilities/dateString";
 
 export function openEditModal(reviewData = null) {
@@ -6,7 +7,7 @@ export function openEditModal(reviewData = null) {
     const itemsContainer = document.getElementById('items-subcat-container');
     
     if (!modal) {
-        console.error('Modal container not found');
+        showConsole('error', 'Modal container not found');
         return;
     }
     

@@ -14,13 +14,14 @@ import {
     guardianFields,
     parentFields
 } from '../modules/playhouseParent.js';
+import { showConsole } from '../config/debug.js';
 
 
 const existedChild = document.getElementById('exist-children');
 
 
 export function autoFillFields(data) {
-    console.log('Auto-filling fields with:', data);
+    showConsole('log', 'Auto-filling fields with:', data);
     oldUser.oldUserLoaded = data.userLoaded;
 
     document.getElementById('parentName').value = data.oldUserData.firstname;
@@ -53,8 +54,7 @@ export function autoFillFields(data) {
 }
 
 export function autoFillChildren(data, parent) {
-    console.log("Children data: ");
-    console.log(data);
+    showConsole('log', "Children data: ", data)
     
     const newCustomer = document.getElementById('new-customer-header');
     const returneeCustomer = document.getElementById('returnee-customer-header');
@@ -110,7 +110,7 @@ export function autoFillChildren(data, parent) {
         });
     });
 
-    console.log('Children auto-filled successfully');
+    showConsole('log', 'Children auto-filled successfully');
     removeFirstChild(data.length);
 }
 

@@ -1,4 +1,5 @@
 import { API_ROUTES } from "../config/api.js";
+import { showConsole } from "../config/debug.js";
 
 import { oldUser } from "../services/olduserState.js";
 
@@ -15,7 +16,6 @@ import {
 } from "../services/requestApi.js";
 
 
-
 const container = document.getElementById('otp-choices');
 const messageDiv = document.getElementById('otp-message');
 
@@ -27,10 +27,10 @@ window.storePhone = storePhone;
 let otpAttempt = 0;
 
 function generateOtpChoices(correctOtp, otpId) {
-    console.log('generateOtpChoices called with:', correctOtp, otpId);
+    showConsole('log', 'generateOtpChoices called with:', `${correctOtp}, ${otpId}`);
     
     if (!container) {
-        console.error('OTP container not found!');
+        showConsole('error', 'OTP container not found!')
         return;
     }
     
@@ -96,8 +96,7 @@ function generateOtpChoices(correctOtp, otpId) {
                                 // If no returnee data in OTP response, fetch from API
                                 // Gi ilisan nako sa akoang gigama nga request api service, para one line nalang - janin
                                 returneeData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
-                                console.log("Returnee data: ");
-                                console.log(returneeData);
+                                showConsole('log', 'Returnee data: ', returneeData);
                             }
                             
                             // First go to parent step to populate fields
@@ -194,36 +193,36 @@ function shuffleArray(array) {
 }
 
 async function generateOtp(phoneNumber) {
-    console.log('generateOtp called with:', phoneNumber);
-    console.log('Current storePhone:', storePhone);
+    showConsole('log', 'generateOtp called with:', phoneNumber);
+    showConsole('log', 'Current storePhone:', storePhone);
     
     if(storePhone !== 0 && storePhone === phoneNumber) {
-        console.log('Same phone number, skipping OTP generation');
+        showConsole('log', 'Same phone number, skipping OTP generation');
         return;
     }
 
     storePhone = phoneNumber;
     otpAttempt = 0;
     
-    console.log('Calling makeOtp API with URL:', API_ROUTES.makeOtpURL);
+    showConsole('log', 'Calling makeOtp API with URL:', API_ROUTES.makeOtpURL);
     try {
         const phoneIntoJson = { phone: phoneNumber };
-        console.log('Sending data:', phoneIntoJson);
+        showConsole('log', 'Sending data:', phoneIntoJson);
         
         const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
-        console.log('OTP response:', otp);
-        console.log('OTP: '+otp.code);
+        showConsole('log', 'OTP response:', otp);
+        showConsole('log', 'OTP: ', otp.code, true);
         
         if (otp && otp.code) {
             generateOtpChoices(otp.code, otp.id, phoneNumber);
         } else {
-            console.error('No OTP code returned or error:', otp);
+            showConsole('error', 'No OTP code returned or error:', otp);
             messageDiv.textContent = 'Error generating OTP. Please try again.';
             messageDiv.className = 'text-center text-red-600 font-medium';
         }
     } catch (error) {
-        console.error('Error calling makeOtp API:', error);
-        console.error('Error message:', error.message);
+        showConsole('error', 'Error calling makeOtp API:', error);
+        showConsole('error', 'Error message:', error.message);
         messageDiv.textContent = 'Error generating OTP. Please try again.';
         messageDiv.className = 'text-center text-red-600 font-medium';
     }
