@@ -363,7 +363,15 @@ document.addEventListener('DOMContentLoaded', function () {
                             ${childrenItems}
                         </div>
                     </div>
-                    <div class="mt-6 pt-4 border-t-2 border-cyan-400">
+                    <div class="mt-6 pt-4 border-t-2 border-cyan-400 space-y-4">
+                        <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
+                            <p class="text-lg font-bold text-teal-800 mb-2">DISCOUNT CODE</p>
+                            <p class="text-xs text-gray-600 mb-3">Got a discount? Enter it below — and come back soon for more offers!</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <input type="text" id="discount-code-input" placeholder="Enter code" class="flex-1 min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all" autocomplete="off">
+                                <button type="button" id="apply-discount-btn" class="min-h-[44px] px-5 py-3 text-base font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition-colors touch-manipulation">Apply</button>
+                            </div>
+                        </div>
                         <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
                             <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Item: ₱${socksTotalCost}</p>
@@ -466,6 +474,12 @@ document.addEventListener('DOMContentLoaded', function () {
             qrContainer.classList.remove('hidden');
             orderNumText.textContent = orderNum;
             qrImage.innerHTML = "";
+
+            const orderInfoLink = document.getElementById('order-info-link');
+            if (orderInfoLink) {
+                orderInfoLink.href = `/v2/order-info/${orderNum}`;
+                orderInfoLink.classList.remove('hidden');
+            }
 
             new QRCode(qrImage, {
                 text: orderNum,
