@@ -1,4 +1,5 @@
-import { attachBirthdayInput } from '../utilities/birthdayInput.js';
+import { attachBirthdayInput, attachBirthdayDropdown } from '../utilities/birthdayInput.js';
+import { attachCameraCapture } from '../utilities/cameraCapture.js';
 
 window.document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
@@ -20,9 +21,8 @@ window.document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <div>
-                    <label class=\"block text-base font-semibold text-gray-900 mb-2\">Birthday <span class=\\"text-red-600\\">*</span></label>
-                    <input type=\"tel\" id=\"child-${childEntries}-birthday\" data-birthday required class=\"bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300\" placeholder=\"MM / DD / YYYY\" inputmode=\"numeric\" autocomplete=\"bday\" />
-                    <input type="hidden" name="child[${childEntries}][birthday]" />
+                    <label class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
+                    <div id="child-${childEntries}-birthday" data-birthday-dropdown data-name="child[${childEntries}][birthday]" required class="bg-teal-100 rounded-lg"></div>
                 </div>
 
                 <div>
@@ -54,6 +54,12 @@ window.document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             
+            <!-- Child Photo Camera Capture -->
+            <div class="px-3 mb-3">
+                <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
+                <div id="child-${childEntries}-photo" data-camera-input data-name="child[${childEntries}][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
+            </div>
+            
             <div class="flex justify-start pt-2">
                 <button type="button" class="remove-child text-sm font-bold text-white bg-red-600 hover:bg-red-500 px-4 py-1.5 rounded-tr-xl rounded-bl-lg shadow transition-all duration-200 flex items-center gap-2">
                     <i class="fa-solid fa-trash text-xs"></i> Remove
@@ -62,8 +68,12 @@ window.document.addEventListener('DOMContentLoaded', function() {
         `;
         attachEntryListeners(entry);
         
-        const b = entry.querySelector('input[data-birthday]');
-        if (b) attachBirthdayInput(b);
+        const birthdayContainer = entry.querySelector('[data-birthday-dropdown]');
+        if (birthdayContainer) attachBirthdayDropdown(birthdayContainer);
+
+        // Initialize camera capture for this child
+        const cameraContainer = entry.querySelector('[data-camera-input]');
+        if (cameraContainer) attachCameraCapture(cameraContainer);
 
         return { entry, index };
     }

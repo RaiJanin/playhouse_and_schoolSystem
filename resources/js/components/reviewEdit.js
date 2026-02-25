@@ -1,3 +1,51 @@
+import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
+
+// Helper function to generate birthday dropdown HTML
+export function createBirthdayDropdownHtml(name, existingValue = '') {
+    let currentMM = '', currentDD = '', currentYYYY = '';
+    if (existingValue && /^\d{4}-\d{2}-\d{2}$/.test(existingValue)) {
+        currentYYYY = existingValue.slice(0, 4);
+        currentMM = existingValue.slice(5, 7);
+        currentDD = existingValue.slice(8, 10);
+    }
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let monthOptions = '<option value="">Month</option>';
+    monthNames.forEach((name, idx) => {
+        const val = String(idx + 1).padStart(2, '0');
+        const selected = (val === currentMM) ? ' selected' : '';
+        monthOptions += `<option value="${val}"${selected}>${name}</option>`;
+    });
+
+    let dayOptions = '<option value="">Day</option>';
+    for (let d = 1; d <= 31; d++) {
+        const val = String(d).padStart(2, '0');
+        const selected = (val === currentDD) ? ' selected' : '';
+        dayOptions += `<option value="${val}"${selected}>${d}</option>`;
+    }
+
+    const currentYear = new Date().getFullYear();
+    let yearOptions = '<option value="">Year</option>';
+    for (let y = currentYear; y >= currentYear - 100; y--) {
+        const selected = (String(y) === currentYYYY) ? ' selected' : '';
+        yearOptions += `<option value="${y}"${selected}>${y}</option>`;
+    }
+
+    return `
+        <div class="birthday-dropdown-wrapper flex gap-2">
+            <select class="birthday-month-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[month]">
+                ${monthOptions}
+            </select>
+            <select class="birthday-day-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[day]">
+                ${dayOptions}
+            </select>
+            <select class="birthday-year-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[year]">
+                ${yearOptions}
+            </select>
+        </div>
+    `;
+}
+
 export function openEditModal(reviewData = null) {
     const modal = document.getElementById('modal-container');
     const modalTitle = document.getElementById('modal-title');
@@ -86,8 +134,10 @@ export function openEditModal(reviewData = null) {
                 <input type="tel" id="edit-phone" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${reviewData?.phone || ''}">
             </div>
             <div>
-                <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
-                <input type="text" id="edit-parentBirthday" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all" value="${formatDateForInput(parentData.birthday)}" placeholder="MM / DD / YYYY">
+                <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday</label>
+                <div id="edit-parentBirthday">
+                    ${createBirthdayDropdownHtml('parentBirthday', parentData.birthday)}
+                </div>
             </div>
         </div>
     `;
@@ -153,8 +203,10 @@ export function openEditModal(reviewData = null) {
                             <input type="text" class="edit-child-name w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${child.name || ''}">
                         </div>
                         <div>
-                            <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday (MM / DD / YYYY)</label>
-                            <input type="text" class="edit-child-birthday w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${formatDateForInput(child.birthday)}" placeholder="MM / DD / YYYY">
+                            <label class="text-sm font-semibold text-gray-600 block mb-1">Birthday</label>
+                            <div class="birthday-edit-wrapper" data-child-index="${index}">
+                                ${createBirthdayDropdownHtml(`childBirthday${index}`, child.birthday)}
+                            </div>
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-gray-600 block mb-1">Play Duration</label>
@@ -241,19 +293,28 @@ export function openEditModal(reviewData = null) {
                 if (formGuardianPhone) formGuardianPhone.value = editGuardianPhone.value;
             }
         }
-        if (editParentBirthday) {
+        // Update parent birthday from dropdowns
+        const parentBirthdayContainer = document.querySelector('#edit-parentBirthday');
+        if (parentBirthdayContainer) {
+            const monthSelect = parentBirthdayContainer.querySelector('.birthday-month-select');
+            const daySelect = parentBirthdayContainer.querySelector('.birthday-day-select');
+            const yearSelect = parentBirthdayContainer.querySelector('.birthday-year-select');
+            
             const formParentBirthday = document.getElementById('parentBirthday');
-            const formParentBirthdayHidden = document.getElementById('parentBirthday-hidden');
-            if (formParentBirthday) {
-                // Convert slash date to ISO format for hidden field
-                formParentBirthday.value = editParentBirthday.value;
-                // Mark as valid
-                formParentBirthday.classList.remove('birthday-invalid');
-                formParentBirthday.classList.add('birthday-valid');
-                formParentBirthday.setAttribute('data-birthday-valid', 'true');
-                formParentBirthday.removeAttribute('aria-invalid');
-                if (formParentBirthdayHidden) {
-                    formParentBirthdayHidden.value = convertToIsoDate(editParentBirthday.value);
+            if (formParentBirthday && monthSelect && daySelect && yearSelect) {
+                const mm = monthSelect.value;
+                const dd = daySelect.value;
+                const yyyy = yearSelect.value;
+                
+                if (mm && dd && yyyy) {
+                    const isoDate = `${yyyy}-${mm}-${dd}`;
+                    formParentBirthday.dataset.birthdayValue = isoDate;
+                    const hiddenInput = formParentBirthday.querySelector('input[type="hidden"]');
+                    if (hiddenInput) hiddenInput.value = isoDate;
+                    
+                    formParentBirthday.classList.remove('birthday-invalid');
+                    formParentBirthday.classList.add('birthday-valid');
+                    formParentBirthday.setAttribute('data-birthday-valid', 'true');
                 }
             }
         }
@@ -268,23 +329,33 @@ export function openEditModal(reviewData = null) {
             }
         });
         
-        document.querySelectorAll('.edit-child-birthday').forEach((input) => {
-            const index = input.dataset.childIndex;
-            const childEntries = document.querySelectorAll('.child-entry');
-            if (childEntries[index]) {
-                const birthdayInput = childEntries[index].querySelector('input[name*="[birthday]"]');
-                const birthdayDisplay = childEntries[index].querySelector('[data-birthday]');
-                if (birthdayInput) {
-                    // Convert slash date to ISO format
-                    birthdayInput.value = convertToIsoDate(input.value);
-                }
-                if (birthdayDisplay) {
-                    birthdayDisplay.value = input.value;
-                    // Mark as valid for form validation
-                    birthdayDisplay.classList.remove('birthday-invalid');
-                    birthdayDisplay.classList.add('birthday-valid');
-                    birthdayDisplay.setAttribute('data-birthday-valid', 'true');
-                    birthdayDisplay.removeAttribute('aria-invalid');
+        // Update children birthday from dropdowns
+        document.querySelectorAll('.birthday-edit-wrapper').forEach((wrapper) => {
+            const index = wrapper.dataset.childIndex;
+            const monthSelect = wrapper.querySelector('.birthday-month-select');
+            const daySelect = wrapper.querySelector('.birthday-day-select');
+            const yearSelect = wrapper.querySelector('.birthday-year-select');
+            
+            if (monthSelect && daySelect && yearSelect) {
+                const mm = monthSelect.value;
+                const dd = daySelect.value;
+                const yyyy = yearSelect.value;
+                
+                const childEntries = document.querySelectorAll('.child-entry');
+                if (childEntries[index]) {
+                    const birthdayDropdown = childEntries[index].querySelector('[data-birthday-dropdown]');
+                    if (birthdayDropdown) {
+                        if (mm && dd && yyyy) {
+                            const isoDate = `${yyyy}-${mm}-${dd}`;
+                            birthdayDropdown.dataset.birthdayValue = isoDate;
+                            const hiddenInput = birthdayDropdown.querySelector('input[type="hidden"]');
+                            if (hiddenInput) hiddenInput.value = isoDate;
+                            
+                            birthdayDropdown.classList.remove('birthday-invalid');
+                            birthdayDropdown.classList.add('birthday-valid');
+                            birthdayDropdown.setAttribute('data-birthday-valid', 'true');
+                        }
+                    }
                 }
             }
         });
