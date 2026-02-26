@@ -77,6 +77,7 @@ class PlayHouseController extends Controller
                         [
                             'lastname' => $parent->lastname,
                             'age' => Carbon::parse($child['birthday'])->age,
+                            'photo' => $child['photo'] ?? null,
                             'createdby' => $parent->d_name,
                             'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
                         ]
@@ -260,9 +261,28 @@ class PlayHouseController extends Controller
     {
         $oldUserData = M06::with(['children', 'guardians'])->where('mobileno', $phoneNumber)->first();
 
+        // Get children with photo data
+        if ($oldUserData && $oldUserData->children) {
+            foreach ($oldUserData->children as $child) {
+                // Ensure photo field is included
+                $child->makeVisible('photo');
+            }
+        }
+
         return response()->json([
             'oldUserData' => $oldUserData,
             'userLoaded' => true,
         ]);
+    }
+
+    public function orderInfo($orderNo)
+    {
+        $order = Orders::with(['parent', 'orderItems'])->where('order_no', $orderNo)->firstOrFail();
+
+        $order->orderItems->each(function ($item) {
+            $item->child = M06Child::find($item->d_code_child);
+        });
+
+        return view('v2.pages.order-info', compact('order'));
     }
 }

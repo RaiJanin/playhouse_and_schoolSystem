@@ -35,7 +35,8 @@ class StorePlayhouseFormRequest extends FormRequest
             'child.*.name' => 'required|string|max:255',
             'child.*.birthday' => 'required|date',
             'child.*.playDuration' => 'required',
-            'child.*.addSocks' => 'nullable|boolean'
+            'child.*.addSocks' => 'nullable|boolean',
+            'child.*.photo' => 'nullable|string'
         ];
     }
 }

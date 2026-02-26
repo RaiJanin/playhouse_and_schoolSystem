@@ -187,15 +187,23 @@ export function attachCameraCapture(container) {
         // Store in hidden input
         hiddenInput.value = dataUrl;
         
-        // Show preview
+        // Show as profile picture
         preview.src = dataUrl;
         preview.style.display = 'block';
         placeholder.style.display = 'none';
         
+        // Add profile picture styling
+        preview.classList.add('rounded-full', 'object-cover', 'border-4', 'border-teal-500', 'mx-auto');
+        preview.style.width = '100px';
+        preview.style.height = '100px';
+        
         // Show retake and remove buttons, hide start button
         startCameraBtn.classList.add('hidden');
+        uploadBtn.classList.add('hidden');
         retakeBtn.classList.remove('hidden');
+        retakeBtn.classList.add('flex-1');
         removeBtn.classList.remove('hidden');
+        removeBtn.classList.add('flex-1');
         
         closeCamera();
     };
@@ -210,8 +218,12 @@ export function attachCameraCapture(container) {
         hiddenInput.value = '';
         preview.src = '';
         preview.style.display = 'none';
+        preview.classList.remove('rounded-full', 'object-cover', 'border-4', 'border-teal-500', 'mx-auto');
+        preview.style.width = '';
+        preview.style.height = '';
         placeholder.style.display = 'flex';
         startCameraBtn.classList.remove('hidden');
+        uploadBtn.classList.remove('hidden');
         retakeBtn.classList.add('hidden');
         removeBtn.classList.add('hidden');
     };
@@ -236,9 +248,18 @@ export function attachCameraCapture(container) {
                 preview.src = dataUrl;
                 preview.style.display = 'block';
                 placeholder.style.display = 'none';
+                
+                // Add profile picture styling
+                preview.classList.add('rounded-full', 'object-cover', 'border-4', 'border-teal-500', 'mx-auto');
+                preview.style.width = '100px';
+                preview.style.height = '100px';
+                
                 startCameraBtn.classList.add('hidden');
+                uploadBtn.classList.add('hidden');
                 retakeBtn.classList.remove('hidden');
+                retakeBtn.classList.add('flex-1');
                 removeBtn.classList.remove('hidden');
+                removeBtn.classList.add('flex-1');
             };
             reader.readAsDataURL(file);
         }
