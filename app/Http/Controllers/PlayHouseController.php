@@ -83,7 +83,8 @@ class PlayHouseController extends Controller
                     );
 
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
-                    $totalPrice = ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice);
+                    $childprice = ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice);
+                    $totalPrice += $childprice;
                 }
             }
 
@@ -103,13 +104,13 @@ class PlayHouseController extends Controller
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
 
                     OrderItems::create([
-                        'order_id' => $order->id,
+                        'order_id' => $order->order_no,
                         'd_code_child' => $childModel->d_code_c,
                         'durationhours' => $duration,
                         'durationsubtotal' => $duration * $pricePerDuration,
                         'issocksadded' => $child['addSocks'],
                         'socksprice' => $child['addSocks'] * $socksPrice,
-                        'subtotal' => ($duration * $pricePerDuration) * ($child['addSocks'] * $socksPrice)
+                        'subtotal' => ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice)
                     ]);
                 }
             }
