@@ -34,7 +34,8 @@ class StorePlayhouseFormRequest extends FormRequest
             'child' => 'required|array|min:1',
             'child.*.name' => 'required|string|max:255',
             'child.*.birthday' => 'required|date',
-            'child.*.playDuration' => 'required',
+            'child.*.playDuration' => 'required|string|max:50',
+            'child.*.phoneNumber' => 'nullable|string|max:20',
             'child.*.addSocks' => 'nullable|boolean',
             'child.*.photo' => 'nullable|string'
         ];

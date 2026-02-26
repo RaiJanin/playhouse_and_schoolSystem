@@ -5,7 +5,7 @@ export let selectedChildState = {
 export function attachFields(data, index) {
     const hasPhoto = data.photo && data.photo.length > 0;
     const photoHtml = hasPhoto 
-        ? `<img src="${data.photo}" alt="${data.firstname}'s photo" class="w-24 h-24 rounded-full object-cover border-2 border-teal-500 mx-auto mb-2">`
+        ? `<img src="/${data.photo}" alt="${data.firstname}'s photo" class="w-24 h-24 rounded-full object-cover border-2 border-teal-500 mx-auto mb-2">`
         : `<div class="w-24 h-24 rounded-full bg-gray-200 border-2 border-gray-300 mx-auto mb-2 flex items-center justify-center">
             <i class="fa-solid fa-user text-3xl text-gray-400"></i>
           </div>`;

@@ -11,6 +11,7 @@ use App\Models\OrderItems;
 use App\Models\ParentInfo;
 use App\Models\Guardian;
 use App\Models\Child;
+use App\Services\DecodeBase64File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -67,7 +68,15 @@ class PlayHouseController extends Controller
 
             if($request->has('child'))
             {
-                foreach($data['child'] as $child) {
+                foreach($data['child'] as $index => $child) 
+                {
+                    $photoPath = null;
+                    $filename = 'child_'.$index;
+                    $folder = 'children_photos/';
+
+                    if (!empty($child['photo'])) {
+                        $photoPath = DecodeBase64File::makeFile($child['photo'], $folder, $filename);
+                    }
                     M06Child::updateOrCreate(
                         [
                             'd_code' => $parent->d_code,
@@ -77,7 +86,7 @@ class PlayHouseController extends Controller
                         [
                             'lastname' => $parent->lastname,
                             'age' => Carbon::parse($child['birthday'])->age,
-                            'photo' => $child['photo'] ?? null,
+                            'photo' => $photoPath,
                             'createdby' => $parent->d_name,
                             'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
                         ]
@@ -128,47 +137,12 @@ class PlayHouseController extends Controller
 
             return response()->json([
                 'isFormSubmitted' => false,
+                'dataRequests' => $request->all(),
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ], 500);
         }
         
-    }
-
-    public function checkPhone($phoneNum)
-    {
-        // Check if phone number exists in guardians (primary contact)
-        $guardian = \App\Models\Guardian::whereHas('phoneNumbers', function($query) use ($phoneNum) {
-            $query->where('phone_number', $phoneNum);
-        })->first();
-        
-        if ($guardian) {
-            return response()->json([
-                'isExisting' => true,
-                'type' => 'guardian',
-                'name' => $guardian->first_name,
-                'last_name' => $guardian->last_name,
-            ]);
-        }
-        
-        // Check in parent_info table
-        $parent = \App\Models\ParentInfo::whereHas('phoneNumbers', function($query) use ($phoneNum) {
-            $query->where('phone_number', $phoneNum);
-        })->first();
-        
-        if ($parent) {
-            return response()->json([
-                'isExisting' => true,
-                'type' => 'parent',
-                'name' => $parent->first_name,
-                'last_name' => $parent->last_name,
-            ]);
-        }
-        
-        return response()->json([
-            'isExisting' => false,
-            'name' => null,
-        ]);
     }
 
     public function makeOtp(Request $request)
@@ -261,14 +235,10 @@ class PlayHouseController extends Controller
     {
         $oldUserData = M06::with(['children', 'guardians'])->where('mobileno', $phoneNumber)->first();
 
-        // Get children with photo data
-        if ($oldUserData && $oldUserData->children) {
-            foreach ($oldUserData->children as $child) {
-                // Ensure photo field is included
-                $child->makeVisible('photo');
-            }
+        foreach ($oldUserData->children as $child) {
+            $child->makeVisible('photo');
         }
-
+        
         return response()->json([
             'oldUserData' => $oldUserData,
             'userLoaded' => true,
