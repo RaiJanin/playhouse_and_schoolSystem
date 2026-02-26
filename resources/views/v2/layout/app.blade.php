@@ -18,7 +18,7 @@
     <div class="flex h-screen overflow-hidden">
         <div class="flex-1 flex flex-col overflow-hidden">
             @include('components.modal')
-            <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
+            <main class="flex-1 overflow-y-auto bg-gray-50 p-3 sm:p-6">
                 @yield('main-content')
             </main>
         </div>

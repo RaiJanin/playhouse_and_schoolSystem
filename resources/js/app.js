@@ -8,16 +8,18 @@ import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
+import { addedChildEntries } from './modules/playhouseChildren.js';
+
 import { submitData } from './services/requestApi.js'
 import { oldUser } from './services/olduserState.js';
 
 import { dateToString } from './utilities/dateString.js';
-import { parseBracketedFormData } from './utilities/parseFlatJson.js';
-import { requestBirthdayValidation, requestBirthdayDropdownValidation } from './utilities/birthdayInput.js';
+import { parseBracketedFormData } from './services/parseFlatJson.js';
 import { initCameraCaptures } from './utilities/cameraCapture.js';
 
 import { CustomCheckbox } from './components/customCheckbox.js';
 import { openEditModal } from './components/reviewEdit.js';
+import { validateSelectedChild } from './components/existingChild.js';
 
 import {    
     addguardianCheckBx, 
@@ -34,10 +36,21 @@ import {
     disableBirthdayonSubmit, 
     enableEditInfo 
 } from './utilities/formControl.js';
-import { validateSelectedChild } from './components/existingChild.js';
 
+import { 
+    requestBirthdayDropdownValidation,
+    validateDateInputs
+} from './utilities/birthdayInput.js';
 
 document.addEventListener('DOMContentLoaded', function () {
+//-------variables-----------------------------------------------------------------
+        window.showSteps = showSteps;
+        window.getCurrentStep = () => currentStep;
+        window.getSteps = () => steps;
+        window.populateSummary = populateSummary;
+        window.openEditModal = openEditModal;
+
+
         const form = document.getElementById('playhouse-registration-form');
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
@@ -59,15 +72,163 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('step-5-text')
         ];
 
+        const phoneInputEl = document.getElementById('phone');
+        const nextBtnEl = document.getElementById('next-btn');
+
         let currentStep = 0;
         let replyFromBackend = '';
+
+//----Simple scripts--------------------------------------------------------------
+
+        if (phoneInputEl && nextBtnEl) {
+            nextBtnEl.disabled = true;
+        }
+
+        const phoneTermsCheckbox = (() => {
+            try {
+                return new CustomCheckbox('agree-checkbox-phone', 'check-agree-icon-phone', 'check-agree-info-phone');
+            } catch (e) {
+                return null;
+            }
+        })();
+
+        window.updateNextBtnState = function() {
+            const current = getCurrentStepName();
+            if (current !== 'phone') {
+                if (nextBtnEl) nextBtnEl.disabled = false;
+                return;
+            }
+
+            const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
+            const agreed = phoneTermsCheckbox ? phoneTermsCheckbox.isChecked() : false;
+            if (nextBtnEl) {
+                nextBtnEl.disabled = !(phoneValid && agreed);
+            }
+        };
+
+        if (phoneInputEl) {
+            phoneInputEl.addEventListener('input', () => {
+                if (window.updateNextBtnState) window.updateNextBtnState();
+            });
+        }
+
+        if (phoneTermsCheckbox) {
+            phoneTermsCheckbox.onChange(() => {
+                if (window.updateNextBtnState) window.updateNextBtnState();
+            });
+        }
+
         
-        // Expose functions globally for other modules
-        window.showSteps = showSteps;
-        window.getCurrentStep = () => currentStep;
-        window.getSteps = () => steps;
-        window.populateSummary = populateSummary;
-        window.openEditModal = openEditModal;
+//--------Event listeners outside functions--------------------------------------------------
+
+
+        nextBtn.addEventListener('click', async () => {
+            const currentForm = steps[currentStep];
+            const inputs = currentForm.querySelectorAll(
+                'input[required], select[required]'
+            );
+
+            let valid = true;
+            let generalValid = true;
+            let parentsValid = true;
+            let childrenValid = true;
+
+            inputs.forEach(input => {
+                if (input.id === 'phone') {
+                    showConsole('log', 'Phone input detected, validating...');
+                    if (!validatePhone(input)) {
+                        showConsole('log', 'Phone validation failed');
+                        input.classList.remove('border-teal-500');
+                        input.classList.add('border-red-500');
+                        generalValid = false;
+                    } else {
+                        showConsole('log', 'Phone validation passed, calling generateOtp');
+                        input.classList.remove('border-red-500');
+                        generateOtp(input.value);
+                    }
+                }
+                else {
+                    if (!input.checkValidity()) {
+                        input.classList.remove('border-teal-500');
+                        input.classList.add('border-red-600');
+                        generalValid = false;
+                    } else {
+                        input.classList.remove('border-red-600');
+                        input.classList.add('border-teal-500');
+                    }
+                }
+            });
+
+            requestBirthdayDropdownValidation(currentForm);
+
+            if(getCurrentStepName() === 'otp') {
+                if(!correctCode) {
+                    valid = false;
+                }
+            
+                showConsole('log', 'OTP step - oldUser.isOldUser:', oldUser.isOldUser);
+                showConsole('log', 'OTP step - oldUser.oldUserLoaded:', oldUser.oldUserLoaded);
+                showConsole('log', 'OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
+                
+                if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
+                    //Return to avoid conflicts with the auto scroll
+                    return;
+                }
+            }
+
+            if(getCurrentStepName() === 'parent') {
+                parentsValid = validateDateInputs(currentForm);
+                if(!parentsValid || !generalValid) valid = false;
+            }
+
+            if(getCurrentStepName() === 'children') {
+                childrenValid = validateDateInputs(currentForm);
+                if(!childrenValid || !generalValid) valid = false;
+
+                if(oldUser.isOldUser && addedChildEntries === 0) {
+                    valid = validateSelectedChild();
+                }
+            }
+            
+            if(!valid)return;
+            
+            if(currentStep < steps.length - 1) {
+                showSteps(currentStep + 1,'next');
+                if (currentStep + 1 === steps.length -1) populateSummary();
+            }
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            if(getCurrentStepName() === 'children') {
+                disableBirthdayonSubmit(false);
+            }
+            showSteps(currentStep - 1,'prev');
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            showConsole('log', 'Form submition active');
+
+            const formData = new FormData(form);
+            const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
+            showConsole('log', 'Before submit: ', jsonData);
+
+            replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
+            showConsole('log', "Reply from Backend", replyFromBackend);
+
+            if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
+
+        });
+        
+        
+
+//--------Functions section-------------------------------------------------------------
+
+        function getCurrentStepName() {
+            return steps[currentStep].dataset.step;
+        }
+        window.getCurrentStepName = getCurrentStepName;
 
         function showSteps(step, direction = 'next', override = null) {
             const currentStepEl = steps[currentStep];
@@ -134,142 +295,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 prevBtn.classList.toggle('hidden', currentStep === 0);
                 nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
-
-                // Show welcome message based on user type
-                // Step 3 (index 2) = Parent Info - for new users
-                // Step 5 (index 4) = Review - for returning users
-                // if (window.userDataForMessage) {
-                //     const userData = window.userDataForMessage;
-                //     if (currentStep === 2 && !userData.isExisting) {
-                //         // New user on Parent Info step
-                //         window.showWelcomeMessageOnStep('step3', false, '');
-                //     } else if (currentStep === 4 && userData.isExisting) {
-                //         // Returning user on Review step
-                //         window.showWelcomeMessageOnStep('step5', true, userData.name || '');
-                //     }
-                // }
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
-                // Update next button enablement when step changes (e.g., back to phone step)
+                
                 if (window.updateNextBtnState) window.updateNextBtnState();
             }, 300);
 
-        }
-
-        function getCurrentStepName() {
-            return steps[currentStep].dataset.step;
-        }
-        window.getCurrentStepName = getCurrentStepName;
-
-        nextBtn.addEventListener('click', async () => {
-            const currentForm = steps[currentStep];
-            const inputs = currentForm.querySelectorAll(
-                'input[required], select[required]'
-            );
-
-            requestBirthdayValidation(currentForm);
-
-            let valid = true;
-
-            inputs.forEach(input => {
-                if (input.id === 'phone') {
-                    showConsole('log', 'Phone input detected, validating...');
-                    if (!validatePhone(input)) {
-                        showConsole('log', 'Phone validation failed');
-                        input.classList.remove('border-teal-500');
-                        input.classList.add('border-red-500');
-                        valid = false;
-                    } else {
-                        showConsole('log', 'Phone validation passed, calling generateOtp');
-                        input.classList.remove('border-red-500');
-                        generateOtp(input.value);
-                    }
-                }
-                else {
-                    if (!input.checkValidity()) {
-                        input.classList.remove('border-teal-500');
-                        input.classList.add('border-red-600');
-                        valid = false;
-                    } else {
-                        input.classList.remove('border-red-600');
-                    }
-                }
-            });
-
-            if(getCurrentStepName() === 'otp') {
-                if(!correctCode) {
-                    valid = false;
-                }
-            
-                showConsole('log', 'OTP step - oldUser.isOldUser:', oldUser.isOldUser);
-                showConsole('log', 'OTP step - oldUser.oldUserLoaded:', oldUser.oldUserLoaded);
-                showConsole('log', 'OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
-                
-                if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
-                    //Return to avoid conflicts with the auto scroll
-                    
-                    return;
-                }
-            }
-
-            if(getCurrentStepName() === 'children') {
-                if(oldUser.isOldUser) {
-                    valid = validateSelectedChild();
-                }
-            }
-            
-            if(!valid)return;
-            
-            if(currentStep < steps.length - 1) {
-                showSteps(currentStep + 1,'next');
-                if (currentStep + 1 === steps.length -1) populateSummary();
-            }
-        });
-        prevBtn.addEventListener('click', () => {
-            if(getCurrentStepName() === 'children') {
-                disableBirthdayonSubmit(false);
-            }
-            showSteps(currentStep - 1,'prev');
-        });
-
-        const phoneInputEl = document.getElementById('phone');
-        const nextBtnEl = document.getElementById('next-btn');
-        
-        if (phoneInputEl && nextBtnEl) {
-            nextBtnEl.disabled = true;
-        }
-
-        const phoneTermsCheckbox = (() => {
-            try {
-                return new CustomCheckbox('agree-checkbox-phone', 'check-agree-icon-phone', 'check-agree-info-phone');
-            } catch (e) {
-                return null;
-            }
-        })();
-
-        window.updateNextBtnState = function() {
-            const current = getCurrentStepName();
-            if (current !== 'phone') {
-                if (nextBtnEl) nextBtnEl.disabled = false;
-                return;
-            }
-
-            const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
-            const agreed = phoneTermsCheckbox ? phoneTermsCheckbox.isChecked() : false;
-            if (nextBtnEl) {
-                nextBtnEl.disabled = !(phoneValid && agreed);
-            }
-        };
-
-        if (phoneInputEl) {
-            phoneInputEl.addEventListener('input', () => {
-                if (window.updateNextBtnState) window.updateNextBtnState();
-            });
-        }
-
-        if (phoneTermsCheckbox) {
-            phoneTermsCheckbox.onChange(() => {
-                if (window.updateNextBtnState) window.updateNextBtnState();
-            });
         }
 
         function populateSummary() {
@@ -368,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="text-lg font-bold text-teal-800 mb-2">DISCOUNT CODE</p>
                             <p class="text-xs text-gray-600 mb-3">Got a discount? Enter it below — and come back soon for more offers!</p>
                             <div class="flex flex-col sm:flex-row gap-3">
-                                <input type="text" id="discount-code-input" placeholder="Enter code" class="flex-1 min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all" autocomplete="off">
+                                <input type="text" id="discount-code-input" name="discountCode" placeholder="Enter code" class="flex-1 min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
                                 <button type="button" id="apply-discount-btn" class="min-h-[44px] px-5 py-3 text-base font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition-colors touch-manipulation">Apply</button>
                             </div>
                         </div>
@@ -383,6 +413,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         </button>
                     </div>
             `;
+
+            const dscCodeInput = document.getElementById('discount-code-input');
+            const applyDscBtn = document.getElementById('apply-discount-btn');
+            let apply = false;
+
+            applyDscBtn.addEventListener('click', () => {
+                apply = !apply;
+
+                if(apply) {
+                    dscCodeInput.setAttribute('readonly', true);
+                    applyDscBtn.textContent = 'Edit';
+                } else {
+                    dscCodeInput.removeAttribute('readonly');
+                    applyDscBtn.textContent = 'Apply';
+                }
+            })
 
             if(data.get('parentBirthday')) parentBirthdayIsFilled = true;
             
@@ -444,22 +490,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            showConsole('log', 'Form submition active');
-
-            const formData = new FormData(form);
-            const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
-            showConsole('log', 'Before submit: ', jsonData);
-
-            replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
-            showConsole('log', "Reply from Backend", replyFromBackend);
-
-            if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
-
-        });
-
         function generateQR(orderNum) {
             const qrContainer = document.getElementById('qr-container');
             const orderNumText = document.getElementById('order-number-text');
@@ -477,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const orderInfoLink = document.getElementById('order-info-link');
             if (orderInfoLink) {
-                orderInfoLink.href = `/v2/order-info/${orderNum}`;
+                orderInfoLink.href = `/order-info/${orderNum}`;
                 orderInfoLink.classList.remove('hidden');
             }
 

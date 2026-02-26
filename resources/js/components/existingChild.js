@@ -14,7 +14,7 @@ export function attachFields(data, index) {
         <div class="attached-fields child-entry flex flex-col">
             <input type="name" name="child[${index}][name]" value="${data.firstname}" hidden required/>
             <input type="hidden" name="child[${index}][birthday]" value="${data.birthday}"/>
-            <input type="hidden" name="child[${index}][photo]" value="${data.photo || ''}"/>
+            <input type="hidden" name="child[${index}][photo]" value="${data.photo}"/>
             
             <!-- Photo Display for Returning Users -->
             <div class="text-center mb-3">
@@ -53,11 +53,11 @@ export function attachFields(data, index) {
     `;
 }
 
-export function validateSelectedChild() {
+export function validateSelectedChild(removePrompt = false) {
     let validated = true;
     const addChildPrompt = document.getElementById('add-child-prompt');
 
-    if(selectedChildState.selectCount === 0) {
+    if(selectedChildState.selectCount === 0 && !removePrompt) {
         addChildPrompt.hidden = false;
         addChildPrompt.textContent = 'You need to add at least one child to continue.';
         validated = false;

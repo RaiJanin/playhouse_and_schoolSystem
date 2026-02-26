@@ -27,33 +27,6 @@ export function openEditModal(reviewData = null) {
     const editForm = document.createElement('div');
     editForm.className = 'space-y-4';
     
-    // Helper to format date for input display
-    const formatDateForInput = (dateStr) => {
-        if (!dateStr) return '';
-        // If already in slash format, return as-is
-        if (dateStr.includes('/')) return dateStr;
-        // Try to format from ISO or other format
-        try {
-            return dateToString('slashDate', dateStr);
-        } catch (e) {
-            return dateStr;
-        }
-    };
-    
-    // Helper to convert slash date back to ISO for storage
-    const convertToIsoDate = (dateStr) => {
-        if (!dateStr) return '';
-        // If already in ISO format, return as-is
-        if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dateStr;
-        // Try to parse slash date (MM / DD / YYYY)
-        const match = dateStr.match(/(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/);
-        if (match) {
-            const [, month, day, year] = match;
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        }
-        return dateStr;
-    };
-    
     // Parent section
     const parentData = reviewData?.parent || {};
     const guardianData = reviewData?.guardian || null;

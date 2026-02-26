@@ -68,16 +68,9 @@ class PlayHouseController extends Controller
 
             if($request->has('child'))
             {
-                foreach($data['child'] as $index => $child) 
+                foreach($data['child'] as $child) 
                 {
-                    $photoPath = null;
-                    $filename = 'child_'.$index;
-                    $folder = 'children_photos/';
-
-                    if (!empty($child['photo'])) {
-                        $photoPath = DecodeBase64File::makeFile($child['photo'], $folder, $filename);
-                    }
-                    M06Child::updateOrCreate(
+                    $childM = M06Child::updateOrCreate(
                         [
                             'd_code' => $parent->d_code,
                             'firstname' => $child['name'],
@@ -86,11 +79,21 @@ class PlayHouseController extends Controller
                         [
                             'lastname' => $parent->lastname,
                             'age' => Carbon::parse($child['birthday'])->age,
-                            'photo' => $photoPath,
                             'createdby' => $parent->d_name,
                             'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
                         ]
                     );
+
+                    $photoPath = null;
+                    $filename = 'child_' . $childM->d_code_c . '_';
+                    $folder = 'children_photos/';
+
+                    if (!empty($child['photo']) && !$childM->photo)
+                    {
+                        $photoPath = DecodeBase64File::makeFile($child['photo'], $folder, $filename);
+                        $childM->photo = $photoPath;
+                        $childM->save();
+                    }
 
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
                     $childprice = ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice);
@@ -101,7 +104,8 @@ class PlayHouseController extends Controller
             $order = Orders::create([
                 'guardian' => $parent->d_name,
                 'd_code' => $parent->d_code,
-                'totalprice' => $totalPrice
+                'totalprice' => $totalPrice,
+                'dsc_code' => $data['discountCode']
             ]);
 
             if(is_array($data['child']) && $request->has('child'))
@@ -233,7 +237,10 @@ class PlayHouseController extends Controller
 
     public function searchReturnee($phoneNumber)
     {
-        $oldUserData = M06::with(['children', 'guardians'])->where('mobileno', $phoneNumber)->first();
+        $oldUserData = M06::with(['children', 'guardians'])
+                        ->where('mobileno', $phoneNumber)
+                        ->where('isparent', true)
+                        ->first();
 
         foreach ($oldUserData->children as $child) {
             $child->makeVisible('photo');
@@ -247,7 +254,7 @@ class PlayHouseController extends Controller
 
     public function orderInfo($orderNo)
     {
-        $order = Orders::with(['parent', 'orderItems'])->where('order_no', $orderNo)->firstOrFail();
+        $order = Orders::with(['parent', 'orderItems'])->where('order_no', $orderNo)->first();
 
         $order->orderItems->each(function ($item) {
             $item->child = M06Child::find($item->d_code_child);

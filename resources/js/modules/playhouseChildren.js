@@ -1,9 +1,9 @@
-import { 
-    attachBirthdayInput, 
-    attachBirthdayDropdown
-} from '../utilities/birthdayInput.js';
+import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
 import { attachCameraCapture } from '../utilities/cameraCapture.js';
 import { selectedSocksExistChild } from '../services/autoFill.js';
+import { validateSelectedChild } from '../components/existingChild.js';
+
+export let addedChildEntries = 0;
 
 window.document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
@@ -87,9 +87,11 @@ window.document.addEventListener('DOMContentLoaded', function() {
         if (removeBtn) {
             removeBtn.addEventListener('click', () => {
                 entry.remove();
-                updateRemoveButtons();
+                addedChildEntries--;
             });
         }
+        addedChildEntries++;
+        validateSelectedChild(true);
     }
 
     // Add Socks is now a select dropdown in each child entry; checkbox helper removed.

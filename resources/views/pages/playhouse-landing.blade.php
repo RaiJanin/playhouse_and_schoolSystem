@@ -40,99 +40,19 @@
                 <div class="absolute top-0 right-0 w-16 h-16 border-r-4 border-t-4 border-[#0d9984] rounded-br-full"></div>
                 <div class="absolute bottom-0 left-0 w-16 h-16 border-l-4 border-b-4 border-[#0d9984] rounded-tl-full"></div>
                 <div class="absolute bottom-0 right-0 w-16 h-16 border-r-4 border-b-4 border-[#1abc9c] rounded-tr-full"></div>
-                
-                <div class="flex items-center justify-center">
-                    <p class="text-2xl text-[#0d9984] font-bold mb-8">Start registration for</p>
-                </div>
 
-                {{-- UPDATED BUTTONS SECTION START --}}
                 <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
-                    <!-- Returnee Button -->
-                    <button 
-                        onclick="document.getElementById('returnee-search-form').classList.remove('hidden'); this.classList.add('hidden');"
-                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                                rounded-full shadow-md overflow-hidden transition-all duration-300 
-                                hover:shadow-lg hover:scale-105 active:scale-95">
-                        <span class="relative z-10 flex items-center justify-center gap-2">
-                            Returnee Customer
-                            <span class="transition-transform group-hover:translate-x-1">→</span>
-                        </span>
-                    </button>
-
-                    <!-- Returnee Search Form (Hidden by default) -->
-                    <!-- Fetching data using POST is not recommended, GET request is actually the norm -->
-                    {{-- <form id="returnee-search-form" action="{{ route('returnee.search') }}" method="POST" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
-                        @csrf
-                        <input 
-                            type="tel" 
-                            name="mobileno" 
-                            placeholder="Enter your phone number" 
-                            class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0d9984] w-full sm:w-64"
-                            pattern="^(\+63|0)?9\d{9}$"
-                            title="Please enter a valid Philippine mobile number"
-                            required
-                        >
-                        <button 
-                            type="submit" 
-                            class="px-6 py-2 bg-[#0d9984] text-white rounded-lg hover:bg-[#1abc9c] transition whitespace-nowrap font-semibold"
-                        >
-                            Search
-                        </button>
-                        <button 
-                            type="button" 
-                            onclick="document.getElementById('returnee-search-form').classList.add('hidden'); document.querySelector('button[onclick*=\'Returnee Customer\']').classList.remove('hidden');"
-                            class="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
-                        >
-                            ✕
-                        </button>
-                    </form> --}}
-                    <div id="returnee-search-form" class="hidden flex-col sm:flex-row gap-2 justify-center items-center">
-                        <input 
-                            type="tel"
-                            id="mobileno"
-                            name="mobileno" 
-                            placeholder="Enter your phone number" 
-                            class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0d9984] w-full sm:w-64"
-                            pattern="^(\+63|0)?9\d{9}$"
-                            title="Please enter a valid Philippine mobile number"
-                            required
-                        >
-                        <button 
-                            type="button" 
-                            class="px-6 py-2 bg-[#0d9984] text-white rounded-lg hover:bg-[#1abc9c] transition whitespace-nowrap font-semibold"
-                            onclick="findReturnee()"
-                        >
-                        <script>
-                            function findReturnee() {
-                                let phone = document.getElementById('mobileno').value;
-                                window.location.href = '/api/search-returnee/'+phone;
-                            }
-                        </script>
-                            Search
-                        </button>
-                        <button 
-                            type="button" 
-                            onclick="document.getElementById('returnee-search-form').classList.add('hidden'); document.querySelector('button[onclick*=\'Returnee Customer\']').classList.remove('hidden');"
-                            class="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
-                        >
-                            ✕
-                        </button>
-                    </div>
-
-                    <!-- New Customer Button -->
                     <button 
                         onclick="window.location.href=`{{ route('playhouse.registration', ['type' => 'new']) }}`"
                         class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
                                 rounded-full shadow-md overflow-hidden transition-all duration-300 
                                 hover:shadow-lg hover:scale-105 active:scale-95">
                         <span class="relative z-10 flex items-center justify-center gap-2">
-                            New Customer
+                            Start Registration
                             <span class="transition-transform group-hover:translate-x-1">→</span>
                         </span>
                     </button>
                 </div>
-                {{-- UPDATED BUTTONS SECTION END --}}
-                
             </div>
         </div>
     </div>

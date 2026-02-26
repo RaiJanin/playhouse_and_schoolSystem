@@ -30,3 +30,22 @@ export function enableReadonly(fields, readOnly) {
         }
     });
 }
+
+export function disableDateInputs(scope, disable) {
+    const container = scope.querySelectorAll('.birthday-dropdown-wrapper');
+
+    container.forEach(field => {
+        if(disable) {
+            field.querySelector('.birthday-month-select').disabled = true;
+            field.querySelector('.birthday-day-select').disabled = true;
+            field.querySelector('.birthday-year-select').disabled = true;
+            field.classList.add('disabled:cursor-not-allowed');
+        } else {
+            field.querySelector('.birthday-month-select').disabled = false;
+            field.querySelector('.birthday-day-select').disabled = false;
+            field.querySelector('.birthday-year-select').disabled = false;
+            field.classList.remove('disabled:cursor-not-allowed');
+        }
+    })
+    
+}

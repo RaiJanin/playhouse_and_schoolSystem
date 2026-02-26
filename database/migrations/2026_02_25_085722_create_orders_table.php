@@ -21,6 +21,7 @@ return new class extends Migration
                   ->cascadeOnDelete();
             $table->string('guardian', 100)->nullable();
             $table->decimal('totalprice', 10, 2)->default();
+            $table->string('dsc_code', 50)->nullable();
             $table->timestamps();
         });
     }

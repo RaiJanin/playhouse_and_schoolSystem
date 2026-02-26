@@ -14,7 +14,8 @@ class Orders extends Model
         'order_no',
         'guardian',
         'd_code',
-        'totalprice'
+        'totalprice',
+        'dsc_code'
     ];
 
     public function parent()
@@ -24,7 +25,7 @@ class Orders extends Model
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItems::class, 'order_id', 'id');
+        return $this->hasMany(OrderItems::class, 'order_id', 'order_no');
     }
 
     protected static function boot()

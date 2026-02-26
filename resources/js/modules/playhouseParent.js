@@ -1,7 +1,10 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
 import { showConsole } from '../config/debug.js';
 import { oldUser } from '../services/olduserState.js';
-import { enableReadonly } from '../utilities/formControl.js';
+import { 
+    disableDateInputs, 
+    enableReadonly 
+} from '../utilities/formControl.js';
 
 export const guardianFields = [
     document.getElementById('guardianName'),
@@ -12,7 +15,6 @@ export const guardianFields = [
 export const parentFields = [
     document.getElementById('parentName'),
     document.getElementById('parentLastName'),
-    document.getElementById('parentBirthday'),
     document.getElementById('parentEmail')
 ];
 
@@ -43,8 +45,9 @@ editParentChkBx.setLabel(`Edit info`);
 editParentChkBx.onChange(checked => {
 
     enableReadonly(parentFields, !checked);
-    showConsole('log', 'Returnee Data: ', oldUser.returneeData);
+    disableDateInputs(document.getElementById('parentBirthday'), !checked);
 
+    showConsole('log', 'Returnee Data: ', oldUser.returneeData);
     if(oldUser.returneeData.oldUserData.guardians.length >=1) {
         enableReadonly(guardianFields, !checked);
     }

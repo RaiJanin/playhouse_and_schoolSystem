@@ -1,4 +1,9 @@
 const debugMode = true; //change this to view console.logs
+const allowOverride = true;
+
+
+
+
 /**
  * 
  * @param {'error'|'log'} options - Console Options
@@ -6,7 +11,7 @@ const debugMode = true; //change this to view console.logs
  * @param {*} logs - Logs
  */
 export function showConsole(options, message, logs = null, override = null) {
-    if (debugMode || override) {
+    if (debugMode || (override && allowOverride)) {
         
         const stack = new Error().stack || '';
         const callerLineRaw = stack.split('\n')[2]?.trim() || 'unknown location';

@@ -1,4 +1,6 @@
 import { dateToString } from '../utilities/dateString.js';
+import { showConsole } from '../config/debug.js';
+import { oldUser } from './olduserState.js';
 
 import { 
     attachFields,
@@ -6,15 +8,17 @@ import {
     validateSelectedChild
 } from '../components/existingChild.js';
 
-import { oldUser } from './olduserState.js';
-
 import {   
     addguardianCheckBx, 
     confirmGuardianCheckBx, 
     guardianFields,
     parentFields
 } from '../modules/playhouseParent.js';
-import { showConsole } from '../config/debug.js';
+
+import { 
+    disableDateInputs, 
+    enableReadonly 
+} from '../utilities/formControl.js';
 
 
 const existedChild = document.getElementById('exist-children');
@@ -55,13 +59,10 @@ export function autoFillFields(data) {
             }
         })
         document.getElementById('guardian-form').hidden = false;
-        guardianFields.forEach(fields => {
-            fields.setAttribute('readonly', true);
-        })
+        enableReadonly(guardianFields, true);
     }
-    parentFields.forEach(fields => {
-        fields.setAttribute('readonly', true);
-    })
+    enableReadonly(parentFields, true);
+    disableDateInputs(document.getElementById('parentBirthday'), true);
 
 }
 

@@ -3,7 +3,7 @@
 @section('title', 'Order Info - ' . $order->order_no)
 
 @section('main-content')
-    <div class="container max-w-full mx-auto max-w-2xl">
+    <div class="container mx-auto max-w-2xl">
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             {{-- Header --}}
             <div class="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-6 text-white">
@@ -14,6 +14,17 @@
             <div class="p-6 space-y-6">
                 {{-- Order details --}}
                 <div class="border-b border-gray-200 pb-4">
+                    <div id="qr-image-invoice" class="p-4">
+                        
+                    </div>
+                    <span id="order-number" hidden>{{ $order->order_no }}</span>
+                    <script>
+                        new QRCode(document.getElementById('qr-image-invoice'), {
+                            text: document.getElementById('order-number').textContent,
+                            width: 80,
+                            height: 80
+                        })
+                    </script>
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-gray-600 font-medium">Order No.</span>
                         <span class="font-bold text-xl text-teal-700">{{ $order->order_no }}</span>
