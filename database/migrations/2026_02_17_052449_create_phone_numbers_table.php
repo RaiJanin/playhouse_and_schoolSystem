@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('phone_numbers', function (Blueprint $table) {
+        Schema::create('phone_number_otp', function (Blueprint $table) {
             $table->id();
             $table->string('phone_number', 20);
             $table->string('otp_code', 6)->nullable();
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('phone_numbers');
+        Schema::dropIfExists('phone_number_otp');
     }
 };

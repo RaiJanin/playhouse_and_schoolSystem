@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('ordhdr', function (Blueprint $table) {
             $table->id();
-            $table->string('order_no')->unique();
+            $table->string('ord_code_ph')->unique();
             $table->string('d_code');
             $table->foreign('d_code')
                   ->references('d_code')
                   ->on('m06')
                   ->cascadeOnDelete();
             $table->string('guardian', 100)->nullable();
-            $table->decimal('totalprice', 10, 2)->default();
-            $table->string('dsc_code', 50)->nullable();
+            $table->decimal('total_amnt', 10, 2)->default();
+            $table->decimal('disc_amnt', 10, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -29,8 +29,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('orders');
-    }
+    // public function down(): void
+    // {
+    //     Schema::dropIfExists('ordhdr');
+    // }
 };

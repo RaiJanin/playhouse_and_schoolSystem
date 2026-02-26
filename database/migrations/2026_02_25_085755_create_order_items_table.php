@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::create('ordlne_ph', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id');
-            $table->foreign('order_id')
-                  ->references('order_no')
-                  ->on('orders')
+            $table->string('ord_code_ph');
+            $table->foreign('ord_code_ph')
+                  ->references('ord_code_ph')
+                  ->on('ordhdr')
                   ->cascadeOnDelete();
             $table->string('d_code_child');
             $table->foreign('d_code_child')
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('issocksadded');
             $table->decimal('socksprice', 10, 2);
             $table->decimal('subtotal', 10, 2);
+            $table->string('disc_code', 50)->nullable();
             $table->timestamps();
         });
     }
@@ -35,8 +36,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('order_items');
-    }
+    // public function down(): void
+    // {
+    //     Schema::dropIfExists('order_items');
+    // }
 };

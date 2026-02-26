@@ -19,6 +19,14 @@
     <p class="text-center text-gray-600 mb-5 font-semibold">
         Please provide your details
     </p>
+    <div id="edit-parent-checkbox-el" class="hidden">
+        <button id="edit-parent-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+            <span class="flex items-center">
+                <i id="edit-parent-icon" class="fa-regular fa-square text-red-500 text-xl"></i></i>
+                <p id="edit-parent-info" class="ml-2"></p>
+            </span>
+        </button>
+    </div>
     <div class="space-y-4">
         <div>
             <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>

@@ -1,3 +1,5 @@
+import { dateToString } from "../utilities/dateString";
+
 export let selectedChildState = {
     selectCount: 0
 };
@@ -13,7 +15,7 @@ export function attachFields(data, index) {
     return `
         <div class="attached-fields child-entry flex flex-col">
             <input type="name" name="child[${index}][name]" value="${data.firstname}" hidden required/>
-            <input type="hidden" name="child[${index}][birthday]" value="${data.birthday}"/>
+            <input type="hidden" name="child[${index}][birthday]" value="${dateToString('iso', data.birthday)}"/>
             <input type="hidden" name="child[${index}][photo]" value="${data.photo}"/>
             
             <!-- Photo Display for Returning Users -->
