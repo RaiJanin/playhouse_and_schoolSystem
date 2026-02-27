@@ -281,6 +281,15 @@ class PlayHouseController extends Controller
         {
             $getRecordUsingMobile = M06::where('mobileno', $phoneNum)->first();
 
+            // Check if phone number exists in database
+            if (!$getRecordUsingMobile) {
+                return response()->json([
+                    'orders' => [],
+                    'message' => 'Phone number not found in our records.',
+                    'not_found' => true
+                ]);
+            }
+
             $orderToCheckout = Orders::where('d_code', $getRecordUsingMobile->d_code)
                     ->whereHas('orderItems', function($query) {
                         $query->where('checked_out', false);
@@ -298,16 +307,35 @@ class PlayHouseController extends Controller
         if($guardian)
         {
             $isParent = M06::where('d_name', $guardian)->where('isparent', true)->first();
-            $getparent = $isParent->d_code;
-
-            if(!$isParent)
-            {
+            
+            // Check if guardian/parent name exists in database
+            if (!$isParent) {
+                // Try to find any record with this guardian name
                 $getRecordUsingGuardian = M06::where('d_name', $guardian)->get();
+                
+                if ($getRecordUsingGuardian->isEmpty()) {
+                    return response()->json([
+                        'orders' => [],
+                        'message' => 'Guardian/Parent name not found in our records.',
+                        'not_found' => true
+                    ]);
+                }
+                
                 $updatedByValues = $getRecordUsingGuardian->pluck('updatedby')->unique();
-                $getparent = M06::whereIn('updatedby', $updatedByValues)
+                $isParent = M06::whereIn('updatedby', $updatedByValues)
                     ->where('isparent', true)
                     ->first();
+                    
+                if (!$isParent) {
+                    return response()->json([
+                        'orders' => [],
+                        'message' => 'Guardian/Parent name not found in our records.',
+                        'not_found' => true
+                    ]);
+                }
             }
+            
+            $getparent = $isParent->d_code;
             
             $orderToCheckout = Orders::where('d_code', $getparent)
                     ->whereHas('orderItems', function($query) {

@@ -170,6 +170,12 @@
                     
                     loading.classList.add('hidden');
                     
+                    // Check if phone number/guardian was not found in database
+                    if (data.not_found) {
+                        showError(data.message || 'This number/name is not found in our records. Please check and try again.');
+                        return;
+                    }
+                    
                     if (data.orders && data.orders.length > 0) {
                         displayOrders(data.orders);
                     } else {
