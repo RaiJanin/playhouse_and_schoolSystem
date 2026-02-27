@@ -4,5 +4,7 @@ export const API_ROUTES = {
     verifyOtpURL: '/api/verify-otp',
     searchReturneeURL: '/api/search-returnee',
     deleteOtpURL: '/api/delete-otp',
-    checkPhoneURL: '/api/check-phone'
+    checkPhoneURL: '/api/check-phone',
+    getOrdersURL: '/api/get-orders',
+    checkOutURL: '/api/check-out'
 };

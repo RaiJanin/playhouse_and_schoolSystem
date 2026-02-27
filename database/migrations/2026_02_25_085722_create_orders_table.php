@@ -21,6 +21,7 @@ return new class extends Migration
                     ->on('m06')
                     ->cascadeOnDelete();
                 $table->string('guardian', 100)->nullable();
+                $table->decimal('xtra_chrg_amnt', 10, 2)->default(0.00);
                 $table->decimal('total_amnt', 10, 2)->default(0.00);
                 $table->decimal('disc_amnt', 10, 2)->nullable();
                 $table->timestamps();

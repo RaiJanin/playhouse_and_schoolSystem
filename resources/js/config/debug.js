@@ -1,11 +1,11 @@
-const debugMode = false; //change this to view console.logs
+const debugMode = true; //change this to view console.logs
 const allowOverride = true;
 
 
 
 
 /**
- * 
+ * Enables or disable console logs on the browser's console
  * @param {'error'|'log'} options - Console Options
  * @param {*} message - Logs Title
  * @param {*} logs - Logs

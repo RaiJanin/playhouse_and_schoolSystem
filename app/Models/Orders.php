@@ -15,6 +15,7 @@ class Orders extends Model
         'guardian',
         'd_code',
         'total_amnt',
+        'xtra_chrg_amnt',
         'disc_amnt'
     ];
 

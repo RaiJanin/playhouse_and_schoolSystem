@@ -18,3 +18,4 @@ Route::prefix('v2')->group(function () {
 });
 
 Route::get('/order-info/{order_no}', [PlayHouseController::class, 'orderInfo'])->name('order.info');
+Route::get('/checkout', function () {})->name('playhouse.checkout');

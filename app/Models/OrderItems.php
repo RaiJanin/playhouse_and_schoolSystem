@@ -15,7 +15,9 @@ class OrderItems extends Model
         'socksqty',
         'socksprice',
         'subtotal',
-        'disc_code'
+        'disc_code',
+        'checked_out',
+        'lne_xtra_chrg'
     ];
 
     public function order()

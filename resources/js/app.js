@@ -7,6 +7,7 @@ import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
+import './modules/playhouseCheckout.js';
 
 import { addedChildEntries } from './modules/playhouseChildren.js';
 

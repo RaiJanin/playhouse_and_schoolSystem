@@ -46,7 +46,7 @@
                             Let your child explore, learn, play, and socialize while you relax and enjoy quality time
                         </p>
                         
-                        <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
+                        <div class="flex sm:flex-row sm:justify-evenly gap-8 flex-col">
                             <!-- Start Now Button -->
                             <button 
                                 onclick="window.location.href='{{route('v2.playhouse.registration')}}'"
@@ -54,7 +54,18 @@
                                         rounded-full shadow-lg overflow-hidden transition-all duration-300 
                                         hover:shadow-xl hover:scale-105 active:scale-95">
                                 <span class="relative z-10 flex items-center justify-center gap-3">
-                                    Start Now
+                                    Check in
+                                    <span class="transition-transform group-hover:translate-x-1 text-2xl">➔</span>
+                                </span>
+                            </button>
+
+                            <button 
+                                onclick="window.location.href='{{route('playhouse.checkout')}}'"
+                                class="group relative px-12 py-5 bg-[#0d9984] text-white font-bold text-xl 
+                                        rounded-full shadow-lg overflow-hidden transition-all duration-300 
+                                        hover:shadow-xl hover:scale-105 active:scale-95">
+                                <span class="relative z-10 flex items-center justify-center gap-3">
+                                    Check out
                                     <span class="transition-transform group-hover:translate-x-1 text-2xl">➔</span>
                                 </span>
                             </button>

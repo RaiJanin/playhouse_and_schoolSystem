@@ -48,6 +48,11 @@ class M06 extends Model
                     ->where('isparent', false);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Orders::class, 'ord_code_ph', 'ord_code_ph');
+    }
+
     protected static function boot()
     {
         parent::boot();

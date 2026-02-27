@@ -47,17 +47,28 @@ class PlayHouseController extends Controller
 
             if($request->filled('guardianName'))
             {
-                M06::updateOrCreate(['mobileno' => $data['guardianPhone']],[
-                    'd_name' => $data['guardianName'] . ' ' . $data['guardianLastName'],
-                    'firstname' => $data['guardianName'],
-                    'lastname' => $data['guardianLastName'],
-                    'mobileno' => $data['guardianPhone'],
-                    'isparent' => false,
-                    'isguardian' => true,
-                    'guardianauthorized' => $data['guardianAuthorized'],
-                    'createdby' => $data['parentName'] . ' ' . $data['parentLastName'],
-                    'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
-                ]);
+                $guardianFullname = $data['guardianName'] . ' ' . $data['guardianLastName'];
+                
+                M06::updateOrCreate(
+                    [
+                        'mobileno' => $data['guardianPhone'],
+                        'd_name' => $guardianFullname,
+                        'isguardian' => true,
+                        'updatedby' => $parent->d_name
+                    ],
+                    [
+                        'd_name' => $guardianFullname,
+                        'firstname' => $data['guardianName'],
+                        'lastname' => $data['guardianLastName'],
+                        'mobileno' => $data['guardianPhone'],
+                        'isparent' => false,
+                        'isguardian' => true,
+                        'guardianauthorized' => $data['guardianAuthorized'],
+                        'createdby' => $data['parentName'] . ' ' . $data['parentLastName'],
+                        'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
+                    ]
+                );
+                
             }
 
             $totalPrice = 0;
@@ -259,5 +270,136 @@ class PlayHouseController extends Controller
         });
 
         return view('v2.pages.order-info', compact('order'));
+    }
+
+    public function getOrders(Request $request)
+    {
+        $phoneNum = $request->query('ph_num') ?? null;
+        $guardian = $request->query('grdian_name') ?? null;
+
+        if($phoneNum)
+        {
+            $getRecordUsingMobile = M06::where('mobileno', $phoneNum)->first();
+
+            $orderToCheckout = Orders::where('d_code', $getRecordUsingMobile->d_code)
+                    ->whereHas('orderItems', function($query) {
+                        $query->where('checked_out', false);
+                    })
+                    ->with(['orderItems' => function($item) {
+                        $item->where('checked_out', false);
+                    }])
+                    ->get();
+
+            return response()->json([
+                'orders' => $orderToCheckout
+            ]);
+        }
+
+        if($guardian)
+        {
+            $isParent = M06::where('d_name', $guardian)->where('isparent', true)->first();
+            $getparent = $isParent->d_code;
+
+            if(!$isParent)
+            {
+                $getRecordUsingGuardian = M06::where('d_name', $guardian)->get();
+                $updatedByValues = $getRecordUsingGuardian->pluck('updatedby')->unique();
+                $getparent = M06::whereIn('updatedby', $updatedByValues)
+                    ->where('isparent', true)
+                    ->first();
+            }
+            
+            $orderToCheckout = Orders::where('d_code', $getparent)
+                    ->whereHas('orderItems', function($query) {
+                        $query->where('checked_out', false);
+                    })
+                    ->with(['orderItems' => function($item) {
+                        $item->where('checked_out', false);
+                    }])
+                    ->get();
+
+            return response()->json([
+                'orders' => $orderToCheckout
+            ]);
+        }
+    }
+
+    public function checkOut($orderNo)
+    {
+        try
+        {
+            DB::beginTransaction();
+
+            $orderCheckingOut = Orders::with(['orderItems'])
+                                ->where('ord_code_ph', $orderNo)
+                                ->first();
+
+            if(!$orderCheckingOut)
+            {
+                return response()->json([
+                    'checked_out' => false,
+                    'message' => 'Order not found'
+                ]);
+            }
+
+            $hasActiveItems = $orderCheckingOut->orderItems->where('checked_out', true)->isNotEmpty();
+
+            if($hasActiveItems)
+            {
+                return response()->json([
+                    'checked_out' => false,
+                    'message' => 'Order already checked out'
+                ]);
+            }
+
+            $extraTotal = 0;
+            foreach($orderCheckingOut->orderItems as $orderItem)
+            {
+                // check if the check out time is under or equals the check in duration, if it is not, charge 20 for each 2 minutes
+
+                $checkIn = Carbon::parse($orderItem->created_at);
+                $checkOut = Carbon::now();
+                $paidHours = $orderItem->durationhours * 60;
+                $actualMinutes = $checkIn->diffInMinutes($checkOut);
+
+                if ($actualMinutes > $paidHours) 
+                {
+
+                    $extraMinutes = $actualMinutes - $paidHours;
+
+                    $chargeUnits = ceil($extraMinutes / 2);
+                    $extraCharge = $chargeUnits * 20;
+
+                    $orderItem->lne_xtra_chrg = $extraCharge;
+                    $orderItem->checked_out = true;
+
+                    $extraTotal += $extraCharge;
+                }
+                else
+                {
+                    $orderItem->checked_out = true;
+                }
+                $orderItem->save();
+            }
+
+            $orderCheckingOut->xtra_chrg_amnt = $extraTotal;
+            $orderCheckingOut->total_amnt += $extraTotal;
+            $orderCheckingOut->save();
+
+            DB::commit();
+
+            return response()->json([
+                'checked_out' => true,
+                'message' => 'Check out done',
+                'extrCharge' => $extraTotal,
+                'order' => $orderCheckingOut->load('orderItems')
+            ]);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

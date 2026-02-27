@@ -27,6 +27,8 @@ return new class extends Migration
             $table->decimal('durationsubtotal', 10, 2)->default(0.00);
             $table->integer('socksqty')->default(0);
             $table->decimal('socksprice', 10, 2)->default(0);
+            $table->boolean('checked_out')->default(false);
+            $table->decimal('lne_xtra_chrg', 10, 2)->default(0.00);
             $table->decimal('subtotal', 10, 2)->default(0);
             $table->string('disc_code', 50)->nullable();
             $table->timestamps();
