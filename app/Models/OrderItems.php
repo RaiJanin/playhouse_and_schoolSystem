@@ -6,23 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItems extends Model
 {
-    protected $table = 'order_items';
+    protected $table = 'ordlne_ph';
     protected $fillable = [
-        'order_id',
+        'ord_code_ph',
         'd_code_child',
         'durationhours',
         'durationsubtotal',
-        'issocksadded',
+        'socksqty',
         'socksprice',
-        'subtotal'
-    ];
-
-    protected $casts = [
-        'issocksadded' => 'boolean'
+        'subtotal',
+        'disc_code'
     ];
 
     public function order()
     {
-        return $this->belongsTo(Orders::class, 'order_id', 'id');
+        return $this->belongsTo(Orders::class, 'ord_code_ph', 'ord_code_ph');
     }
 }

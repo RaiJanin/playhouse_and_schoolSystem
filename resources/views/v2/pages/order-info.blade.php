@@ -1,6 +1,6 @@
 @extends('v2.layout.app')
 
-@section('title', 'Order Info - ' . $order->order_no)
+@section('title', 'Order Info - ' . $order->ord_code_ph)
 
 @section('main-content')
     <div class="container mx-auto max-w-2xl">
@@ -17,7 +17,7 @@
                     <div id="qr-image-invoice" class="p-4">
                         
                     </div>
-                    <span id="order-number" hidden>{{ $order->order_no }}</span>
+                    <span id="order-number" hidden>{{ $order->ord_code_ph }}</span>
                     <script>
                         new QRCode(document.getElementById('qr-image-invoice'), {
                             text: document.getElementById('order-number').textContent,
@@ -27,7 +27,7 @@
                     </script>
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-gray-600 font-medium">Order No.</span>
-                        <span class="font-bold text-xl text-teal-700">{{ $order->order_no }}</span>
+                        <span class="font-bold text-xl text-teal-700">{{ $order->ord_code_ph }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm text-gray-600">
                         <span>Date</span>
@@ -55,7 +55,7 @@
                                         <span>Play duration</span>
                                         <span>{{ $item->durationhours }} hr(s) — ₱{{ number_format($item->durationsubtotal, 2) }}</span>
                                     </div>
-                                    @if($item->issocksadded)
+                                    @if($item->socksqty)
                                         <div class="flex justify-between">
                                             <span>Socks</span>
                                             <span>₱{{ number_format($item->socksprice, 2) }}</span>
@@ -75,7 +75,7 @@
                 <div class="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-lg p-4 border-2 border-teal-400">
                     <div class="flex justify-between items-center">
                         <span class="text-lg font-bold text-teal-800">Total</span>
-                        <span class="text-2xl font-bold text-teal-700">₱{{ number_format($order->totalprice, 2) }}</span>
+                        <span class="text-2xl font-bold text-teal-700">₱{{ number_format($order->total_amnt, 2) }}</span>
                     </div>
                 </div>
 

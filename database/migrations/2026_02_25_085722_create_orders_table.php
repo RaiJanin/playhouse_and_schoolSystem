@@ -11,26 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ordhdr', function (Blueprint $table) {
-            $table->id();
-            $table->string('ord_code_ph')->unique();
-            $table->string('d_code');
-            $table->foreign('d_code')
-                  ->references('d_code')
-                  ->on('m06')
-                  ->cascadeOnDelete();
-            $table->string('guardian', 100)->nullable();
-            $table->decimal('total_amnt', 10, 2)->default();
-            $table->decimal('disc_amnt', 10, 2)->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('ordhdr')) {
+            Schema::create('ordhdr', function (Blueprint $table) {
+                $table->id();
+                $table->string('ord_code_ph')->unique();
+                $table->string('d_code');
+                $table->foreign('d_code')
+                    ->references('d_code')
+                    ->on('m06')
+                    ->cascadeOnDelete();
+                $table->string('guardian', 100)->nullable();
+                $table->decimal('total_amnt', 10, 2)->default(0.00);
+                $table->decimal('disc_amnt', 10, 2)->nullable();
+                $table->timestamps();
+            });
+            return;
+        }
     }
 
     /**
      * Reverse the migrations.
      */
-    // public function down(): void
-    // {
-    //     Schema::dropIfExists('ordhdr');
-    // }
+    public function down(): void
+    {
+        Log::info('Rollback skipped: ordhdr table is not dropped.');
+        // Schema::dropIfExists('ordhdr');
+    }
 };

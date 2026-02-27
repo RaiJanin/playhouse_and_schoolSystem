@@ -10,6 +10,7 @@ class PhoneNumber extends Model
 {
     use HasFactory;
 
+    protected $table = 'phone_number_otp';
     protected $fillable = [
         'phone_number',
         'otp_code',

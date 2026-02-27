@@ -9,23 +9,23 @@ use Carbon\Carbon;
 
 class Orders extends Model
 {
-    protected $table = 'orders';
+    protected $table = 'ordhdr';
     protected $fillable = [
-        'order_no',
+        'ord_code_ph',
         'guardian',
         'd_code',
-        'totalprice',
-        'dsc_code'
+        'total_amnt',
+        'disc_amnt'
     ];
 
-    public function parent()
+    public function parentPl()
     {
         return $this->belongsTo(M06::class, 'd_code', 'd_code');
     }
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItems::class, 'order_id', 'order_no');
+        return $this->hasMany(OrderItems::class, 'ord_code_ph', 'ord_code_ph');
     }
 
     protected static function boot()
@@ -33,7 +33,7 @@ class Orders extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $order->order_no = self::generateMonthlyOrderNo();
+            $order->ord_code_ph = self::generateMonthlyOrderNo();
         });
     }
 
@@ -45,14 +45,14 @@ class Orders extends Model
         $startOfMonth = $now->copy()->startOfMonth();
 
         $lastOrder = self::where('created_at', '>=', $startOfMonth)
-            ->where('order_no', 'like', $monthLetter . '%')
-            ->orderByDesc('order_no')
+            ->where('ord_code_ph', 'like', $monthLetter . '%')
+            ->orderByDesc('ord_code_ph')
             ->first();
 
         if (!$lastOrder) {
             $sequence = 1;
         } else {
-            $lastNumber = (int) substr($lastOrder->order_no, 1);
+            $lastNumber = (int) substr($lastOrder->ord_code_ph, 1);
             $sequence = $lastNumber + 1;
         }
 

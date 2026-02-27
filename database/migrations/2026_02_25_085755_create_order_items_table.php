@@ -23,11 +23,11 @@ return new class extends Migration
                   ->references('d_code_c')
                   ->on('m06_child')
                   ->cascadeOnDelete();
-            $table->integer('durationhours');
-            $table->decimal('durationsubtotal', 10, 2);
-            $table->boolean('issocksadded');
-            $table->decimal('socksprice', 10, 2);
-            $table->decimal('subtotal', 10, 2);
+            $table->integer('durationhours')->default(0);
+            $table->decimal('durationsubtotal', 10, 2)->default(0.00);
+            $table->integer('socksqty')->default(0);
+            $table->decimal('socksprice', 10, 2)->default(0);
+            $table->decimal('subtotal', 10, 2)->default(0);
             $table->string('disc_code', 50)->nullable();
             $table->timestamps();
         });
@@ -36,8 +36,9 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    // public function down(): void
-    // {
-    //     Schema::dropIfExists('order_items');
-    // }
+    public function down(): void
+    {
+        Log::info('Rollback skipped: ordlne_ph table is not dropped.');
+        // Schema::dropIfExists('order_items');
+    }
 };

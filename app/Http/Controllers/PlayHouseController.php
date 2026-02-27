@@ -8,10 +8,8 @@ use App\Models\M06;
 use App\Models\M06Child;
 use App\Models\Orders;
 use App\Models\OrderItems;
-use App\Models\ParentInfo;
-use App\Models\Guardian;
-use App\Models\Child;
 use App\Services\DecodeBase64File;
+use App\Http\Resources\M06Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -88,7 +86,7 @@ class PlayHouseController extends Controller
                     $filename = 'child_' . $childM->d_code_c . '_';
                     $folder = 'children_photos/';
 
-                    if (!empty($child['photo']) && !$childM->photo)
+                    if (!empty($child['photo']) && !$childM->photo &&$childM) 
                     {
                         $photoPath = DecodeBase64File::makeFile($child['photo'], $folder, $filename);
                         $childM->photo = $photoPath;
@@ -104,8 +102,7 @@ class PlayHouseController extends Controller
             $order = Orders::create([
                 'guardian' => $parent->d_name,
                 'd_code' => $parent->d_code,
-                'totalprice' => $totalPrice,
-                'dsc_code' => $data['discountCode']
+                'total_amnt' => $totalPrice,
             ]);
 
             if(is_array($data['child']) && $request->has('child'))
@@ -118,13 +115,14 @@ class PlayHouseController extends Controller
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
 
                     OrderItems::create([
-                        'order_id' => $order->order_no,
+                        'ord_code_ph' => $order->ord_code_ph,
                         'd_code_child' => $childModel->d_code_c,
                         'durationhours' => $duration,
                         'durationsubtotal' => $duration * $pricePerDuration,
-                        'issocksadded' => $child['addSocks'],
+                        'socksqty' => $child['addSocks'],
                         'socksprice' => $child['addSocks'] * $socksPrice,
-                        'subtotal' => ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice)
+                        'subtotal' => ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice),
+                        'disc_code' => $data['discountCode']
                     ]);
                 }
             }
@@ -133,7 +131,7 @@ class PlayHouseController extends Controller
 
             return response()->json([
                 'isFormSubmitted' => true,
-                'orderNum' => $order->order_no
+                'orderNum' => $order->ord_code_ph
             ]);
 
         } catch (\Exception $e) {
@@ -247,14 +245,14 @@ class PlayHouseController extends Controller
         }
         
         return response()->json([
-            'oldUserData' => $oldUserData,
+            'oldUserData' => new M06Resource($oldUserData),
             'userLoaded' => true,
         ]);
     }
 
     public function orderInfo($orderNo)
     {
-        $order = Orders::with(['parent', 'orderItems'])->where('order_no', $orderNo)->first();
+        $order = Orders::with(['parentPl', 'orderItems'])->where('ord_code_ph', $orderNo)->first();
 
         $order->orderItems->each(function ($item) {
             $item->child = M06Child::find($item->d_code_child);
