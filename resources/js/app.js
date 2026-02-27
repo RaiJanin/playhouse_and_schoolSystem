@@ -3,6 +3,9 @@ import './bootstrap';
 import { API_ROUTES } from './config/api.js';
 import { showConsole } from './config/debug.js';
 
+// Expose API_ROUTES globally for other pages
+window.API_ROUTES = API_ROUTES;
+
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
 import './modules/playhouseOtp.js';
@@ -13,6 +16,9 @@ import { addedChildEntries } from './modules/playhouseChildren.js';
 
 import { submitData } from './services/requestApi.js'
 import { oldUser } from './services/olduserState.js';
+
+// Expose functions globally for other pages
+window.submitData = submitData;
 
 import { dateToString } from './utilities/dateString.js';
 import { parseBracketedFormData } from './services/parseFlatJson.js';
@@ -123,7 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
 //--------Event listeners outside functions--------------------------------------------------
 
 
-        nextBtn.addEventListener('click', async () => {
+        if (nextBtn) {
+            nextBtn.addEventListener('click', async () => {
             const currentForm = steps[currentStep];
             const inputs = currentForm.querySelectorAll(
                 'input[required], select[required]'
@@ -198,15 +205,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (currentStep + 1 === steps.length -1) populateSummary();
             }
         });
+        }
         
-        prevBtn.addEventListener('click', () => {
-            if(getCurrentStepName() === 'children') {
-                disableBirthdayonSubmit(false);
-            }
-            showSteps(currentStep - 1,'prev');
-        });
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if(getCurrentStepName() === 'children') {
+                    disableBirthdayonSubmit(false);
+                }
+                showSteps(currentStep - 1,'prev');
+            });
+        }
 
-        form.addEventListener('submit', async (e) => {
+        if (form) {
+            form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             showConsole('log', 'Form submition active');
@@ -221,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
 
         });
+        }
         
         
 
