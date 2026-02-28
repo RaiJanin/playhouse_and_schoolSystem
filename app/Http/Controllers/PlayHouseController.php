@@ -281,7 +281,6 @@ class PlayHouseController extends Controller
         {
             $getRecordUsingMobile = M06::where('mobileno', $phoneNum)->first();
 
-            // Check if phone number exists in database
             if (!$getRecordUsingMobile) {
                 return response()->json([
                     'orders' => [],
@@ -295,7 +294,7 @@ class PlayHouseController extends Controller
                         $query->where('checked_out', false);
                     })
                     ->with(['orderItems' => function($item) {
-                        $item->where('checked_out', false);
+                        $item->with('child')->where('checked_out', false);
                     }])
                     ->get();
 
@@ -307,11 +306,11 @@ class PlayHouseController extends Controller
         if($guardian)
         {
             $isParent = M06::where('d_name', $guardian)->where('isparent', true)->first();
-            
-            // Check if guardian/parent name exists in database
-            if (!$isParent) {
-                // Try to find any record with this guardian name
-                $getRecordUsingGuardian = M06::where('d_name', $guardian)->get();
+            $getparent = $isParent;
+
+            if (!$isParent) 
+            {
+                $getRecordUsingGuardian = M06::where('d_name', $guardian)->where('isguardian', true)->get();
                 
                 if ($getRecordUsingGuardian->isEmpty()) {
                     return response()->json([
@@ -322,109 +321,90 @@ class PlayHouseController extends Controller
                 }
                 
                 $updatedByValues = $getRecordUsingGuardian->pluck('updatedby')->unique();
-                $isParent = M06::whereIn('updatedby', $updatedByValues)
+                $getparent = M06::whereIn('updatedby', $updatedByValues)
                     ->where('isparent', true)
                     ->first();
                     
-                if (!$isParent) {
-                    return response()->json([
-                        'orders' => [],
-                        'message' => 'Guardian/Parent name not found in our records.',
-                        'not_found' => true
-                    ]);
-                }
             }
             
-            $getparent = $isParent->d_code;
-            
-            $orderToCheckout = Orders::where('d_code', $getparent)
+            $orderToCheckout = Orders::where('d_code', $getparent->d_code)
                     ->whereHas('orderItems', function($query) {
                         $query->where('checked_out', false);
                     })
                     ->with(['orderItems' => function($item) {
-                        $item->where('checked_out', false);
+                        $item->with('child')->where('checked_out', false);
                     }])
                     ->get();
 
             return response()->json([
                 'orders' => $orderToCheckout
+                
             ]);
         }
     }
 
-    public function checkOut($orderNo)
+    public function checkOut($orderItemId)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
 
-            $orderCheckingOut = Orders::with(['orderItems'])
-                                ->where('ord_code_ph', $orderNo)
-                                ->first();
+            $orderItem = OrderItems::with('order')
+                ->where('id', $orderItemId)
+                ->first();
 
-            if(!$orderCheckingOut)
-            {
+            if (!$orderItem) {
                 return response()->json([
                     'checked_out' => false,
-                    'message' => 'Order not found'
+                    'message' => 'Order item not found'
                 ]);
             }
 
-            $hasActiveItems = $orderCheckingOut->orderItems->where('checked_out', true)->isNotEmpty();
-
-            if($hasActiveItems)
-            {
+            if ($orderItem->checked_out) {
                 return response()->json([
                     'checked_out' => false,
-                    'message' => 'Order already checked out'
+                    'message' => 'This child is already checked out'
                 ]);
             }
 
-            $extraTotal = 0;
-            foreach($orderCheckingOut->orderItems as $orderItem)
-            {
-                // check if the check out time is under or equals the check in duration, if it is not, charge 20 for each 2 minutes
+            // time computation
+            $checkIn = Carbon::parse($orderItem->created_at);
+            $checkOut = Carbon::now();
 
-                $checkIn = Carbon::parse($orderItem->created_at);
-                $checkOut = Carbon::now();
-                $paidHours = $orderItem->durationhours * 60;
-                $actualMinutes = $checkIn->diffInMinutes($checkOut);
+            $paidMinutes = $orderItem->durationhours * 60;
+            $actualMinutes = $checkIn->diffInMinutes($checkOut);
 
-                if ($actualMinutes > $paidHours) 
-                {
+            $extraCharge = 0;
 
-                    $extraMinutes = $actualMinutes - $paidHours;
+            if ($actualMinutes > $paidMinutes) {
+                $extraMinutes = $actualMinutes - $paidMinutes;
+                $chargeUnits = ceil($extraMinutes / 2);
+                $extraCharge = $chargeUnits * 20;
 
-                    $chargeUnits = ceil($extraMinutes / 2);
-                    $extraCharge = $chargeUnits * 20;
-
-                    $orderItem->lne_xtra_chrg = $extraCharge;
-                    $orderItem->checked_out = true;
-
-                    $extraTotal += $extraCharge;
-                }
-                else
-                {
-                    $orderItem->checked_out = true;
-                }
-                $orderItem->save();
+                $orderItem->lne_xtra_chrg = $extraCharge;
             }
 
-            $orderCheckingOut->xtra_chrg_amnt = $extraTotal;
-            $orderCheckingOut->total_amnt += $extraTotal;
-            $orderCheckingOut->save();
+            $orderItem->checked_out = true;
+            $orderItem->save();
+
+            // update parent order totals
+            $order = $orderItem->order;
+            $order->xtra_chrg_amnt += $extraCharge;
+            $order->total_amnt += $extraCharge;
+            $order->save();
 
             DB::commit();
 
             return response()->json([
                 'checked_out' => true,
-                'message' => 'Check out done',
-                'extrCharge' => $extraTotal,
-                'order' => $orderCheckingOut->load('orderItems')
+                'message' => 'Child checked out successfully',
+                'extraCharge' => $extraCharge,
+                'orderItem' => $orderItem->load('child'),
+                'order' => $order->load('orderItems')
             ]);
-        } catch(\Exception $e) {
+
+        } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'error' => $e->getMessage()
             ], 500);

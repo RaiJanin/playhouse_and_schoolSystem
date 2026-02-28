@@ -24,4 +24,10 @@ class OrderItems extends Model
     {
         return $this->belongsTo(Orders::class, 'ord_code_ph', 'ord_code_ph');
     }
+
+    public function child()
+    {
+        return $this->belongsTo(M06Child::class, 'd_code_child', 'd_code_c');
+    }
+
 }

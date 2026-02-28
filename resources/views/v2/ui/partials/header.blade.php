@@ -11,4 +11,14 @@
             </h1>
         </div>
     </div>
+    <div class="lg:col-span-3 md:col-span-2">
+        <div class="flex items-end justify-end">
+            @if(Route::is('playhouse.checkout'))
+                <a class="text-sm sm:text-base text-white font-semibold underline decoration-2 underline-offset-2 decoration-white" href="{{ route('v2.playhouse.registration')}}">Go to check in</a>
+            @endif
+            @if(Route::is('v2.playhouse.registration'))
+                <a class="text-sm sm:text-base text-white font-semibold underline decoration-2 underline-offset-2 decoration-white" href="{{ route('playhouse.checkout')}}">Go to check out</a>
+            @endif
+        </div>
+    </div>
 </div>

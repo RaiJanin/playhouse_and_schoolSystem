@@ -28,7 +28,7 @@ class Orders extends Model
     {
         return $this->hasMany(OrderItems::class, 'ord_code_ph', 'ord_code_ph');
     }
-
+    
     protected static function boot()
     {
         parent::boot();
