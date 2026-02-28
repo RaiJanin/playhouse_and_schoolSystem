@@ -71,39 +71,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.checked_out) {
                 // Build detailed HTML per order item
+                const item = response.orderItem;
+                const subtotal = Number(item.durationsubtotal) + Number(item.socksprice);
+                const extraCharge = Number(item.lne_xtra_chrg || 0);
+                const total = subtotal + extraCharge;
                 let itemsHtml = '';
-                response.order.order_items.forEach(item => {
-                    const subtotal = Number(item.durationsubtotal) + Number(item.socksprice);
-                    const extraCharge = Number(item.lne_xtra_chrg || 0);
-                    const total = subtotal + extraCharge;
 
-                    // Calculate extra charge breakdown for clarity
-                    const overtimeMinutes = Math.max(0, (new Date(item.updated_at) - new Date(item.created_at)) / 60000 - item.durationhours * 60);
-                    const chargeUnits = Math.ceil(overtimeMinutes / window.masterfile.minutesPerCharge);
+                // Calculate extra charge breakdown for clarity
+                const overtimeMinutes = Math.max(0, (new Date(item.updated_at) - new Date(item.created_at)) / 60000 - item.durationhours * 60);
+                const chargeUnits = Math.ceil(overtimeMinutes / window.masterfile.minutesPerCharge);
 
-                    itemsHtml += `
-                        <div class="mb-4 border-b border-gray-200 pb-2">
-                            <p><strong>Child:</strong> ${item.child?.firstname || 'N/A'} ${item.child?.lastname || ''}</p>
-                            <p><strong>Play Duration:</strong> ${item.durationhours} hr(s) — ₱${Number(item.durationsubtotal).toFixed(2)}</p>
-                            <p><strong>Socks:</strong> ₱${Number(item.socksprice).toFixed(2)}</p>
-                            <p><strong>Subtotal:</strong> ₱${subtotal.toFixed(2)}</p>
-                            ${extraCharge > 0 ? `
-                                <div class="text-red-500">
-                                    <p><strong>Extra Charges:</strong> ₱${extraCharge.toFixed(2)}</p>
-                                    <p>Overtime: ${Math.max(0, Math.round(overtimeMinutes))} minute(s)</p>
-                                    <p>Charge units: ${chargeUnits} × ₱${window.masterfile.chargeOfMinutes} per ${window.masterfile.minutesPerCharge} min</p>
-                                </div>
-                            ` : ''}
-                            <p><strong>Total:</strong> ₱${total.toFixed(2)}</p>
-                        </div>
-                    `;
-                });
+                itemsHtml += `
+                    <div class="mb-4 border-b border-gray-200 pb-2">
+                        <p><strong>Child:</strong> ${item.child?.firstname || 'N/A'} ${item.child?.lastname || ''}</p>
+                        <p><strong>Play Duration:</strong> ${item.durationhours} hr(s) — ₱${Number(item.durationsubtotal).toFixed(2)}</p>
+                        <p><strong>Socks:</strong> ₱${Number(item.socksprice).toFixed(2)}</p>
+                        <p><strong>Subtotal:</strong> ₱${subtotal.toFixed(2)}</p>
+                        ${extraCharge > 0 ? `
+                            <div class="text-red-500">
+                                <p><strong>Extra Charges:</strong> ₱${extraCharge.toFixed(2)}</p>
+                                <p>Overtime: ${Math.max(0, Math.round(overtimeMinutes))} minute(s)</p>
+                                <p>Charge units: ${chargeUnits} × ₱${window.masterfile.chargeOfMinutes} per ${window.masterfile.minutesPerCharge} min</p>
+                            </div>
+                        ` : ''}
+                        <p><strong>Total:</strong> ₱${total.toFixed(2)}</p>
+                    </div>
+                `;
+                
 
                 const detailsHtml = `
                     <p><strong>Order #:</strong> ${orderNumber}</p>
-                    <p><strong>Guardian:</strong> ${response.order.guardian}</p>
+                    <p><strong>Guardian:</strong> ${item.order.guardian}</p>
                     ${itemsHtml}
-                    <p><strong>Order Total:</strong> ₱${Number(response.order.total_amnt).toFixed(2)}</p>
+                    <p><strong>Order Total:</strong> ₱${Number(item.order.total_amnt).toFixed(2)}</p>
                 `;
 
                 document.getElementById('checkout-details').innerHTML = detailsHtml;
@@ -115,6 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             loading.classList.add('hidden');
             showError('Error during checkout: ' + error.message);
+            console.error(error);
+            showConsole('error', 'Error during checkout: ', error.message)
             searchResults.classList.remove('hidden');
         }
     };

@@ -399,7 +399,6 @@ class PlayHouseController extends Controller
                 'message' => 'Child checked out successfully',
                 'extraCharge' => $extraCharge,
                 'orderItem' => $orderItem->load('child'),
-                'order' => $order->load('orderItems')
             ]);
 
         } catch (\Exception $e) {
