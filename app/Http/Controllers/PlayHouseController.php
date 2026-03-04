@@ -261,6 +261,17 @@ class PlayHouseController extends Controller
         ]);
     }
 
+    public function checkInSource()
+    {
+        $data = DB::table('rssys.market')->get();
+        // $data = Market::getAllMarket();
+
+        /* return response()->json([
+            'markets' => $markets
+        ]); */
+        return view('v2.pages.playhouse-checkin-source', compact('data'));
+    }
+
     public function orderInfo($orderNo)
     {
         $order = Orders::with(['parentPl', 'orderItems'])->where('ord_code_ph', $orderNo)->first();

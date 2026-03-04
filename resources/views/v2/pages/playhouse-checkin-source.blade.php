@@ -19,14 +19,9 @@
                         class="w-full flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 cursor-pointer"
                     >
                         <option value="" selected disabled>Select source</option>
-                        <option value="WALK-IN">WALK-IN</option>
-                        <option value="FACEBOOK ADS">FACEBOOK ADS</option>
-                        <option value="OLX ADS">OLX ADS</option>
-                        <option value="OTHER ONLINE ADS">OTHER ONLINE ADS</option>
-                        <option value="APPOINTMENT">APPOINTMENT</option>
-                        <option value="FLYERS">FLYERS</option>
-                        <option value="MALL DISPLAY">MALL DISPLAY</option>
-                        <option value="REFERRAL">REFERRAL</option>
+                        @foreach($data as $market)
+                            <option value="{{ $market->mkt_code }}">{{ $market->mkt_desc }}</option>
+                        @endforeach
                     </select>
                 </div>
 

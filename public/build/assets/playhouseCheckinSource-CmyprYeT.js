@@ -1,0 +1,1 @@
+const e=document.getElementById("howKnowUs"),n=document.getElementById("continueCheckin");e&&n&&(e.addEventListener("change",()=>{n.disabled=!e.value}),n.addEventListener("click",()=>{if(!e.value)return;const t=n.dataset.registrationUrl;if(!t)return;const i=new URL(t,window.location.origin);i.searchParams.set("source",e.value),window.location.href=i.toString()}));

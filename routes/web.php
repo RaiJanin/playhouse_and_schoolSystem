@@ -14,7 +14,7 @@ Route::get('/registration', function () { return view('pages.playhouse-registrat
 //----- Version 2 UI
 Route::prefix('v2')->group(function () {
     Route::get('/', function () { return view('v2.pages.playhouse-landing'); })->name('v2.playhouse.start');
-    Route::get('/check-in-source', function () { return view('v2.pages.playhouse-checkin-source'); })->name('v2.playhouse.checkin.source');
+    Route::get('/check-in-source', [PlayHouseController::class, 'checkInSource'])->name('v2.playhouse.checkin.source');
     Route::get('/registration', function () { return view('v2.pages.playhouse-registration'); })->name('v2.playhouse.registration');
 });
 
