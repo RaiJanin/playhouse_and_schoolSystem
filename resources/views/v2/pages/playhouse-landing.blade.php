@@ -49,7 +49,7 @@
                         <div class="flex sm:flex-row sm:justify-evenly gap-8 flex-col">
                             <!-- Start Now Button -->
                             <button 
-                                onclick="window.location.href='{{route('v2.playhouse.registration')}}'"
+                                onclick="window.location.href='{{route('v2.playhouse.checkin.source')}}'"
                                 class="group relative px-12 py-5 bg-[#0d9984] text-white font-bold text-xl 
                                         rounded-full shadow-lg overflow-hidden transition-all duration-300 
                                         hover:shadow-xl hover:scale-105 active:scale-95">

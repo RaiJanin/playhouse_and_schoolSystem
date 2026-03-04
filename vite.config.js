@@ -7,7 +7,8 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css',
                     'resources/js/app.js',
-                    'resources/js/modules/playhouseCheckout.js'],
+                    'resources/js/modules/playhouseCheckout.js',
+                    'resources/js/modules/playhouseCheckinSource.js'],
             refresh: true,
         }),
         tailwindcss(),
