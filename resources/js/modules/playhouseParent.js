@@ -23,12 +23,21 @@ addguardianCheckBx.setLabel(`
     Add Guardian <span class="text-red-600">*</span>
 `);
 addguardianCheckBx.onChange(checked => {
+    const guardianBirthdayContainer = document.getElementById('guardianBirthday');
 
     document.getElementById('guardian-form').hidden = !checked;
 
     guardianFields.forEach(field => {
         if (field) field.required = checked;
     });
+    // Match parent birthday behavior: guardian birthday is required only when guardian is enabled.
+    if (guardianBirthdayContainer) {
+        if (checked) {
+            guardianBirthdayContainer.setAttribute('required', '');
+        } else {
+            guardianBirthdayContainer.removeAttribute('required');
+        }
+    }
     
     if(!addguardianCheckBx.isChecked()) {
         guardianFields.forEach(field => {
@@ -36,6 +45,24 @@ addguardianCheckBx.onChange(checked => {
             field.value = '';
             field.required = false;
         });
+
+        if (guardianBirthdayContainer) {
+            // Prevent stale guardian birthday from being submitted after guardian is turned off.
+            guardianBirthdayContainer.dataset.birthdayValue = '';
+            guardianBirthdayContainer.classList.remove('birthday-invalid', 'birthday-valid');
+            guardianBirthdayContainer.removeAttribute('data-birthday-valid');
+            guardianBirthdayContainer.removeAttribute('required');
+
+            const monthSelect = guardianBirthdayContainer.querySelector('.birthday-month-select');
+            const daySelect = guardianBirthdayContainer.querySelector('.birthday-day-select');
+            const yearSelect = guardianBirthdayContainer.querySelector('.birthday-year-select');
+            const hiddenInput = guardianBirthdayContainer.querySelector('input[type="hidden"]');
+
+            if (monthSelect) monthSelect.value = '';
+            if (daySelect) daySelect.value = '';
+            if (yearSelect) yearSelect.value = '';
+            if (hiddenInput) hiddenInput.value = '';
+        }
     }
 });
 
@@ -50,14 +77,44 @@ editParentChkBx.onChange(checked => {
     showConsole('log', 'Returnee Data: ', oldUser.returneeData);
     if(oldUser.returneeData.oldUserData.guardians.length >=1) {
         enableReadonly(guardianFields, !checked);
+        const guardianBirthdayContainer = document.getElementById('guardianBirthday');
+        if (guardianBirthdayContainer) {
+            // Keep guardian birthday dropdown readonly in returnee mode unless editing is enabled.
+            disableDateInputs(guardianBirthdayContainer, !checked);
+        }
     }
     
 });
 
 export const confirmGuardianCheckBx = new CustomCheckbox('confirm-guardian-checkbox', 'confirm-guardian-icon', 'confirm-guardian-info');
 confirmGuardianCheckBx.setLabel(`
-    This guardian is allowed to pick up this child
+    This guardian is allowed to pick up my child
 `);
+
+function getAgeFromIsoDate(isoDate) {
+    if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return null;
+    const birthDate = new Date(`${isoDate}T00:00:00`);
+    if (Number.isNaN(birthDate.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+function updateGuardianUnderageWarning() {
+    const guardianBirthdayContainer = document.getElementById('guardianBirthday');
+    const warningEl = document.getElementById('guardian-underage-warning');
+    if (!guardianBirthdayContainer || !warningEl) return;
+
+    const hiddenInput = guardianBirthdayContainer.querySelector('input[type="hidden"]');
+    const guardianBirthday = hiddenInput ? hiddenInput.value : '';
+    const age = getAgeFromIsoDate(guardianBirthday);
+    const shouldShow = confirmGuardianCheckBx.isChecked() && (age === null || age < 18);
+    warningEl.classList.toggle('hidden', !shouldShow);
+}
 
 confirmGuardianCheckBx.onChange(() => {
     if(confirmGuardianCheckBx.isChecked()) {
@@ -65,7 +122,13 @@ confirmGuardianCheckBx.onChange(() => {
     } else {
         document.getElementById('guardianAuthorized').value = '0';
     }
+    updateGuardianUnderageWarning();
 });
+
+const guardianBirthdayContainer = document.getElementById('guardianBirthday');
+if (guardianBirthdayContainer) {
+    guardianBirthdayContainer.addEventListener('change', updateGuardianUnderageWarning);
+}
 
 // Load market options
 export function loadMarketOptions() {
@@ -88,4 +151,3 @@ export function loadMarketOptions() {
             console.error('Error loading market options:', error);
         });
 }
-

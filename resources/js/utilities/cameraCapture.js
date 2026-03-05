@@ -19,7 +19,7 @@ export function attachCameraCapture(container) {
 
     // Create the camera capture UI
     const cameraWrapper = document.createElement('div');
-    cameraWrapper.className = 'camera-capture-wrapper';
+    cameraWrapper.className = 'camera-capture-wrapper rounded-2xl border border-white/60 bg-gradient-to-br from-white/80 to-sky-100/60 p-3 shadow-[0_10px_30px_rgba(77,132,184,0.16)] backdrop-blur-md';
 
     // Create video element for camera stream
     const video = document.createElement('video');
@@ -36,41 +36,43 @@ export function attachCameraCapture(container) {
 
     // Create preview image
     const preview = document.createElement('img');
-    preview.className = 'camera-preview w-full h-48 bg-gray-200 rounded-lg object-cover border-2 border-teal-500';
+    preview.className = 'camera-preview w-full h-52 bg-slate-100 rounded-xl object-cover border border-sky-200 shadow-inner';
     preview.alt = 'Child photo';
     preview.style.display = 'none';
 
     // Create placeholder when no photo
     const placeholder = document.createElement('div');
-    placeholder.className = 'camera-placeholder w-full h-48 bg-gray-100 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-300';
+    placeholder.className = 'camera-placeholder w-full h-52 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200/70 text-slate-500';
     placeholder.innerHTML = `
-        <i class="fa-solid fa-camera text-4xl text-gray-400 mb-2"></i>
-        <p class="text-sm text-gray-500">No photo captured</p>
+        <div class="mb-3 h-14 w-14 rounded-2xl border border-white/70 bg-white/75 text-slate-400 shadow-[0_6px_14px_rgba(92,121,154,0.15)] backdrop-blur-sm flex items-center justify-center">
+            <i class="fa-solid fa-camera text-2xl"></i>
+        </div>
+        <p class="text-lg font-medium text-slate-600">No photo captured</p>
     `;
 
     // Create buttons
     const buttonWrapper = document.createElement('div');
-    buttonWrapper.className = 'camera-buttons flex gap-2 mt-2 relative z-10';
+    buttonWrapper.className = 'camera-buttons flex gap-2 mt-3 relative z-10';
 
     const startCameraBtn = document.createElement('button');
     startCameraBtn.type = 'button';
-    startCameraBtn.className = 'start-camera-btn flex-1 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors relative z-10';
-    startCameraBtn.innerHTML = '<i class="fa-solid fa-camera mr-2"></i> Take Photo';
+    startCameraBtn.className = 'start-camera-btn flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-gradient-to-b from-teal-300 to-cyan-500 text-white font-semibold py-2.5 px-4 shadow-[0_6px_14px_rgba(48,128,151,0.32)] transition-all duration-200 hover:-translate-y-0.5 relative z-10';
+    startCameraBtn.innerHTML = '<span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/25 border border-white/30"><i class="fa-solid fa-camera text-sm"></i></span>';
 
     const uploadBtn = document.createElement('button');
     uploadBtn.type = 'button';
-    uploadBtn.className = 'upload-btn flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors relative z-10';
-    uploadBtn.innerHTML = '<i class="fa-solid fa-upload mr-2"></i> Upload';
+    uploadBtn.className = 'upload-btn flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-gradient-to-b from-sky-400 to-blue-600 text-white font-semibold py-2.5 px-4 shadow-[0_6px_14px_rgba(39,98,178,0.34)] transition-all duration-200 hover:-translate-y-0.5 relative z-10';
+    uploadBtn.innerHTML = '<span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/25 border border-white/30"><i class="fa-solid fa-arrow-up-from-bracket text-sm"></i></span>';
 
     const retakeBtn = document.createElement('button');
     retakeBtn.type = 'button';
-    retakeBtn.className = 'retake-btn flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors hidden relative z-10';
-    retakeBtn.innerHTML = '<i class="fa-solid fa-rotate-right mr-2"></i> Retake';
+    retakeBtn.className = 'retake-btn flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-gradient-to-b from-amber-300 to-orange-500 text-white font-semibold py-2.5 px-4 shadow-[0_6px_14px_rgba(186,126,47,0.34)] transition-all duration-200 hover:-translate-y-0.5 hidden relative z-10';
+    retakeBtn.innerHTML = '<span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/25 border border-white/30"><i class="fa-solid fa-rotate-right text-sm"></i></span><span>Retake</span>';
 
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
-    removeBtn.className = 'remove-btn flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors hidden relative z-10';
-    removeBtn.innerHTML = '<i class="fa-solid fa-trash mr-2"></i> Remove';
+    removeBtn.className = 'remove-btn flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-gradient-to-b from-rose-400 to-red-600 text-white font-semibold py-2.5 px-4 shadow-[0_6px_14px_rgba(180,69,69,0.34)] transition-all duration-200 hover:-translate-y-0.5 hidden relative z-10';
+    removeBtn.innerHTML = '<span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/25 border border-white/30"><i class="fa-solid fa-trash text-sm"></i></span><span>Remove</span>';
 
     // Hidden file input for upload
     const fileInput = document.createElement('input');
@@ -85,22 +87,22 @@ export function attachCameraCapture(container) {
 
     // Create modal for camera
     const cameraModal = document.createElement('div');
-    cameraModal.className = 'camera-modal fixed inset-0 z-50 flex items-center justify-center bg-black/70 hidden';
+    cameraModal.className = 'camera-modal fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm hidden';
     cameraModal.innerHTML = `
-        <div class="camera-modal-content bg-white rounded-2xl p-4 max-w-md w-full mx-4">
+        <div class="camera-modal-content rounded-2xl border border-white/70 bg-white/90 p-4 max-w-md w-full mx-4 shadow-[0_20px_50px_rgba(39,72,110,0.3)] backdrop-blur-md">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-gray-800">Take Photo</h3>
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2"><span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-sky-100 text-sky-600"><i class="fa-solid fa-camera"></i></span><span>Take Photo</span></h3>
                 <button type="button" class="close-camera-btn text-gray-500 hover:text-gray-700">
                     <i class="fa-solid fa-times text-xl"></i>
                 </button>
             </div>
-            <video class="modal-video w-full h-56 bg-gray-900 rounded-lg object-cover" playsinline autoplay></video>
+            <video class="modal-video w-full h-56 bg-slate-900 rounded-xl object-cover" playsinline autoplay></video>
             <canvas class="modal-canvas hidden"></canvas>
             <div class="flex gap-2 mt-4">
-                <button type="button" class="capture-btn flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+                <button type="button" class="capture-btn flex-1 rounded-xl border border-white/30 bg-gradient-to-b from-rose-400 to-red-600 text-white font-bold py-3 px-4 shadow-[0_6px_14px_rgba(171,55,55,0.35)] transition-all duration-200 hover:-translate-y-0.5">
                     <i class="fa-solid fa-circle text-xl mr-2"></i> Capture
                 </button>
-                <button type="button" class="cancel-camera-btn flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                <button type="button" class="cancel-camera-btn flex-1 rounded-xl border border-slate-200 bg-gradient-to-b from-slate-100 to-slate-200 text-slate-700 font-semibold py-3 px-4 shadow-[0_4px_12px_rgba(77,98,124,0.16)] transition-all duration-200 hover:-translate-y-0.5">
                     Cancel
                 </button>
             </div>
@@ -192,10 +194,10 @@ export function attachCameraCapture(container) {
         preview.style.display = 'block';
         placeholder.style.display = 'none';
         
-        // Add profile picture styling
-        preview.classList.add('rounded-full', 'object-cover', 'border-4', 'border-teal-500', 'mx-auto');
-        preview.style.width = '100px';
-        preview.style.height = '100px';
+        // Keep a wide preview style to match the upload panel design.
+        preview.classList.add('object-cover');
+        preview.style.width = '100%';
+        preview.style.height = '13rem';
         
         // Show retake and remove buttons, hide start button
         startCameraBtn.classList.add('hidden');
@@ -218,7 +220,7 @@ export function attachCameraCapture(container) {
         hiddenInput.value = '';
         preview.src = '';
         preview.style.display = 'none';
-        preview.classList.remove('rounded-full', 'object-cover', 'border-4', 'border-teal-500', 'mx-auto');
+        preview.classList.remove('object-cover');
         preview.style.width = '';
         preview.style.height = '';
         placeholder.style.display = 'flex';
@@ -249,10 +251,10 @@ export function attachCameraCapture(container) {
                 preview.style.display = 'block';
                 placeholder.style.display = 'none';
                 
-                // Add profile picture styling
-                preview.classList.add('rounded-full', 'object-cover', 'border-4', 'border-teal-500', 'mx-auto');
-                preview.style.width = '100px';
-                preview.style.height = '100px';
+                // Keep a wide preview style to match the upload panel design.
+                preview.classList.add('object-cover');
+                preview.style.width = '100%';
+                preview.style.height = '13rem';
                 
                 startCameraBtn.classList.add('hidden');
                 uploadBtn.classList.add('hidden');

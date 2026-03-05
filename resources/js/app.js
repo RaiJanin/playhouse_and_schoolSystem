@@ -133,6 +133,11 @@ document.addEventListener('DOMContentLoaded', function () {
             let childrenValid = true;
 
             inputs.forEach(input => {
+                const isInHiddenContainer = !!input.closest('[hidden], .hidden');
+                if (isInHiddenContainer) {
+                    return;
+                }
+
                 if (input.id === 'phone') {
                     showConsole('log', 'Phone input detected, validating...');
                     if (!validatePhone(input)) {
@@ -326,6 +331,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = new FormData(document.getElementById('playhouse-registration-form'));
             let parentEmail = data.get('parentEmail') ? `(${data.get('parentEmail')})` : '';
             let guardianPhone = data.get('guardianPhone') ? `(${data.get('guardianPhone')})` : '';
+            // Read guardian birthday from the dropdown hidden input for summary/review payloads.
+            const guardianBirthday = data.get('guardianBirthday');
             const hiddenParentBirthday = document.getElementById('parentBirthday-hidden');
             const hiPVal = hiddenParentBirthday.value ? dateToString('shortDate', hiddenParentBirthday.value) : '-';
             let childrenItems = '';
@@ -380,10 +387,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const overallTotal = childrenTotalCost + socksTotalCost;
 
             if(addguardianCheckBx.isChecked()) {
+                // Show guardian birthday in step 5 summary when guardian is enabled.
                 guardianInfo = `
                     <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-fit">Guardian:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${data.get('guardianName')} ${data.get('guardianLastName')} ${guardianPhone}</span>
+                    </div>
+                    <div class="flex items-center border-b border-cyan-400 py-2">
+                        <span class="font-semibold text-cyan-800 w-fit">Guardian Birthdate:&nbsp;</span>
+                        <span class="text-gray-900 font-medium">${guardianBirthday ? dateToString('shortDate', guardianBirthday) : '-'}</span>
                     </div>
                 `;
             }
@@ -467,7 +479,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         guardian: addguardianCheckBx.isChecked() ? {
                             first_name: data.get('guardianName'),
                             last_name: data.get('guardianLastName'),
-                            phone: data.get('guardianPhone')
+                            phone: data.get('guardianPhone'),
+                            // Pass guardian birthday into edit modal so it can be reviewed/edited.
+                            birthday: data.get('guardianBirthday')
                         } : null,
                         children: []
                     };

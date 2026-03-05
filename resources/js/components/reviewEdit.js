@@ -84,16 +84,23 @@ export function openEditModal(reviewData = null) {
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="text-sm font-semibold text-gray-600 block mb-1">First Name</label>
+                        <label class="text-sm font-semibold text-gray-600 block mb-1">Guardian First Name</label>
                         <input type="text" id="edit-guardianName" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all" value="${guardianData.first_name || ''}">
                     </div>
                     <div>
-                        <label class="text-sm font-semibold text-gray-600 block mb-1">Last Name</label>
+                        <label class="text-sm font-semibold text-gray-600 block mb-1">Guardian Last Name</label>
                         <input type="text" id="edit-guardianLastName" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all" value="${guardianData.last_name || ''}">
                     </div>
                     <div class="md:col-span-2">
-                        <label class="text-sm font-semibold text-gray-600 block mb-1">Phone</label>
+                        <label class="text-sm font-semibold text-gray-600 block mb-1">Guardian Phone</label>
                         <input type="tel" id="edit-guardianPhone" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all" value="${guardianData.phone || ''}">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-sm font-semibold text-gray-600 block mb-1">Guardian Birthday</label>
+                        <!-- Guardian birthday uses the same month/day/year dropdown structure. -->
+                        <div id="edit-guardianBirthday">
+                            ${createBirthdayDropdownHtml('guardianBirthday', guardianData.birthday)}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,7 +134,7 @@ export function openEditModal(reviewData = null) {
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-semibold text-gray-600 block mb-1">Name</label>
+                            <label class="text-sm font-semibold text-gray-600 block mb-1">Child Name</label>
                             <input type="text" class="edit-child-name w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" data-child-index="${index}" value="${child.name || ''}">
                         </div>
                         <div>
@@ -200,6 +207,7 @@ export function openEditModal(reviewData = null) {
         const editGuardianName = document.getElementById('edit-guardianName');
         const editGuardianLastName = document.getElementById('edit-guardianLastName');
         const editGuardianPhone = document.getElementById('edit-guardianPhone');
+        const editGuardianBirthday = document.getElementById('edit-guardianBirthday');
         
         if (editGuardianName || editGuardianLastName || editGuardianPhone) {
             // If guardian fields have values, check the guardian checkbox
@@ -219,6 +227,38 @@ export function openEditModal(reviewData = null) {
             if (editGuardianPhone) {
                 const formGuardianPhone = document.getElementById('guardianPhone');
                 if (formGuardianPhone) formGuardianPhone.value = editGuardianPhone.value;
+            }
+
+            if (editGuardianBirthday) {
+                const monthSelect = editGuardianBirthday.querySelector('.birthday-month-select');
+                const daySelect = editGuardianBirthday.querySelector('.birthday-day-select');
+                const yearSelect = editGuardianBirthday.querySelector('.birthday-year-select');
+                const formGuardianBirthday = document.getElementById('guardianBirthday');
+
+                if (formGuardianBirthday && monthSelect && daySelect && yearSelect) {
+                    const mm = monthSelect.value;
+                    const dd = daySelect.value;
+                    const yyyy = yearSelect.value;
+
+                    if (mm && dd && yyyy) {
+                        // Sync edited guardian birthday back into the main form dropdown hidden input.
+                        const isoDate = `${yyyy}-${mm}-${dd}`;
+                        formGuardianBirthday.dataset.birthdayValue = isoDate;
+                        const hiddenInput = formGuardianBirthday.querySelector('input[type="hidden"]');
+                        if (hiddenInput) hiddenInput.value = isoDate;
+
+                        formGuardianBirthday.classList.remove('birthday-invalid');
+                        formGuardianBirthday.classList.add('birthday-valid');
+                        formGuardianBirthday.setAttribute('data-birthday-valid', 'true');
+                    } else {
+                        // Clear guardian birthday if edit modal leaves it incomplete.
+                        formGuardianBirthday.dataset.birthdayValue = '';
+                        const hiddenInput = formGuardianBirthday.querySelector('input[type="hidden"]');
+                        if (hiddenInput) hiddenInput.value = '';
+                        formGuardianBirthday.classList.remove('birthday-invalid', 'birthday-valid');
+                        formGuardianBirthday.removeAttribute('data-birthday-valid');
+                    }
+                }
             }
         }
         // Update parent birthday from dropdowns

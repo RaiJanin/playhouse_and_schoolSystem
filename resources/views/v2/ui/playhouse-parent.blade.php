@@ -59,34 +59,4 @@
         </div>
     </div>
 
-    <div class="mt-6 pt-4 border-t border-gray-800">
-        <button id="add-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-			<span class="flex items-center">
-				<i id="check-add-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
-				<p id="check-add-guardian-info" class="ml-2"></p>
-			</span>
-		</button>
-        <div id="guardian-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" hidden>
-            <div>
-                <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
-                <input type="text" id="guardianName" name="guardianName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
-            </div>
-            <div>
-                <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
-                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
-            </div>
-            <div>
-                <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Phone Number <span class="text-red-600">*</span></label> 
-                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
-            </div>
-            <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-                <span class="flex flex-row">
-                    <i id="confirm-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
-                    <p id="confirm-guardian-info" class="ml-2"></p>
-                </span>
-            </button>
-
-            <input type="hidden" name="guardianAuthorized" id="guardianAuthorized" value="0" />
-        </div>
-    </div>
 </div>

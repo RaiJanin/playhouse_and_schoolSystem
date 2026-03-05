@@ -151,15 +151,32 @@ export function requestBirthdayDropdownValidation(scope = document) {
 
 export function validateDateInputs(scope = document) {
     const containers = scope.querySelectorAll('.birthday-dropdown-wrapper');
-    let allValid = false;
+    // Start true so each birthday block can independently fail validation.
+    let allValid = true;
 
     containers.forEach(field => {
-        const month = checkInput(field.querySelector('.birthday-month-select'));
-        const day = checkInput(field.querySelector('.birthday-day-select'));
-        const year = checkInput(field.querySelector('.birthday-year-select'));
+        const monthEl = field.querySelector('.birthday-month-select');
+        const dayEl = field.querySelector('.birthday-day-select');
+        const yearEl = field.querySelector('.birthday-year-select');
+        const hostContainer = field.closest('[data-birthday-dropdown]');
+        const isRequired = hostContainer ? hostContainer.hasAttribute('required') : false;
+        const hasAnyValue = Boolean(
+            (monthEl && monthEl.value) ||
+            (dayEl && dayEl.value) ||
+            (yearEl && yearEl.value)
+        );
 
-        if(month && day && year) {
-            allValid = true;
+        // Skip optional birthday fields when untouched.
+        if (!isRequired && !hasAnyValue) {
+            return;
+        }
+
+        const month = checkInput(monthEl);
+        const day = checkInput(dayEl);
+        const year = checkInput(yearEl);
+
+        if (!(month && day && year)) {
+            allValid = false;
         }
     });
 

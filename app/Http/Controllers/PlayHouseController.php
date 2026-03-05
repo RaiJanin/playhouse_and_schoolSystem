@@ -60,6 +60,7 @@ class PlayHouseController extends Controller
                         'd_name' => $guardianFullname,
                         'firstname' => $data['guardianName'],
                         'lastname' => $data['guardianLastName'],
+                        'birthday' => $data['guardianBirthday'] ?? null,
                         'mobileno' => $data['guardianPhone'],
                         'isparent' => false,
                         'isguardian' => true,

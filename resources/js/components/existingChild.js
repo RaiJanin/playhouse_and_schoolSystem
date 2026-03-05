@@ -4,13 +4,58 @@ export let selectedChildState = {
     selectCount: 0
 };
 
-export function attachFields(data, index) {
+export function attachFields(data, index, guardianData = null) {
     const hasPhoto = data.photo && data.photo.length > 0;
     const photoHtml = hasPhoto 
         ? `<img src="/${data.photo}" alt="${data.firstname}'s photo" class="w-24 h-24 rounded-full object-cover border-2 border-teal-500 mx-auto mb-2">`
         : `<div class="w-24 h-24 rounded-full bg-gray-200 border-2 border-gray-300 mx-auto mb-2 flex items-center justify-center">
             <i class="fa-solid fa-user text-3xl text-gray-400"></i>
           </div>`;
+
+    const hasGuardian = guardianData && (guardianData.firstname || guardianData.lastname || guardianData.mobileno);
+    const guardianBirthdayIso = hasGuardian
+        ? (dateToString('iso', guardianData.birthday || guardianData.birthdate || '') || '')
+        : '';
+    const guardianAuthorizedChecked = hasGuardian && guardianData.guardianauthorized
+        ? 'fa-solid fa-square-check text-green-500'
+        : 'fa-regular fa-square text-red-500';
+    const guardianAuthorizedValue = hasGuardian && guardianData.guardianauthorized ? '1' : '0';
+
+    const guardianSection = hasGuardian ? `
+            <div class="mt-3 p-3 rounded-lg border border-teal-300 bg-teal-50/60">
+                <button type="button" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
+                    <span class="flex items-center">
+                        <i class="edit-guardian-icon fa-regular fa-square text-red-500 text-xl"></i>
+                        <p class="ml-2 font-semibold">Edit</p>
+                    </span>
+                </button>
+                <div class="guardian-existing-form grid grid-cols-1 gap-3 mt-3">
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
+                        <input type="text" name="guardianName" class="guardian-existing-input guardian-existing-name bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData.firstname || ''}" readonly />
+                    </div>
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
+                        <input type="text" name="guardianLastName" class="guardian-existing-input guardian-existing-last-name bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData.lastname || ''}" readonly />
+                    </div>
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
+                        <input type="tel" name="guardianPhone" class="guardian-existing-input guardian-existing-phone bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData.mobileno || ''}" inputmode="tel" readonly />
+                    </div>
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
+                        <div class="guardian-existing-birthday bg-teal-100 rounded-lg" data-birthday-dropdown data-name="guardianBirthday" data-birthday-value="${guardianBirthdayIso}"></div>
+                    </div>
+                    <button type="button" class="confirm-guardian-existing cursor-pointer p-2 text-sm hover:text-gray-500">
+                        <span class="flex flex-row">
+                            <i class="confirm-guardian-existing-icon ${guardianAuthorizedChecked} text-xl"></i>
+                            <p class="ml-2">This guardian is allowed to pick up my child</p>
+                        </span>
+                    </button>
+                    <input type="hidden" name="guardianAuthorized" class="guardian-existing-authorized" value="${guardianAuthorizedValue}" />
+                </div>
+            </div>
+    ` : '';
     
     return `
         <div class="attached-fields child-entry flex flex-col">
@@ -51,6 +96,7 @@ export function attachFields(data, index) {
                     </div>
                 </div>
             </div>
+            ${guardianSection}
         </div>
     `;
 }

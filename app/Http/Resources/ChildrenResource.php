@@ -21,7 +21,7 @@ class ChildrenResource extends JsonResource
             'd_code_c' => $this->d_code_c,
             'lastname' => $this->lastname,
             'firstname' => $this->firstname,
-            'birthday' => Carbon::parse($this->birthday)->format('Y-m-d') ?? null,
+            'birthday' => $this->birthday ? Carbon::parse($this->birthday)->format('Y-m-d') : null,
             'age' => $this->age,
             'photo' => $this->photo,
             'phoneno' => $this->phoneno,

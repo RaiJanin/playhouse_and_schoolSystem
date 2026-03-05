@@ -24,6 +24,54 @@
     .socks-qty-plus {
         -webkit-tap-highlight-color: transparent;
     }
+    #childrenForm {
+        background: linear-gradient(140deg, rgba(255, 255, 255, 0.5), rgba(219, 241, 255, 0.38));
+        border: 1px solid rgba(255, 255, 255, 0.58);
+        border-radius: 18px;
+        padding: 0.75rem;
+        box-shadow: 0 12px 34px rgba(74, 104, 139, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    #childrenContainer .child-entry {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.36), rgba(210, 235, 250, 0.35));
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        border-radius: 16px;
+        box-shadow: 0 8px 22px rgba(73, 109, 145, 0.12);
+    }
+    #childrenContainer label {
+        color: #1f2937;
+        font-weight: 600;
+    }
+    #childrenContainer input[type="text"],
+    #childrenContainer input[type="tel"],
+    #childrenContainer select {
+        background: rgba(255, 255, 255, 0.92) !important;
+        border: 1px solid #cfd8e4 !important;
+        border-radius: 12px !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 4px 10px rgba(110, 136, 165, 0.1) !important;
+    }
+    #childrenContainer input:focus,
+    #childrenContainer select:focus {
+        border-color: #5ba3f7 !important;
+        box-shadow: 0 0 0 3px rgba(91, 163, 247, 0.18) !important;
+    }
+    #childrenContainer .birthday-month-select,
+    #childrenContainer .birthday-day-select,
+    #childrenContainer .birthday-year-select {
+        background: rgba(255, 255, 255, 0.92) !important;
+        border: 1px solid #cfd8e4 !important;
+        border-radius: 10px !important;
+    }
+    #childrenContainer .camera-capture-wrapper {
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 8px 24px rgba(80, 112, 150, 0.14);
+    }
+    #childrenContainer .camera-placeholder {
+        background: #eef1f6;
+        border-color: #d4dae4;
+        color: #67758a;
+    }
 </style>
 
 <div class="p-4">
@@ -51,55 +99,94 @@
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
-            <div id="first-child" class="child-entry grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-3 border border-teal-600 rounded-lg">
-                <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Name <span class="text-red-600">*</span></label>
-                    <input type="text" name="child[0][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
-                </div>
-
-                <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
-                    <div id="child-0-birthday" data-birthday-dropdown data-name="child[0][birthday]" required class="bg-teal-100 rounded-lg"></div>
-                </div>
-
-                <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
-                    <div class="relative">
-                        <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                            <option value="1">1 Hour = ₱100</option>  
-                            <option value="2">2 Hours = ₱200</option> 
-                            <option value="3">3 Hours = ₱300</option>
-                            <option value="4">4 Hours = ₱400</option>
-                            <option value="unlimited">Unlimited = ₱500</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
-                            <i class="fa-solid fa-chevron-down text-sm"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (₱100)</label>
-                    <div class="relative">
-                        <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
-                            <i class="fa-solid fa-chevron-down text-sm"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="px-3 mb-3">
+            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-teal-600 rounded-lg">
+                <div class="md:order-1 px-3 mb-3">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
+                    <div class="mt-3 p-2 rounded-lg border border-teal-300 bg-teal-50/60">
+                        <button id="add-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+                            <span class="flex items-center">
+                                <i id="check-add-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
+                                <p id="check-add-guardian-info" class="ml-2"></p>
+                            </span>
+                        </button>
+                        <div id="guardian-form" class="grid grid-cols-1 gap-3 mt-3" hidden>
+                            <div>
+                                <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
+                                <input type="text" id="guardianName" name="guardianName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                            </div>
+                            <div>
+                                <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
+                                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                            </div>
+                            <div>
+                                <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
+                                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                            </div>
+                            <div>
+                                <label for="guardianBirthday" class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
+                                <div id="guardianBirthday" data-birthday-dropdown data-name="guardianBirthday" class="bg-teal-100 rounded-lg"></div>
+                            </div>
+                            <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+                                <span class="flex flex-row">
+                                    <i id="confirm-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
+                                    <p id="confirm-guardian-info" class="ml-2"></p>
+                                </span>
+                            </button>
+                            <p id="guardian-underage-warning" class="text-sm font-semibold text-red-600 hidden">
+                                Are you sure do you want to proceed this guardian below 18 yrs old?
+                            </p>
+
+                            <input type="hidden" name="guardianAuthorized" id="guardianAuthorized" value="0" />
+                        </div>
+                    </div>
                 </div>
-            </div>  
+
+                <div class="md:order-2 grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
+                        <input type="text" name="child[0][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
+                    </div>
+
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
+                        <div id="child-0-birthday" data-birthday-dropdown data-name="child[0][birthday]" required class="bg-teal-100 rounded-lg"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
+                        <div class="relative">
+                            <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                                <option value="1">1 Hour = &#8369;100</option>
+                                <option value="2">2 Hours = &#8369;200</option>
+                                <option value="3">3 Hours = &#8369;300</option>
+                                <option value="4">4 Hours = &#8369;400</option>
+                                <option value="unlimited">Unlimited = &#8369;500</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (&#8369;100)</label>
+                        <div class="relative">
+                            <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="pt-4 pb-4 flex flex-col gap-3">
-            <button type="button" id="addChildBtn" 
+            <button type="button" id="addChildBtn"
             class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>

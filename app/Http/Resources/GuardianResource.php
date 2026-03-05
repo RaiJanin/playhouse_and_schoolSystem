@@ -23,7 +23,7 @@ class GuardianResource extends JsonResource
             'lastname' => $this->lastname,
             'firstname' => $this->firstname,
             'mi' => $this->mi,
-            'birthday' => Carbon::parse($this->birthday)->format('Y-m-d') ?? null,
+            'birthday' => $this->birthday ? Carbon::parse($this->birthday)->format('Y-m-d') : null,
             'mobileno' => $this->mobileno,
             'email' => $this->email,
             'isparent' => $this->isparent,
