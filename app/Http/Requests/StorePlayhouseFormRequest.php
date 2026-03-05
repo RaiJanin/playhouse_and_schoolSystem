@@ -26,6 +26,7 @@ class StorePlayhouseFormRequest extends FormRequest
             'parentName' => 'required|string|max:255',
             'parentLastName' => 'required|string|max:255',
             'parentEmail' => 'nullable|email|max:255',
+            'mkt_code' => 'nullable|string|max:50',
             'parentBirthday' => 'required|date',
             'guardianName' => 'nullable|string|max:255',
             'guardianLastName' => 'nullable|string|max:255',

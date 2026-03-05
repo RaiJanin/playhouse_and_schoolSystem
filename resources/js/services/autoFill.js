@@ -26,12 +26,19 @@ const existedChild = document.getElementById('exist-children');
 
 export function autoFillFields(data) {
     showConsole('log', 'Auto-filling fields with:', data);
+    
+    // Check if data is valid before proceeding
+    if (!data || !data.userLoaded || !data.oldUserData) {
+        showConsole('log', 'No valid returnee data to auto-fill');
+        return;
+    }
+    
     oldUser.oldUserLoaded = data.userLoaded;
 
-    document.getElementById('parentName').value = data.oldUserData.firstname;
-    document.getElementById('parentLastName').value = data.oldUserData.lastname;
-    document.getElementById('parentEmail').value = data.oldUserData.email;
-    document.getElementById('parentBirthday-hidden').value = dateToString('iso', data.oldUserData.birthday);
+    document.getElementById('parentName').value = data.oldUserData.firstname || '';
+    document.getElementById('parentLastName').value = data.oldUserData.lastname || '';
+    document.getElementById('parentEmail').value = data.oldUserData.email || '';
+    document.getElementById('parentBirthday-hidden').value = dateToString('iso', data.oldUserData.birthday) || '';
 
     const birthdayContainer = document.getElementById('parentBirthday');
     const birthday = dateToString('iso',  data.oldUserData.birthday);
@@ -46,7 +53,7 @@ export function autoFillFields(data) {
         birthdayContainer.querySelector('.birthday-year-select').value = yyyy;
     }
 
-    if(data.oldUserData.guardians.length >= 1) {
+    if(data.oldUserData.guardians && data.oldUserData.guardians.length >= 1) {
         data.oldUserData.guardians.forEach(guardian => {
             document.getElementById('guardianName').value = guardian.firstname;
             document.getElementById('guardianLastName').value = guardian.lastname;

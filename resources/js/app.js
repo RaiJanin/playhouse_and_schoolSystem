@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.populateSummary = populateSummary;
         window.openEditModal = openEditModal;
 
-
+    
         const form = document.getElementById('playhouse-registration-form');
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
@@ -83,37 +83,37 @@ document.addEventListener('DOMContentLoaded', function () {
         if (phoneInputEl && nextBtnEl) {
             nextBtnEl.disabled = true;
         }
-
-        const phoneTermsCheckbox = (() => {
-            try {
-                return new CustomCheckbox('agree-checkbox-phone', 'check-agree-icon-phone', 'check-agree-info-phone');
-            } catch (e) {
-                return null;
-            }
-        })();
+        
+        // Initialize submit button as disabled
+        if (submitBtn) {
+            submitBtn.disabled = true;
+        }
 
         window.updateNextBtnState = function() {
             const current = getCurrentStepName();
+            
+            // Handle next button (I Agree)
             if (current !== 'phone') {
                 if (nextBtnEl) nextBtnEl.disabled = false;
-                return;
+            } else {
+                const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
+                if (nextBtnEl) {
+                    nextBtnEl.disabled = !phoneValid;
+                }
             }
-
-            const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
-            const agreed = phoneTermsCheckbox ? phoneTermsCheckbox.isChecked() : false;
-            if (nextBtnEl) {
-                nextBtnEl.disabled = !(phoneValid && agreed);
+            
+            // Handle submit button - enable when on final step and form is valid
+            if (currentStep === steps.length - 1) {
+                // Check if form is valid before enabling submit
+                const formValid = form ? form.checkValidity() : false;
+                if (submitBtn) submitBtn.disabled = !formValid;
+            } else {
+                if (submitBtn) submitBtn.disabled = true;
             }
         };
 
         if (phoneInputEl) {
             phoneInputEl.addEventListener('input', () => {
-                if (window.updateNextBtnState) window.updateNextBtnState();
-            });
-        }
-
-        if (phoneTermsCheckbox) {
-            phoneTermsCheckbox.onChange(() => {
                 if (window.updateNextBtnState) window.updateNextBtnState();
             });
         }
@@ -208,6 +208,12 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Validate form before submitting
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             showConsole('log', 'Form submition active');
 
             const formData = new FormData(form);
@@ -220,6 +226,17 @@ document.addEventListener('DOMContentLoaded', function () {
             if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
 
         });
+        
+        // Extra safeguard: prevent submit button click if disabled
+        if (submitBtn) {
+            submitBtn.addEventListener('click', (e) => {
+                if (submitBtn.disabled) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+        }
         
         
         
@@ -295,7 +312,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentStep = nextStepIndex;
 
                 prevBtn.classList.toggle('hidden', currentStep === 0);
-                nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
+                // Hide Next button on OTP step (step 1) since it auto-advances after verification
+                nextBtn.classList.toggle('hidden', currentStep === steps.length - 1 || currentStep === 1);
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
                 
                 if (window.updateNextBtnState) window.updateNextBtnState();
@@ -476,10 +494,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     window.openEditModal(reviewData);
                 });
-            }
-
-            if(phoneTermsCheckbox.isChecked()) {
-                submitBtn.disabled = false;
             }
 
             showConsole('log', 'Is Parent Birthdate filled? ', parentBirthdayIsFilled);

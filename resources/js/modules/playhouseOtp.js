@@ -3,8 +3,6 @@ import { showConsole } from "../config/debug.js";
 
 import { oldUser } from "../services/olduserState.js";
 
-import { enableEditInfo } from "../utilities/formControl.js";
-
 import { 
     autoFillChildren, 
     autoFillFields 
@@ -93,9 +91,9 @@ function generateOtpChoices(correctOtp, otpId) {
                         
                             if (window.showSteps) {
                                 
-                                if (returneeData) {
+                                // Check if returnee data is valid before auto-filling
+                                if (returneeData && returneeData.userLoaded && returneeData.oldUserData) {
                                     autoFillFields(returneeData);
-                                    enableEditInfo();
                                 }
                                 window.showSteps(2, 'next');
                                 
@@ -105,7 +103,8 @@ function generateOtpChoices(correctOtp, otpId) {
                                 
                                 await new Promise(resolve => setTimeout(resolve, 300));
                                 
-                                if (returneeData && returneeData.oldUserData.children.length >= 1) {
+                                // Check if returnee data has children before auto-filling
+                                if (returneeData && returneeData.userLoaded && returneeData.oldUserData && returneeData.oldUserData.children && returneeData.oldUserData.children.length >= 1) {
                                     autoFillChildren(returneeData.oldUserData.children, returneeData.oldUserData.d_name);
                                 }
                             }
