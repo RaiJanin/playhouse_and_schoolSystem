@@ -4,8 +4,10 @@ import { showConsole } from '../config/debug.js';
 
 function validatePhone(phoneInput) {
     const phone = phoneInput.value.trim();
-    const cleanPhone = phone.replace(/[\s\-\$\$]/g, '');
-    const phMobilePattern = /^(?:\+63|0)?9\d{9}$/;
+    // Remove any + or - signs that might have been pasted
+    const cleanPhone = phone.replace(/[+\s\-]/g, '');
+    // Accepts: 09XXXXXXXXX, 639XXXXXXXXX, or 9XXXXXXXXX
+    const phMobilePattern = /^(?:63|0)?9\d{9}$/;
     return cleanPhone && phMobilePattern.test(cleanPhone);
 }
 window.validatePhone = validatePhone;

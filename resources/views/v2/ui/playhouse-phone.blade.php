@@ -12,13 +12,11 @@
             id="phone"
             name="phone"
             class="bg-teal-100 w-full px-4 py-3 border-2 border-teal-500 shadow rounded-md font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"  
-            pattern="^(?:\+63|0)?9\d{9}$"
-            title="Philippine mobile number (e.g., 09171234567 or +639171234567)"
+            title="Philippine mobile number (e.g., 09171234567, 639171234567, or 9171234567)"
             required
-            maxlength="13"
         >
         <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
-            Accepts: 09XXXXXXXXX, +639XXXXXXXXX, or 9XXXXXXXXX
+            Accepts: 09XXXXXXXXX, 639XXXXXXXXX, or 9XXXXXXXXX (no + or - signs)
         </small>
 
     </div>

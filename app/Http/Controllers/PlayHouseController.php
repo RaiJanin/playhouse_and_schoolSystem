@@ -10,6 +10,7 @@ use App\Models\Orders;
 use App\Models\OrderItems;
 use App\Services\DecodeBase64File;
 use App\Http\Resources\M06Resource;
+use App\Services\SendSmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -159,24 +160,53 @@ class PlayHouseController extends Controller
         
     }
 
-    public function makeOtp(Request $request)
+public function makeOtp(Request $request)
     {
         try {
             $request->validate(['phone' => 'required|string|max:20']);
 
             $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
             $phone = $request->phone;
+            
+            // Format phone to +63 if not already formatted
+            if (!str_starts_with($phone, '+')) {
+                if (str_starts_with($phone, '63')) {
+                    $phone = '+' . $phone;
+                } elseif (str_starts_with($phone, '0')) {
+                    $phone = '+63' . substr($phone, 1);
+                } else {
+                    $phone = '+63' . $phone;
+                }
+            }
 
             $phoneRecord = PhoneNumber::create([
                 'phone_number' => $phone,
                 'otp_code' => $OTP,
                 'otp_expires_at' => Carbon::now()->addMinutes(5)
             ]);
+            
+            if($phoneRecord)
+            {
+                $message = 'JDEN SMS: Your OTP code is '.$OTP.', It is valid for 5 minutes, dont share your code with anyone, thank you.';
+                $smsStatus = SendSmsService::sendnowsms($phone,$message);
+                
+                if(!$smsStatus['success'])
+                {
+                    return response()->json([
+                        'generated' => true,
+                        'id' => $phoneRecord->id,
+                        'code' => $OTP,
+                        'isSent' => false,
+                        'smsStatus' => $smsStatus['response']
+                    ]);
+                }
+            }
 
             return response()->json([
                 'generated' => true,
                 'id' => $phoneRecord->id,
-                'code' => $OTP
+                'code' => $OTP,
+                'isSent' => true
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -185,46 +215,63 @@ class PlayHouseController extends Controller
             ], 500);
         }
     }
-
+    
     public function verifyOTP(Request $request, $phoneNum)
     {
+        try {
+            $request->validate(['otp' => 'required|string|size:3']);
 
-        $request->validate(['otp' => 'required|string|size:3']);
+            // Format phone number to +63 if not already formatted
+            $formattedPhone = $phoneNum;
+            if (str_starts_with($phoneNum, '63')) {
+                $formattedPhone = '+' . $phoneNum;
+            } elseif (str_starts_with($phoneNum, '0')) {
+                $formattedPhone = '+63' . substr($phoneNum, 1);
+            } elseif (!str_starts_with($phoneNum, '+')) {
+                $formattedPhone = '+63' . $phoneNum;
+            }
 
-        $phoneVerified = PhoneNumber::where('phone_number', $phoneNum)
-                                ->where('otp_code', $request->otp)
-                                ->where('is_verified', false)
-                                ->where('otp_expires_at', '>', Carbon::now())
-                                ->first();
+            $phoneVerified = PhoneNumber::where('phone_number', $formattedPhone)
+                                    ->where('otp_code', $request->otp)
+                                    ->whereNull('otp_verified_at')
+                                    ->where('otp_expires_at', '>', Carbon::now())
+                                    ->first();
 
-        if(!$phoneVerified) 
-        {
-            return response()->json([
-                'isCorrectOtp' => false,
+            if(!$phoneVerified) 
+            {
+                return response()->json([
+                    'isCorrectOtp' => false,
+                ]);
+            }
+
+            $phoneVerified->update([
+                'is_verified' => true,
+                'otp_verified_at' => Carbon::now()
             ]);
-        }
+            
+            // Search for old user using the formatted phone number
+            $oldUserData = M06::where('mobileno', $formattedPhone)->orWhere('mobileno', $phoneNum)->first();
 
-        $phoneVerified->update([
-            'is_verified' => true,
-            'otp_verified_at' => Carbon::now()
-        ]);
-        
-        $oldUserData = M06::where('mobileno', $phoneNum)->first();
+            if(!$oldUserData)
+            {
+                return response()->json([
+                    'isCorrectOtp' => true,
+                    'isOldUser' => false,
+                    'phoneNum' => $phoneNum,
+                ]);
+            }
 
-        if(!$oldUserData)
-        {
             return response()->json([
                 'isCorrectOtp' => true,
-                'isOldUser' => false,
+                'isOldUser' => true,
                 'phoneNum' => $phoneNum,
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'isCorrectOtp' => false,
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'isCorrectOtp' => true,
-            'isOldUser' => true,
-            'phoneNum' => $phoneNum,
-        ]);
     }
 
     public function deleteOtp($otpId)

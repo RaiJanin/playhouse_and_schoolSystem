@@ -114,6 +114,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (phoneInputEl) {
             phoneInputEl.addEventListener('input', () => {
+                // Remove + and - signs from phone input (keep only 63, not +63)
+                const currentValue = phoneInputEl.value;
+                const cleanedValue = currentValue.replace(/[+\-]/g, '');
+                if (currentValue !== cleanedValue) {
+                    phoneInputEl.value = cleanedValue;
+                }
+                
                 if (window.updateNextBtnState) window.updateNextBtnState();
             });
         }
