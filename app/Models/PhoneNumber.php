@@ -13,6 +13,7 @@ class PhoneNumber extends Model
     protected $table = 'phone_number_otp';
     protected $fillable = [
         'phone_number',
+        'email',
         'otp_code',
         'otp_expires_at',
         'otp_verified_at',

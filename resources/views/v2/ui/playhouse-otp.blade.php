@@ -8,6 +8,10 @@
         <div id="otp-choices" class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <!-- OTP choices will be generated here -->
         </div>
+        <div id="otpLoading" class="mt-8 text-center inset-0">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#0d9984] border-t-transparent"></div>
+            <p class="text-gray-600 mt-2">Please wait...</p>
+        </div>  
     </div>
     
     <div id="otp-message" class="text-center min-h-[24px] font-medium"></div>

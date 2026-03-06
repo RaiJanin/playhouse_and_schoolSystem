@@ -170,7 +170,7 @@ public function makeOtp(Request $request)
         try {
             $request->validate([
                 'phone' => 'required|string|max:20',
-                'email' => 'nullable|email|max:50'
+                'email' => 'nullable|string|max:50'
             ]);
 
             $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
@@ -178,6 +178,7 @@ public function makeOtp(Request $request)
 
             $phoneRecord = PhoneNumber::create([
                 'phone_number' => $phone,
+                'email' => $request->email ?? null,
                 'otp_code' => $OTP,
                 'otp_expires_at' => Carbon::now()->addMinutes(5)
             ]);
@@ -199,7 +200,10 @@ public function makeOtp(Request $request)
                     ]);
                 }
 
-                Mail::to($request->email)->send(new SendOtpMail($OTP));
+                if($request->filled('email'))
+                {
+                    Mail::to($request->email)->send(new SendOtpMail($OTP));
+                }
             }
 
             return response()->json([

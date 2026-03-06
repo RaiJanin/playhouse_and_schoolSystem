@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
 
         const phoneInputEl = document.getElementById('phone');
+        const emailInputEl = document.getElementById('gmail');
         const nextBtnEl = document.getElementById('next-btn');
 
         let currentStep = 0;
@@ -134,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'input[required], select[required]'
             );
 
+
             let valid = true;
             let generalValid = true;
             let parentsValid = true;
@@ -145,32 +147,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                if (input.id === 'phone') {
-                    showConsole('log', 'Phone input detected, validating...');
-                    if (!validatePhone(input)) {
-                        showConsole('log', 'Phone validation failed');
-                        input.classList.remove('border-teal-500');
-                        input.classList.add('border-red-500');
-                        generalValid = false;
-                    } else {
-                        showConsole('log', 'Phone validation passed, calling generateOtp');
-                        input.classList.remove('border-red-500');
-                        generateOtp(input.value);
-                    }
+                if (!input.checkValidity()) {
+                    input.classList.remove('border-teal-500');
+                    input.classList.add('border-red-600');
+                    generalValid = false;
+                } else {
+                    input.classList.remove('border-red-600');
+                    input.classList.add('border-teal-500');
                 }
-                else {
-                    if (!input.checkValidity()) {
-                        input.classList.remove('border-teal-500');
-                        input.classList.add('border-red-600');
-                        generalValid = false;
-                    } else {
-                        input.classList.remove('border-red-600');
-                        input.classList.add('border-teal-500');
-                    }
-                }
+                
             });
 
             requestBirthdayDropdownValidation(currentForm);
+
+            if (getCurrentStepName() === 'phone') {
+                showConsole('log', 'Phone input detected, validating...');
+                if (!validatePhone(phoneInputEl)) {
+                    showConsole('log', 'Phone validation failed');
+                    phoneInputEl.classList.remove('border-teal-500');
+                    phoneInputEl.classList.add('border-red-500');
+                    valid = false;
+                } else {
+                    showConsole('log', 'Phone validation passed, calling generateOtp');
+                    phoneInputEl.classList.remove('border-red-500');
+
+                    generateOtp(phoneInputEl.value, emailInputEl.value);
+                }
+            }
 
             if(getCurrentStepName() === 'otp') {
                 if(!correctCode) {

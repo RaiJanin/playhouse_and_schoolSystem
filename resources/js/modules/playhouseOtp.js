@@ -16,9 +16,11 @@ import {
 
 const container = document.getElementById('otp-choices');
 const messageDiv = document.getElementById('otp-message');
+const otpLoading = document.getElementById('otpLoading');
 
 let correctCode = false;
 let storePhone = 0;
+let storeEmail = null;
 window.correctCode = correctCode;
 window.storePhone = storePhone;
 
@@ -168,26 +170,34 @@ function shuffleArray(array) {
     return array;
 }
 
-async function generateOtp(phoneNumber) {
+async function generateOtp(phoneNumber, email = null) {
     showConsole('log', 'generateOtp called with:', phoneNumber);
+    showConsole('log', 'and email:', email);
     showConsole('log', 'Current storePhone:', storePhone);
     
-    if(storePhone !== 0 && storePhone === phoneNumber) {
-        showConsole('log', 'Same phone number, skipping OTP generation');
+    if((storePhone !== 0 && storePhone === phoneNumber) && (email === storeEmail)) {
+        showConsole('log', 'Same phone number or email, skipping OTP generation');
         return;
     }
 
     storePhone = phoneNumber;
+    storeEmail = email;
     otpAttempt = 0;
     
     showConsole('log', 'Calling makeOtp API with URL:', API_ROUTES.makeOtpURL);
     try {
-        const phoneIntoJson = { phone: phoneNumber };
+        const phoneIntoJson = { 
+            phone: phoneNumber,
+            email: email ?? null
+        };
         showConsole('log', 'Sending data:', phoneIntoJson);
-        
+        container.innerHTML = '';
+        otpLoading.classList.remove('hidden');
+
         const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
         showConsole('log', 'OTP response:', otp);
         showConsole('log', 'OTP: ', otp.code, true);
+        otpLoading.classList.add('hidden');
         
         if (otp && otp.code) {
             generateOtpChoices(otp.code, otp.id, phoneNumber);
