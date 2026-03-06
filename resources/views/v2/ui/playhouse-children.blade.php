@@ -190,26 +190,7 @@
             class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>
-            <span id="childCountBadge" class="hidden text-xs font-semibold text-teal-700 bg-teal-100 px-2 py-1 rounded-full"></span>
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const firstChildNameInput = document.querySelector('#first-child input[name="child[0][name]"]');
-        const addChildBtn = document.getElementById('addChildBtn');
-        
-        if (firstChildNameInput && addChildBtn) {
-            firstChildNameInput.addEventListener('input', function(e) {
-                const childName = e.target.value.trim();
-                if (childName) {
-                    addChildBtn.innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Add ' + childName;
-                } else {
-                    addChildBtn.innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Add another child';
-                }
-            });
-        }
-    });
-</script>
 
