@@ -130,7 +130,7 @@ export function autoFillChildren(data, parent) {
 
         wrapper.innerHTML = `
             <div>
-                <button type="button" class="add-exist-child text-start text-teal-700 font-bold py-2 px-4 w-full rounded-lg mb-2 hover:text-teal-500 transition-all duration-300 text-lg">
+                <button type="button" class="add-exist-child text-start text-teal-700 font-bold py-1 px-3 w-auto rounded-lg mb-2 hover:text-teal-500 transition-all duration-300 text-base">
                     <i class="check-i fa-solid fa-plus"></i> <span class="child-name-label">Add ${childName}</span>
                 </button>
             </div>

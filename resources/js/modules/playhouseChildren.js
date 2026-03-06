@@ -218,14 +218,14 @@ window.document.addEventListener('DOMContentLoaded', function() {
         const newEntry = createChildEntry();
         container.appendChild(newEntry.entry);
         newEntry.entry.querySelector('.child-first');
-        
+                
         // Update button with child name when child name input is filled
         const childNameInput = newEntry.entry.querySelector('input[name^="child["]');
         if (childNameInput) {
             childNameInput.addEventListener('input', (e) => {
                 const childName = e.target.value.trim();
                 if (childName) {
-                    addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add ${childName}`;
+                    addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add`;
                 } else {
                     addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add another child`;
                 }
