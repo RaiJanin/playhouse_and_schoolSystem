@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('market', function (Blueprint $table) {
-            $table->string('mkt_code', 50)->primary();
-            $table->string('mkt_desc', 255);
-            $table->string('branch', 100)->nullable();
-            $table->string('transferred', 1)->default('N');
-        });
+        if(!Schema::hasTable('market'))
+        {
+            Schema::create('market', function (Blueprint $table) {
+                $table->string('mkt_code', 50)->primary();
+                $table->string('mkt_desc', 255);
+                $table->string('branch', 100)->nullable();
+                $table->string('transferred', 1)->default('N');
+            });
+        }
     }
 
     /**

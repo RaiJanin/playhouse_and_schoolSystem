@@ -16,10 +16,10 @@ window.document.addEventListener('DOMContentLoaded', function() {
         const index = childEntries;
 
         const entry = document.createElement('div');
-        entry.className = 'child-entry pt-3 border border-teal-600 rounded-lg mt-4';
+        entry.className = 'child-entry pt-3 border border-teal-600 rounded-lg mt-4 align-content-start';
         entry.innerHTML = `
-            <div class="px-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:order-1">
+            <div class="px-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-6 align-content-start">
+                <div class="md:order-1 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-${childEntries}-photo" data-camera-input data-name="child[${childEntries}][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
                     <div class="mt-3 p-2 rounded-lg border border-teal-300 bg-teal-50/60">
@@ -32,19 +32,19 @@ window.document.addEventListener('DOMContentLoaded', function() {
                         <div class="guardian-form-local grid grid-cols-1 gap-3 mt-3 hidden">
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" class="guardian-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" name="guardianName" class="guardian-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                                <input type="text" class="guardian-last-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" name="guardianLastName" class="guardian-last-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" class="guardian-phone-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                                <input type="tel" name="guardianPhone" class="guardian-phone-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                                <div class="guardian-birthday-local bg-teal-100 rounded-lg" data-birthday-dropdown data-name="guardianBirthday-local-${childEntries}"></div>
+                                <div class="guardian-birthday-local bg-teal-100 rounded-lg" data-birthday-dropdown data-name="guardianBirthday${childEntries}"></div>
                             </div>
                             <button type="button" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
@@ -59,7 +59,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
 
-                <div class="md:order-2 grid grid-cols-1 gap-4">
+                <div class="md:order-2 grid grid-cols-1 gap-4 self-start">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
                         <input type="text" name="child[${childEntries}][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
