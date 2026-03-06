@@ -14,7 +14,7 @@ import {
     confirmGuardianCheckBx, 
     guardianFields,
     parentFields
-} from '../modules/playhouseParent.js';
+} from '../modules/playhouseParent.js'; 
 
 import { 
     disableDateInputs, 
@@ -125,10 +125,13 @@ export function autoFillChildren(data, parent) {
         const wrapper = document.createElement('div');
         wrapper.className = 'exist-child-el flex flex-col p-3 gap-6 border border-teal-600 rounded-lg';
 
+        // Get child name for button label - use firstname which is the correct property
+        const childName = child.firstname || child.c_name || child.name || 'this child';
+
         wrapper.innerHTML = `
             <div>
-                <button type="button" class="add-exist-child text-start text-teal-700 font-semibold py-0 px-4 w-25 rounded-full mb-2 hover:text-teal-500 transition-all duration-300">
-                    <i class="check-i fa-solid fa-plus"></i> Add
+                <button type="button" class="add-exist-child text-start text-teal-700 font-bold py-2 px-4 w-full rounded-lg mb-2 hover:text-teal-500 transition-all duration-300 text-lg">
+                    <i class="check-i fa-solid fa-plus"></i> <span class="child-name-label">Add ${childName}</span>
                 </button>
             </div>
         `;
@@ -146,6 +149,10 @@ export function autoFillChildren(data, parent) {
                 addExistChildBtn.classList.remove('text-teal-700');
                 checkIcon.classList.add('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
                 addExistChildBtn.classList.add('text-green-500');
+                addExistChildBtn.innerHTML = '<i class="check-i fa-solid fa-check"></i> <span class="child-name-label">Added ' + childName + '</span>';
+
+                // Add border to the selected child only
+                wrapper.classList.add('border-green-500', 'bg-green-50/50');
 
                 wrapper.insertAdjacentHTML('beforeend', attachFields(child, index, guardian));
 
@@ -249,6 +256,7 @@ export function autoFillChildren(data, parent) {
                 addExistChildBtn.classList.remove('text-green-500');
                 checkIcon.classList.add('fa-plus');
                 addExistChildBtn.classList.add('text-teal-700');
+                addExistChildBtn.innerHTML = '<i class="check-i fa-solid fa-plus"></i> <span class="child-name-label">Add ' + childName + '</span>';
 
                 const fields = wrapper.querySelector('.attached-fields');
                 if (fields) fields.remove();

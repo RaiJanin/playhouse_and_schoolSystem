@@ -16,7 +16,7 @@
             required
         >
         <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
-            Accepts: 09XXXXXXXXX, 639XXXXXXXXX, or 9XXXXXXXXX (no + or - signs)
+            Accepts: 09XXXXXXXXX, 639XXXXXXXXX, or 9XXXXXXXXX
         </small>
 
     </div>

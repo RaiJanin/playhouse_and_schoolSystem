@@ -99,8 +99,8 @@
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
-            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-teal-600 rounded-lg">
-                <div class="md:order-1 px-3 mb-3">
+            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-teal-600 rounded-lg align-content-start">
+                <div class="md:order-1 px-3 mb-3 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
                     <div class="mt-3 p-2 rounded-lg border border-teal-300 bg-teal-50/60">
@@ -142,7 +142,7 @@
                     </div>
                 </div>
 
-                <div class="md:order-2 grid grid-cols-1 gap-4">
+                <div class="md:order-2 grid grid-cols-1 gap-4 self-start">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
                         <input type="text" name="child[0][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
@@ -190,7 +190,26 @@
             class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>
+            <span id="childCountBadge" class="hidden text-xs font-semibold text-teal-700 bg-teal-100 px-2 py-1 rounded-full"></span>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstChildNameInput = document.querySelector('#first-child input[name="child[0][name]"]');
+        const addChildBtn = document.getElementById('addChildBtn');
+        
+        if (firstChildNameInput && addChildBtn) {
+            firstChildNameInput.addEventListener('input', function(e) {
+                const childName = e.target.value.trim();
+                if (childName) {
+                    addChildBtn.innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Add ' + childName;
+                } else {
+                    addChildBtn.innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Add another child';
+                }
+            });
+        }
+    });
+</script>
 
