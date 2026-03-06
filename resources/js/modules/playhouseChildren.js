@@ -32,19 +32,19 @@ window.document.addEventListener('DOMContentLoaded', function() {
                         <div class="guardian-form-local grid grid-cols-1 gap-3 mt-3 hidden">
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" class="guardian-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" name="guardianName" class="guardian-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                                <input type="text" class="guardian-last-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" name="guardianLastName" class="guardian-last-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" class="guardian-phone-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                                <input type="tel" name="guardianPhone" class="guardian-phone-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                                <div class="guardian-birthday-local bg-teal-100 rounded-lg" data-birthday-dropdown data-name="guardianBirthday-local-${childEntries}"></div>
+                                <div class="guardian-birthday-local bg-teal-100 rounded-lg" data-birthday-dropdown data-name="guardianBirthday${childEntries}"></div>
                             </div>
                             <button type="button" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">

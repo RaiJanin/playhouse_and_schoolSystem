@@ -21,6 +21,7 @@ class M06 extends Model
         'birthday',
         'mobileno',
         'email',
+        'mkt_code',
         'isparent',
         'isguardian',
         'guardianauthorized',

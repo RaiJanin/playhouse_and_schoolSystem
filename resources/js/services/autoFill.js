@@ -197,6 +197,14 @@ export function autoFillChildren(data, parent) {
                             });
                         }
 
+                        if(!guardian) {
+                            guardianInputs.forEach(input => {
+                                input.readOnly = editingGuardian;
+                            });
+                            updateReadonly(editingGuardian);
+                            editGuardianBtn.classList.add('hidden');
+                        }
+
                         const confirmBtn = attachedFields.querySelector('.confirm-guardian-existing');
                         const confirmIcon = attachedFields.querySelector('.confirm-guardian-existing-icon');
                         const authorizedHidden = attachedFields.querySelector('.guardian-existing-authorized');

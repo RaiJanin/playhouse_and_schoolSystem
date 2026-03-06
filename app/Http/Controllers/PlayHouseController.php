@@ -34,6 +34,7 @@ class PlayHouseController extends Controller
 
             $parent = M06::updateOrCreate(['mobileno' => $data['phone']],[
                 'd_name' => $data['parentName'] . ' ' . $data['parentLastName'],
+                'mkt_code' => $data['mkt_code'],
                 'firstname' => $data['parentName'],
                 'lastname' => $data['parentLastName'],
                 'birthday' => $data['parentBirthday'],
@@ -197,7 +198,8 @@ public function makeOtp(Request $request)
                         'id' => $phoneRecord->id,
                         'code' => $OTP,
                         'isSent' => false,
-                        'smsStatus' => $smsStatus['response']
+                        'smsStatus' => $smsStatus['status'],
+                        'smsResponse' => $smsStatus['response']
                     ]);
                 }
             }
@@ -206,7 +208,8 @@ public function makeOtp(Request $request)
                 'generated' => true,
                 'id' => $phoneRecord->id,
                 'code' => $OTP,
-                'isSent' => true
+                'isSent' => true,
+                'smsStatus' => $smsStatus['response']
             ]);
         } catch (\Exception $e) {
             return response()->json([

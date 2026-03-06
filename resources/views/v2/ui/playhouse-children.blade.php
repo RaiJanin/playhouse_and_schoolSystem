@@ -99,7 +99,11 @@
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
+<<<<<<< HEAD
+            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-teal-600 rounded-lg">
+=======
             <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-teal-600 rounded-lg align-content-start">
+>>>>>>> 179938930753fb31e6bf9dbe13035b0e8cf94601
                 <div class="md:order-1 px-3 mb-3 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>

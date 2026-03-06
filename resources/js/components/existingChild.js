@@ -21,7 +21,7 @@ export function attachFields(data, index, guardianData = null) {
         : 'fa-regular fa-square text-red-500';
     const guardianAuthorizedValue = hasGuardian && guardianData.guardianauthorized ? '1' : '0';
 
-    const guardianSection = hasGuardian ? `
+    const guardianSection = `
             <div class="mt-3 p-3 rounded-lg border border-teal-300 bg-teal-50/60">
                 <button type="button" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
@@ -32,15 +32,15 @@ export function attachFields(data, index, guardianData = null) {
                 <div class="guardian-existing-form grid grid-cols-1 gap-3 mt-3">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="guardianName" class="guardian-existing-input guardian-existing-name bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData.firstname || ''}" readonly />
+                        <input type="text" name="guardianName" class="guardian-existing-input guardian-existing-name bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData?.firstname ?? ''}" readonly />
                     </div>
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="guardianLastName" class="guardian-existing-input guardian-existing-last-name bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData.lastname || ''}" readonly />
+                        <input type="text" name="guardianLastName" class="guardian-existing-input guardian-existing-last-name bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData?.lastname ?? ''}" readonly />
                     </div>
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
-                        <input type="tel" name="guardianPhone" class="guardian-existing-input guardian-existing-phone bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData.mobileno || ''}" inputmode="tel" readonly />
+                        <input type="tel" name="guardianPhone" class="guardian-existing-input guardian-existing-phone bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${guardianData?.mobileno ?? ''}" inputmode="tel" readonly />
                     </div>
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
@@ -55,7 +55,7 @@ export function attachFields(data, index, guardianData = null) {
                     <input type="hidden" name="guardianAuthorized" class="guardian-existing-authorized" value="${guardianAuthorizedValue}" />
                 </div>
             </div>
-    ` : '';
+    `;
     
     return `
         <div class="attached-fields child-entry flex flex-col">
