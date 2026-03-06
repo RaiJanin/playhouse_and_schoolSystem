@@ -1,6 +1,8 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
+import { API_ROUTES } from '../config/api.js';
 import { showConsole } from '../config/debug.js';
 import { oldUser } from '../services/olduserState.js';
+import { getOrDelete } from '../services/requestApi.js';
 import { 
     disableDateInputs, 
     enableReadonly 
@@ -131,23 +133,19 @@ if (guardianBirthdayContainer) {
 }
 
 // Load market options
-export function loadMarketOptions() {
+export async function loadMarketOptions() {
     const marketSelect = document.getElementById('mkt_code');
     if (!marketSelect) return;
 
-    fetch('/api/get-markets')
-        .then(response => response.json())
-        .then(data => {
-            if (data.markets && data.markets.length > 0) {
-                data.markets.forEach(market => {
-                    const option = document.createElement('option');
-                    option.value = market.mkt_code;
-                    option.textContent = market.mkt_desc;
-                    marketSelect.appendChild(option);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error loading market options:', error);
+    const data = await getOrDelete('GET', API_ROUTES.getMarketURL);
+
+    if (data.markets && data.markets.length > 0) {
+        data.markets.forEach(market => {
+            const option = document.createElement('option');
+            option.value = market.mkt_code;
+            option.textContent = market.mkt_desc;
+            marketSelect.appendChild(option);
         });
+    }
+    
 }

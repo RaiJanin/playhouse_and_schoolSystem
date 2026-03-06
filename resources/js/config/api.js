@@ -6,5 +6,6 @@ export const API_ROUTES = {
     deleteOtpURL: '/api/delete-otp',
     checkPhoneURL: '/api/check-phone',
     getOrdersURL: '/api/get-orders',
-    checkOutURL: '/api/check-out'
+    checkOutURL: '/api/check-out',
+    getMarketURL: '/api/get-markets'
 };

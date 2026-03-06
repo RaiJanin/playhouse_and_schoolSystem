@@ -16,7 +16,8 @@ class Orders extends Model
         'd_code',
         'total_amnt',
         'xtra_chrg_amnt',
-        'disc_amnt'
+        'disc_amnt',
+        'fb_pp_url'
     ];
 
     public function parentPl()

@@ -6,7 +6,7 @@ class SendSmsService
 {
     public static function sendnowsms($to, $msg)
     {
-        $mobile = "63" . substr($to, 1, 10);
+        $mobile = static::formatPHNumber($to);
 
         $destination = $mobile;
         $message = $msg;
@@ -51,7 +51,7 @@ class SendSmsService
         ];
     }
 
-    public function formatPHNumber($number)
+    public static function formatPHNumber($number)
     {
         $number = preg_replace('/[^0-9]/', '', $number);
 

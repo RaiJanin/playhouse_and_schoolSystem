@@ -8,12 +8,15 @@ use App\Models\M06;
 use App\Models\M06Child;
 use App\Models\Orders;
 use App\Models\OrderItems;
+use App\Models\Market;
 use App\Services\DecodeBase64File;
 use App\Http\Resources\M06Resource;
 use App\Services\SendSmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendOtpMail;
 use Carbon\Carbon;
 
 class PlayHouseController extends Controller
@@ -117,6 +120,7 @@ class PlayHouseController extends Controller
                 'guardian' => $parent->d_name,
                 'd_code' => $parent->d_code,
                 'total_amnt' => $totalPrice,
+                'fb_pp_url' => $data['fb_pp_url']
             ]);
 
             if(is_array($data['child']) && $request->has('child'))
@@ -170,15 +174,15 @@ public function makeOtp(Request $request)
             $phone = $request->phone;
             
             // Format phone to +63 if not already formatted
-            if (!str_starts_with($phone, '+')) {
-                if (str_starts_with($phone, '63')) {
-                    $phone = '+' . $phone;
-                } elseif (str_starts_with($phone, '0')) {
-                    $phone = '+63' . substr($phone, 1);
-                } else {
-                    $phone = '+63' . $phone;
-                }
-            }
+            // if (!str_starts_with($phone, '+')) {
+            //     if (str_starts_with($phone, '63')) {
+            //         $phone = '+' . $phone;
+            //     } elseif (str_starts_with($phone, '0')) {
+            //         $phone = '+63' . substr($phone, 1);
+            //     } else {
+            //         $phone = '+63' . $phone;
+            //     }
+            // }
 
             $phoneRecord = PhoneNumber::create([
                 'phone_number' => $phone,
@@ -202,6 +206,8 @@ public function makeOtp(Request $request)
                         'smsResponse' => $smsStatus['response']
                     ]);
                 }
+
+                //Mail::to($email)->send(new SendOtpMail($OTP));
             }
 
             return response()->json([
@@ -314,8 +320,8 @@ public function makeOtp(Request $request)
 
     public function checkInSource()
     {
-        $data = DB::table('rssys.market')->get();
-        // $data = Market::getAllMarket();
+        //$data = DB::table('rssys.market')->get();
+        $data = Market::getAllMarket();
 
         /* return response()->json([
             'markets' => $markets

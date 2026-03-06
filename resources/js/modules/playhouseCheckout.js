@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loading.classList.remove('hidden');
         
         const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}`, []);
+        
         showConsole('log', 'Orders: ', data);
             
         loading.classList.add('hidden');
