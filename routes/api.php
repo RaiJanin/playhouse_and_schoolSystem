@@ -12,6 +12,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/submit/whole-form', [PlayHouseController::class, 'store']);
+Route::post('/submit/fb-profile-url', [PlayHouseController::class, 'saveFbProfileUrl']);
 Route::post('/submit/make-otp', [PlayHouseController::class, 'makeOtp']);
 Route::get('/check-phone/{phoneNum}', [PlayHouseController::class, 'checkPhone']);
 Route::patch('/verify-otp/{phoneNum}', [PlayHouseController::class, 'verifyOTP']);

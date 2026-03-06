@@ -34,7 +34,7 @@ class StorePlayhouseFormRequest extends FormRequest
             'guardianBirthday' => 'nullable|date',
             'guardianAuthorized' => 'nullable|boolean',
             'discountCode' => 'nullable|string|max:50',
-            'fb_pp_url' => 'nullable|string|max:255',
+            'fb_pp_url' => 'nullable|url|max:255',
             'child' => 'required|array|min:1',
             'child.*.name' => 'required|string|max:255',
             'child.*.birthday' => 'required|date',

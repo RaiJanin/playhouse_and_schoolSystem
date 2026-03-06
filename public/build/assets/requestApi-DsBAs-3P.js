@@ -1,4 +1,4 @@
-const h={submitURL:"/api/submit/whole-form",makeOtpURL:"/api/submit/make-otp",verifyOtpURL:"/api/verify-otp",searchReturneeURL:"/api/search-returnee",deleteOtpURL:"/api/delete-otp",checkPhoneURL:"/api/check-phone",getOrdersURL:"/api/get-orders",checkOutURL:"/api/check-out"};function u(n,t,e=null,r=null){{const l=(new Error().stack||"").split(`
+const h={submitURL:"/api/submit/whole-form",makeOtpURL:"/api/submit/make-otp",verifyOtpURL:"/api/verify-otp",searchReturneeURL:"/api/search-returnee",deleteOtpURL:"/api/delete-otp",checkPhoneURL:"/api/check-phone",getOrdersURL:"/api/get-orders",checkOutURL:"/api/check-out",getMarketURL:"/api/get-markets"};function u(n,t,e=null,r=null){{const l=(new Error().stack||"").split(`
 `)[2]?.trim()||"unknown location";let o="unknown";const a=l.match(/\(?([^\s()]+):(\d+):(\d+)\)?$/);a&&(o=`${a[1].replace(/^.*\/resources\/js\//,"")}:_line_-${a[2]}:${a[3]}`);const s="color: skyblue; font-weight: bold;",i="color: white; font-weight: normal;";switch(n){case"log":e!==null?console.log(`%c[${o}]
 %c${t}`,s,i,e):console.log(`%c[${o}]
 %c${t}`,s,i);break;case"error":e!==null?console.error(`%c[${o}]
