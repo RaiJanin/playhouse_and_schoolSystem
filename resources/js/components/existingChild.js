@@ -21,7 +21,7 @@ export function attachFields(data, index, guardianData = null) {
         : 'fa-regular fa-square text-red-500';
     const guardianAuthorizedValue = hasGuardian && guardianData.guardianauthorized ? '1' : '0';
 
-    const guardianSection = `
+    const guardianSection = hasGuardian ? `
             <div class="mt-3 p-3 rounded-lg border border-teal-300 bg-teal-50/60">
                 <button type="button" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
@@ -55,7 +55,7 @@ export function attachFields(data, index, guardianData = null) {
                     <input type="hidden" name="guardianAuthorized" class="guardian-existing-authorized" value="${guardianAuthorizedValue}" />
                 </div>
             </div>
-    `;
+    ` : '';
     
     return `
         <div class="attached-fields child-entry flex flex-col">
