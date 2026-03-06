@@ -168,21 +168,13 @@ class PlayHouseController extends Controller
 public function makeOtp(Request $request)
     {
         try {
-            $request->validate(['phone' => 'required|string|max:20']);
+            $request->validate([
+                'phone' => 'required|string|max:20',
+                'email' => 'nullable|email|max:50'
+            ]);
 
             $OTP = str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
             $phone = $request->phone;
-            
-            // Format phone to +63 if not already formatted
-            // if (!str_starts_with($phone, '+')) {
-            //     if (str_starts_with($phone, '63')) {
-            //         $phone = '+' . $phone;
-            //     } elseif (str_starts_with($phone, '0')) {
-            //         $phone = '+63' . substr($phone, 1);
-            //     } else {
-            //         $phone = '+63' . $phone;
-            //     }
-            // }
 
             $phoneRecord = PhoneNumber::create([
                 'phone_number' => $phone,
@@ -207,7 +199,7 @@ public function makeOtp(Request $request)
                     ]);
                 }
 
-                //Mail::to($email)->send(new SendOtpMail($OTP));
+                Mail::to($request->email)->send(new SendOtpMail($OTP));
             }
 
             return response()->json([

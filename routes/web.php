@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\PlayHouseController;
 
 //WEB routes for page viewing only
@@ -20,3 +21,16 @@ Route::prefix('v2')->group(function () {
 
 Route::get('/order-info/{order_no}', [PlayHouseController::class, 'orderInfo'])->name('order.info');
 Route::get('/checkout', function () { return view('v2.pages.playhouse-checkout'); })->name('playhouse.checkout');
+
+
+//--------------TESTING
+
+Route::get('/test-mail', function () {
+
+    Mail::raw('This is a test email from Laravel.', function ($message) {
+        $message->to('abrenicajanino03@gmail.com')
+                ->subject('Laravel Mail Test');
+    });
+
+    return 'Email sent!';
+});
