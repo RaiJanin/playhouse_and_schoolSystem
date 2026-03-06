@@ -131,21 +131,3 @@ const guardianBirthdayContainer = document.getElementById('guardianBirthday');
 if (guardianBirthdayContainer) {
     guardianBirthdayContainer.addEventListener('change', updateGuardianUnderageWarning);
 }
-
-// Load market options
-export async function loadMarketOptions() {
-    const marketSelect = document.getElementById('mkt_code');
-    if (!marketSelect) return;
-
-    const data = await getOrDelete('GET', API_ROUTES.getMarketURL);
-
-    if (data.markets && data.markets.length > 0) {
-        data.markets.forEach(market => {
-            const option = document.createElement('option');
-            option.value = market.mkt_code;
-            option.textContent = market.mkt_desc;
-            marketSelect.appendChild(option);
-        });
-    }
-    
-}

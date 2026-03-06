@@ -120,7 +120,7 @@ class PlayHouseController extends Controller
                 'guardian' => $parent->d_name,
                 'd_code' => $parent->d_code,
                 'total_amnt' => $totalPrice,
-                'fb_pp_url' => $data['fb_pp_url']
+                'fb_pp_url' => $data['fb_pp_url'] ?? null
             ]);
 
             if(is_array($data['child']) && $request->has('child'))
@@ -230,17 +230,7 @@ public function makeOtp(Request $request)
         try {
             $request->validate(['otp' => 'required|string|size:3']);
 
-            // Format phone number to +63 if not already formatted
-            $formattedPhone = $phoneNum;
-            if (str_starts_with($phoneNum, '63')) {
-                $formattedPhone = '+' . $phoneNum;
-            } elseif (str_starts_with($phoneNum, '0')) {
-                $formattedPhone = '+63' . substr($phoneNum, 1);
-            } elseif (!str_starts_with($phoneNum, '+')) {
-                $formattedPhone = '+63' . $phoneNum;
-            }
-
-            $phoneVerified = PhoneNumber::where('phone_number', $formattedPhone)
+            $phoneVerified = PhoneNumber::where('phone_number', $phoneNum)
                                     ->where('otp_code', $request->otp)
                                     ->whereNull('otp_verified_at')
                                     ->where('otp_expires_at', '>', Carbon::now())
@@ -259,7 +249,7 @@ public function makeOtp(Request $request)
             ]);
             
             // Search for old user using the formatted phone number
-            $oldUserData = M06::where('mobileno', $formattedPhone)->orWhere('mobileno', $phoneNum)->first();
+            $oldUserData = M06::where('mobileno', $phoneNum)->first();
 
             if(!$oldUserData)
             {
@@ -320,12 +310,8 @@ public function makeOtp(Request $request)
 
     public function checkInSource()
     {
-        //$data = DB::table('rssys.market')->get();
         $data = Market::getAllMarket();
 
-        /* return response()->json([
-            'markets' => $markets
-        ]); */
         return view('v2.pages.playhouse-checkin-source', compact('data'));
     }
 
