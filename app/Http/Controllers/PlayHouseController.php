@@ -165,7 +165,7 @@ class PlayHouseController extends Controller
         
     }
 
-public function makeOtp(Request $request)
+    public function makeOtp(Request $request)
     {
         try {
             $request->validate([
@@ -187,6 +187,11 @@ public function makeOtp(Request $request)
             {
                 $message = 'JDEN SMS: Your OTP code is '.$OTP.', It is valid for 5 minutes, dont share your code with anyone, thank you.';
                 $smsStatus = SendSmsService::sendnowsms($phone,$message);
+
+                if($request->filled('email'))
+                {
+                    Mail::to($request->email)->queue(new SendOtpMail($OTP));
+                }
                 
                 if(!$smsStatus['success'])
                 {
@@ -198,11 +203,6 @@ public function makeOtp(Request $request)
                         'smsStatus' => $smsStatus['status'],
                         'smsResponse' => $smsStatus['response']
                     ]);
-                }
-
-                if($request->filled('email'))
-                {
-                    Mail::to($request->email)->send(new SendOtpMail($OTP));
                 }
             }
 
@@ -244,7 +244,6 @@ public function makeOtp(Request $request)
                 'otp_verified_at' => Carbon::now()
             ]);
             
-            // Search for old user using the formatted phone number
             $oldUserData = M06::where('mobileno', $phoneNum)->first();
 
             if(!$oldUserData)

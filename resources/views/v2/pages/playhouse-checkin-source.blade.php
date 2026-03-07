@@ -16,7 +16,7 @@
                 <div class="mt-4">
                     <select
                         id="howKnowUs"
-                        class="w-full flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 cursor-pointer"
+                        class="w-full flex-1 bg-[var(--color-primary-foggy)] border-2 border-[var(--color-primary)] rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 cursor-pointer"
                     >
                         <option value="" selected disabled>Select source</option>
                         @foreach($data as $market)
