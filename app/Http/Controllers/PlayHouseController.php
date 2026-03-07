@@ -116,11 +116,13 @@ class PlayHouseController extends Controller
                 }
             }
 
+            $fbProfileUrl = $data['fb_pp_url'] ?? Session::get('pending_fb_pp_url');
+
             $order = Orders::create([
                 'guardian' => $parent->d_name,
                 'd_code' => $parent->d_code,
                 'total_amnt' => $totalPrice,
-                'fb_pp_url' => $data['fb_pp_url'] ?? null
+                'fb_pp_url' => $fbProfileUrl
             ]);
 
             if(is_array($data['child']) && $request->has('child'))
@@ -146,6 +148,7 @@ class PlayHouseController extends Controller
             }
 
             DB::commit();
+            Session::forget('pending_fb_pp_url');
 
             return response()->json([
                 'isFormSubmitted' => true,
@@ -165,7 +168,27 @@ class PlayHouseController extends Controller
         
     }
 
-    public function makeOtp(Request $request)
+    public function saveFbProfileUrl(Request $request)
+    {
+        $validated = $request->validate([
+            'fb_pp_url' => 'nullable|url|max:255'
+        ]);
+
+        $fbProfileUrl = $validated['fb_pp_url'] ?? null;
+
+        if ($fbProfileUrl) {
+            Session::put('pending_fb_pp_url', $fbProfileUrl);
+        } else {
+            Session::forget('pending_fb_pp_url');
+        }
+
+        return response()->json([
+            'saved' => true,
+            'fb_pp_url' => $fbProfileUrl
+        ]);
+    }
+
+public function makeOtp(Request $request)
     {
         try {
             $request->validate([

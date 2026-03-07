@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('ordhr', function (Blueprint $table) {
-            //
+        Schema::table('ordhdr', function (Blueprint $table) {
+            $table->dropColumn('fb_pp_url');
         });
     }
 };

@@ -413,6 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const parentName = data.get('parentName') || '';
             const parentLastName = data.get('parentLastName') || '';
             const parentFullName = [parentName, parentLastName].filter(n => n).join(' ') || '-';
+            const existingFbUrl = data.get('fb_pp_url') || '';
             
             summary.innerHTML = `
                     <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
@@ -444,6 +445,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                         </div>
                         <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
+                            <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 30% off</p>
+                            <p class="text-xs text-gray-600 mb-3">Already following? Paste your Facebook profile link below to claim your discount.</p>
+                            <input type="url" id="fb-pp-url-input" name="fb_pp_url" value="${existingFbUrl}" placeholder="https://facebook.com/your-profile" class="w-full min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
+                        </div>
+                        <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
                             <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Item: ₱${socksTotalCost}</p>
                         </div>
@@ -470,6 +476,73 @@ document.addEventListener('DOMContentLoaded', function () {
                     applyDscBtn.textContent = 'Apply';
                 }
             })
+
+            const fbUrlInput = document.getElementById('fb-pp-url-input');
+            if (fbUrlInput) {
+                let fbUrlSaveTimeout = null;
+
+                const normalizeFbUrl = (rawValue) => {
+                    const trimmedUrl = rawValue.trim();
+
+                    if (!trimmedUrl) {
+                        return '';
+                    }
+
+                    if (!/^https?:\/\//i.test(trimmedUrl)) {
+                        return `https://${trimmedUrl}`;
+                    }
+
+                    return trimmedUrl;
+                };
+
+                const isValidUrl = (urlValue) => {
+                    if (!urlValue) {
+                        return true;
+                    }
+
+                    try {
+                        new URL(urlValue);
+                        return true;
+                    } catch (error) {
+                        return false;
+                    }
+                };
+
+                const saveFbUrlToSession = async (rawValue) => {
+                    const normalizedUrl = normalizeFbUrl(rawValue);
+                    if (!isValidUrl(normalizedUrl)) {
+                        return;
+                    }
+
+                    try {
+                        await submitData(API_ROUTES.saveFbProfileURL, {
+                            fb_pp_url: normalizedUrl || null
+                        });
+                    } catch (error) {
+                        showConsole('error', 'FB URL autosave failed:', error);
+                    }
+                };
+
+                fbUrlInput.addEventListener('input', () => {
+                    if (fbUrlSaveTimeout) {
+                        clearTimeout(fbUrlSaveTimeout);
+                    }
+
+                    fbUrlSaveTimeout = setTimeout(() => {
+                        saveFbUrlToSession(fbUrlInput.value);
+                    }, 600);
+                });
+
+                fbUrlInput.addEventListener('blur', () => {
+                    if (fbUrlSaveTimeout) {
+                        clearTimeout(fbUrlSaveTimeout);
+                    }
+
+                    const normalizedUrl = normalizeFbUrl(fbUrlInput.value);
+                    fbUrlInput.value = normalizedUrl;
+                    saveFbUrlToSession(normalizedUrl);
+                });
+            }
 
             if(data.get('parentBirthday')) parentBirthdayIsFilled = true;
             
