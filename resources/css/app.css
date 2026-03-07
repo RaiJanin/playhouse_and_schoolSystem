@@ -11,20 +11,25 @@
 }
 
 :root {
-  --color-primary: #139eab;
-  --color-primary-transparent: #caf8fc;
-  --color-primary-foggy: #95f4fc;
-  --color-primary-light: #17c1d1;
-  --color-primary-lighter: #1ad9eb;
-  --color-primary-mid-dark: #118b96;
-  --color-primary-full-dark: #0c737d;
-  --color-secondary: #d6991e;
-  --color-secondary-light: #eda921;
-  --color-secondary-lighter: #fcc658;
-  --color-third: #19d1b5;
-  --color-third-light: #2cf2d4;
-  --color-third-mid-dark: #16b59d;
-  --color-third-full-dark: #108f7c
+  /* Primary Cyan/Teal Palette - Darker */
+  --color-primary: #0e7a85;
+  --color-primary-light: #1197a5;
+  --color-primary-lighter: #13b5c4;
+  --color-primary-foggy: #6dd5e8;
+  --color-primary-transparent: #9de5f5;
+  --color-primary-mid-dark: #0d6e78;
+  --color-primary-full-dark: #095961;
+  
+  /* Secondary Yellow/Amber Palette - Darker */
+  --color-secondary: #b88218;
+  --color-secondary-light: #c98f1c;
+  --color-secondary-lighter: #e0b045;
+  
+  /* Third/Accent Teal Palette - Darker */
+  --color-third: #14a891;
+  --color-third-light: #23c4ab;
+  --color-third-mid-dark: #12917e;
+  --color-third-full-dark: #0d7364;
 }
 
 @layer utilities {
@@ -40,8 +45,8 @@
     text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4);
   }
 
-  .text-glow-cyan {
-    text-shadow: 0 0 5px #22d3ee, 0 0 10px #22d3ee, 0 0 20px #22d3ee;
+  .text-glow-primary {
+    text-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
   }
 
   .text-glow-red {
@@ -101,18 +106,18 @@
   padding: 0 0.75rem;
   background: transparent;
   border: none;
-  color: #0f766e; /* teal-700 */
+  color: var(--color-primary-full-dark); /* darker cyan */
   cursor: pointer;
 }
 .birthday-dropdown-button:focus-visible {
-  outline: 2px solid #06b6d4; /* cyan-400 */
+  outline: 2px solid var(--color-primary); /* darker cyan */
   outline-offset: 2px;
 }
 .birthday-input.birthday-active,
 .birthday-input:focus {
   outline: none !important;
-  box-shadow: 0 6px 18px rgba(2,132,137,0.08), 0 0 0 4px rgba(6,182,212,0.06);
-  border-color: #06b6d4; /* cyan focus */
+  box-shadow: 0 6px 18px rgba(20, 158, 171, 0.15), 0 0 0 4px rgba(20, 158, 171, 0.1);
+  border-color: var(--color-primary); /* cyan focus */
 }
 .birthday-input.birthday-valid {
   border-color: #10b981; /* green */
@@ -121,4 +126,3 @@
 input[data-validation-triggered="true"].birthday-input.birthday-invalid:not(:focus) {
   border-color: #ef4444; /* red */
 }
-

@@ -22,7 +22,7 @@
                     <button 
                         type="button" 
                         value="{{ $item->id }}"
-                        class="item w-full p-10 bg-white rounded-lg text-lg font-semibold hover:bg-teal-100 transition">
+                        class="item w-full p-10 bg-white rounded-lg text-lg font-semibold hover:bg-cyan-100 transition">
                         {{ $item->name }}
                     </button>
                 @endforeach

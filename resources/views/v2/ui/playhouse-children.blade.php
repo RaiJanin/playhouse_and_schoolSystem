@@ -82,9 +82,9 @@
         </p>
     </div>
     <div id="returnee-customer-header" hidden>
-        <h1 class="text-center text-2xl text-teal-700 font-bold">
+        <h1 class="text-center text-2xl text-[var(--color-primary-mid-dark)] font-bold">
             <span>Welcome back </span>
-            <span id="parent-name" class="text-teal-600"></span>
+            <span id="parent-name" class="text-[var(--color-primary)]"></span>
         </h1>
         <p class="text-center text-gray-600 mb-5 font-semibold">
             Who would you like to check in
@@ -99,11 +99,11 @@
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
-            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-teal-600 rounded-lg align-content-start">
+            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border border-[var(--color-primary-mid-dark)] rounded-lg align-content-start">
                 <div class="md:order-1 px-3 mb-3 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
-                    <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
-                    <div class="mt-3 p-2 rounded-lg border border-teal-300 bg-teal-50/60">
+                    <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-cyan-50 rounded-lg p-2 overflow-visible"></div>
+                    <div class="mt-3 p-2 rounded-lg border border-cyan-300 bg-cyan-50/60">
                         <button id="add-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                             <span class="flex items-center">
                                 <i id="check-add-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
@@ -113,19 +113,19 @@
                         <div id="guardian-form" class="grid grid-cols-1 gap-3 mt-3" hidden>
                             <div>
                                 <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="guardianName" name="child[0][guardianName]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" id="guardianName" name="guardianName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
                             </div>
                             <div>
                                 <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="guardianLastName" name="child[0][guardianLastName]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
                             </div>
                             <div>
                                 <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" id="guardianPhone" name="child[0][guardianPhone]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
                             </div>
                             <div>
                                 <label for="guardianBirthday" class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                                <div id="guardianBirthday" data-birthday-dropdown data-name="child[0][guardianBirthday]" class="bg-teal-100 rounded-lg"></div>
+                                <div id="guardianBirthday" data-birthday-dropdown data-name="guardianBirthday" class="bg-cyan-100 rounded-lg"></div>
                             </div>
                             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
@@ -145,25 +145,25 @@
                 <div class="md:order-2 grid grid-cols-1 gap-4 self-start">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="child[0][name]" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
+                        <input type="text" name="child[0][name]" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
                     </div>
 
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
-                        <div id="child-0-birthday" data-birthday-dropdown data-name="child[0][birthday]" required class="bg-teal-100 rounded-lg"></div>
+                        <div id="child-0-birthday" data-birthday-dropdown data-name="child[0][birthday]" required class="bg-cyan-100 rounded-lg"></div>
                     </div>
 
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                         <div class="relative">
-                            <select name="child[0][playDuration]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                            <select name="child[0][playDuration]" class="child-duration bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                                 <option value="1">1 Hour = &#8369;100</option>
                                 <option value="2">2 Hours = &#8369;200</option>
                                 <option value="3">3 Hours = &#8369;300</option>
                                 <option value="4">4 Hours = &#8369;400</option>
                                 <option value="unlimited">Unlimited = &#8369;500</option>
                             </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[#139eab]">
                                 <i class="fa-solid fa-chevron-down text-sm"></i>
                             </div>
                         </div>
@@ -172,11 +172,11 @@
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (&#8369;100)</label>
                         <div class="relative">
-                            <select name="child[0][addSocks]" class="child-duration bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                            <select name="child[0][addSocks]" class="child-duration bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                             </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[#139eab]">
                                 <i class="fa-solid fa-chevron-down text-sm"></i>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
 
         <div class="pt-4 pb-4 flex flex-col gap-3">
             <button type="button" id="addChildBtn"
-            class="text-sm font-bold text-teal-700 bg-teal-200/50 hover:bg-teal-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-teal-300 w-fit">
+            class="text-sm font-bold text-[#118b96] bg-cyan-200/50 hover:bg-cyan-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-cyan-300 w-fit">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>
         </div>

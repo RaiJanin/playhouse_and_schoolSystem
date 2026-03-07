@@ -8,7 +8,7 @@
         type="tel" 
         id="phone"
         name="phone"
-        class="bg-teal-100 w-full px-4 py-3 border-2 border-teal-500 shadow rounded-md font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"  
+        class="bg-cyan-100 w-full px-4 py-3 border-2 border-[#139eab] shadow rounded-md font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300"  
         title="Philippine mobile number (e.g., 09171234567, 639171234567, or 9171234567)"
         required
     >

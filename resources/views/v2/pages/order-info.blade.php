@@ -6,9 +6,9 @@
     <div class="container mx-auto max-w-2xl">
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             {{-- Header --}}
-            <div class="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-6 text-white">
+            <div class="bg-gradient-to-r from-[var(--color-primary-mid-dark)] to-[var(--color-primary-mid-dark)] px-6 py-6 text-white">
                 <h1 class="text-2xl font-bold">Order Information</h1>
-                <p class="text-teal-100 text-sm mt-1">Mimo Play Cafe</p>
+                <p class="text-cyan-100 text-sm mt-1">Mimo Play Cafe</p>
             </div>
 
             <div class="p-6 space-y-6">
@@ -27,7 +27,7 @@
                     </script>
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-gray-600 font-medium">Order No.</span>
-                        <span class="font-bold text-xl text-teal-700">{{ $order->ord_code_ph }}</span>
+                        <span class="font-bold text-xl text-[var(--color-primary-mid-dark)]">{{ $order->ord_code_ph }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm text-gray-600">
                         <span>Date</span>
@@ -72,16 +72,16 @@
                 </div>
 
                 {{-- Total --}}
-                <div class="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-lg p-4 border-2 border-teal-400">
+                <div class="bg-gradient-to-r from-cyan-100 to-cyan-100 rounded-lg p-4 border-2 border-cyan-400">
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-teal-800">Total</span>
-                        <span class="text-2xl font-bold text-teal-700">₱{{ number_format($order->total_amnt, 2) }}</span>
+                        <span class="text-lg font-bold text-cyan-800">Total</span>
+                        <span class="text-2xl font-bold text-[var(--color-primary-mid-dark)]">₱{{ number_format($order->total_amnt, 2) }}</span>
                     </div>
                 </div>
 
                 {{-- Back link --}}
                 <div class="pt-4 text-center">
-                    <a href="{{ route('v2.playhouse.start') }}" class="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-medium">
+                    <a href="{{ route('v2.playhouse.start') }}" class="inline-flex items-center gap-2 text-[var(--color-primary-mid-dark)] hover:text-[var(--color-primary-full-dark)] font-medium">
                         ← Back to Home
                     </a>
                 </div>

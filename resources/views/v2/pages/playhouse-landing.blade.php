@@ -38,7 +38,7 @@
                             <h1 class="text-2xl sm:text-5xl text-pretty max-w-xl sm:text-start mb-4 font-bold text-gray-700">
                                 A fun and creative space where 
                                 <span class="text-amber-600 text-xl sm:text-4xl">little imaginations</span> 
-                                grow <span class="text-teal-600 font-extrabold">BIG</span>
+                                grow <span class="text-[var(--color-primary-mid-dark)] font-extrabold">BIG</span>
                             </h1>
                         </div>
                         

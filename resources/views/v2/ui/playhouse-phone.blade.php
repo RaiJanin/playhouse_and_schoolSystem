@@ -11,7 +11,7 @@
             type="tel" 
             id="phone"
             name="phone"
-            class="bg-teal-100 w-full px-4 py-3 border-2 border-teal-500 shadow rounded-md font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"  
+            class="bg-cyan-100 w-full px-4 py-3 border-2 border-[var(--color-primary)] shadow rounded-md font-semibold focus:outline-none focus:border-[var(--color-primary-light)] focus:shadow-none transition-all duration-300"  
             title="Philippine mobile number (e.g., 09171234567, 639171234567, or 9171234567)"
             required
         >
@@ -32,7 +32,7 @@
                 type="text" 
                 id="gmail"
                 name="gmail"
-                class="bg-teal-100 w-full px-4 py-3 border-2 border-teal-500 shadow rounded-md font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"  
+                class="bg-cyan-100 w-full px-4 py-3 border-2 border-[var(--color-primary)] shadow rounded-md font-semibold focus:outline-none focus:border-[var(--color-primary-light)] focus:shadow-none transition-all duration-300"  
                 title="Gmail."
             >
         </div>

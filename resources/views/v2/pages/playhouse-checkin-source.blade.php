@@ -8,8 +8,8 @@
         @include('v2.ui.partials.header')
 
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
-            <div class="bg-white/90 border border-teal-100 rounded-2xl shadow-md p-6 sm:p-8">
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0d9984]">
+            <div class="bg-white/90 border border-cyan-100 rounded-2xl shadow-md p-6 sm:p-8">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-primary-mid-dark)]">
                     How do you know about us?
                 </h1>
 
@@ -29,7 +29,7 @@
                     <button
                         type="button"
                         onclick="window.location.href='{{ route('v2.playhouse.start') }}'"
-                        class="px-5 py-2.5 rounded-lg border-2 border-teal-500 text-teal-700 font-semibold hover:bg-teal-50 transition-colors duration-200"
+                        class="px-5 py-2.5 rounded-lg border-2 border-[#139eab] text-[#118b96] font-semibold hover:bg-cyan-50 transition-colors duration-200"
                     >
                         Back
                     </button>
@@ -37,7 +37,7 @@
                         type="button"
                         id="continueCheckin"
                         data-registration-url="{{ route('v2.playhouse.registration') }}"
-                        class="px-5 py-2.5 rounded-lg bg-[#0d9984] text-white font-semibold hover:bg-teal-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="px-5 py-2.5 rounded-lg bg-[#118b96] text-white font-semibold hover:bg-[#139eab] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
                         Continue to Check in

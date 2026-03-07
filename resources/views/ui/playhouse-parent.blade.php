@@ -30,19 +30,19 @@
     <div class="space-y-4">
         <div>
             <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
-            <input type="text" id="parentName" name="parentName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="John" required />
+            <input type="text" id="parentName" name="parentName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="John" required />
         </div>
         <div>
             <label for="parentLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
-            <input type="text" id="parentLastName" name="parentLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Doe" required />
+            <input type="text" id="parentLastName" name="parentLastName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="Doe" required />
         </div>
         <div>
             <label for="parentEmail" class="block text-base font-semibold text-gray-900 mb-2">Email Address</label>
-            <input type="email" id="parentEmail" name="parentEmail" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com"/>
+            <input type="email" id="parentEmail" name="parentEmail" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com"/>
         </div>
         <div>
             <label for="parentBirthday" class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
-            <input type="tel" id="parentBirthday" data-birthday required class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="MM / DD / YYYY" inputmode="numeric" autocomplete="bday" />
+            <input type="tel" id="parentBirthday" data-birthday required class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="MM / DD / YYYY" inputmode="numeric" autocomplete="bday" />
             <input type="hidden" name="parentBirthday" id="parentBirthday-hidden" />
         </div>
     </div>
@@ -57,15 +57,15 @@
         <div id="guardian-form" hidden>
             <div>
                 <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
-                <input type="text" id="guardianName" name="guardianName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                <input type="text" id="guardianName" name="guardianName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="Will"/>
             </div>
             <div>
                 <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
-                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
             </div>
             <div>
                 <label for="guardianPhone" class="block text-base font-semibold text-gray-900 my-2">Phone Number</label>
-                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
             </div>
             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                 <span class="flex flex-row">

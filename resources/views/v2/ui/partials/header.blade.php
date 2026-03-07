@@ -1,4 +1,4 @@
-<div class="sm:flex md:grid md:grid-cols-2 lg:grid-cols-3 py-[20px] px-4 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-mid-dark)] rounded-xl mb-[30px] shadow-sm">
+<div class="sm:flex md:grid md:grid-cols-2 lg:grid-cols-3 py-[20px] px-4 bg-gradient-to-r from-cyan-500 to-cyan-500 rounded-xl mb-[30px] shadow-sm">
     <div class="flex justify-center items-center gap-4 sm:gap-6"> 
         <img src="/images/playhouse_bounce.gif" alt="MIMO Play Cafe Logo" class="sm:h-24 h-16 w-auto" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
 
@@ -9,7 +9,7 @@
             <p class="md:text-xl sm:text-base text-sm text-white [text-shadow:2px_2px_4px_rgba(0,0,0,0.3)]">
                 Where Little Explorers Have Big Fun!
             </h1>
-        </div>
+        </div>  
     </div>
     <div class="lg:col-span-3 md:col-span-2">
         <div class="flex items-end justify-end">

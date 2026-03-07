@@ -39,7 +39,7 @@
         <!-- Modal Panel -->
         <div class="inline-block z-50 bg-white align-bottom rounded-2xl shadow-2xl transform transition-all sm:my-8 sm:max-w-4xl w-full relative overflow-hidden">
             <!-- Header with gradient -->
-            <div class="bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-4 flex justify-between items-center">
+            <div class="bg-gradient-to-r from-[var(--color-primary-mid-dark)] to-[var(--color-primary-full-dark)] px-6 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <div class="bg-white/20 p-2 rounded-lg">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +61,7 @@
 
             <!-- Footer -->
             <div class="modal-footer bg-gray-50 px-6 py-4 flex flex-col sm:flex-row-reverse gap-3 border-t border-gray-100">
-                <button type="button" id="save-btn" class="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-teal-700 shadow-lg shadow-teal-500/30 transition-all duration-300 transform hover:scale-[1.02]">
+                <button type="button" id="save-btn" class="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[var(--color-primary-mid-dark)] to-[var(--color-primary-full-dark)] text-white font-semibold rounded-xl hover:from-[var(--color-primary-full-dark)] hover:to-[var(--color-third-full-dark)] shadow-lg shadow-cyan-500/30 transition-all duration-300 transform hover:scale-[1.02]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
