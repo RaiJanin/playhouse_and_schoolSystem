@@ -28,20 +28,20 @@ class StorePlayhouseFormRequest extends FormRequest
             'parentEmail' => 'nullable|email|max:255',
             'mkt_code' => 'nullable|string|max:50',
             'parentBirthday' => 'required|date',
-            'guardianName' => 'nullable|string|max:255',
-            'guardianLastName' => 'nullable|string|max:255',
-            'guardianPhone' => 'nullable|string|max:20',
-            'guardianBirthday' => 'nullable|date',
-            'guardianAuthorized' => 'nullable|boolean',
-            'discountCode' => 'nullable|string|max:50',
-            'fb_pp_url' => 'nullable|url|max:255',
             'child' => 'required|array|min:1',
             'child.*.name' => 'required|string|max:255',
             'child.*.birthday' => 'required|date',
             'child.*.playDuration' => 'required|string|max:50',
             'child.*.phoneNumber' => 'nullable|string|max:20',
             'child.*.addSocks' => 'nullable|boolean',
-            'child.*.photo' => 'nullable|string'
+            'child.*.photo' => 'nullable|string',
+            'child.*.guardianName' => 'nullable|string|max:255',
+            'child.*.guardianLastName' => 'nullable|string|max:255',
+            'child.*.guardianPhone' => 'nullable|string|max:20',
+            'child.*.guardianBirthday' => 'nullable|date',
+            'child.*.guardianAuthorized' => 'nullable|boolean',
+            'discountCode' => 'nullable|string|max:50',
+            'fb_pp_url' => 'nullable|url|max:255'
         ];
     }
 }

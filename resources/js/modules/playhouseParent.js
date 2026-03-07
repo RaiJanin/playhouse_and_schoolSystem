@@ -120,14 +120,14 @@ function updateGuardianUnderageWarning() {
 
 confirmGuardianCheckBx.onChange(() => {
     if(confirmGuardianCheckBx.isChecked()) {
-        document.getElementById('guardianAuthorized').value = '1';
+        document.getElementById('guardianAuthorized-1').value = '1';
     } else {
-        document.getElementById('guardianAuthorized').value = '0';
+        document.getElementById('guardianAuthorized-1').value = '0';
     }
     updateGuardianUnderageWarning();
 });
 
-const guardianBirthdayContainer = document.getElementById('guardianBirthday');
+const guardianBirthdayContainer = document.getElementById('guardianBirthday-1');
 if (guardianBirthdayContainer) {
     guardianBirthdayContainer.addEventListener('change', updateGuardianUnderageWarning);
 }

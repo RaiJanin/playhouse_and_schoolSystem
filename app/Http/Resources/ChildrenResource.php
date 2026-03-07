@@ -25,6 +25,7 @@ class ChildrenResource extends JsonResource
             'age' => $this->age,
             'photo' => $this->photo,
             'phoneno' => $this->phoneno,
+            'guardians' => GuardianResource::collection($this->guardians),
             'createdby' => $this->createdby,
             'updatedby' => $this->updatedby,
             'd_code' => $this->d_code,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePlayhouseFormRequest;
 use App\Models\PhoneNumber;
 use App\Models\M06;
+use App\Models\M06Guardian;
 use App\Models\M06Child;
 use App\Models\Orders;
 use App\Models\OrderItems;
@@ -33,7 +34,14 @@ class PlayHouseController extends Controller
 
             $data = $request->validated();
 
-            $parentAsGuardian = !$request->filled('guardianName') ? '1' : '0';
+            $parentAsGuardian = '1';
+
+            foreach ($data['child'] as $child) {
+                if (!empty($child['guardianName']) || !empty($child['guardianLastName'])) {
+                    $parentAsGuardian = '0';
+                    break;
+                }
+            }
 
             $parent = M06::updateOrCreate(['mobileno' => $data['phone']],[
                 'd_name' => $data['parentName'] . ' ' . $data['parentLastName'],
@@ -48,34 +56,6 @@ class PlayHouseController extends Controller
                 'createdby' => $data['parentName'] . ' ' . $data['parentLastName'],
                 'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
             ]);
-
-
-            if($request->filled('guardianName'))
-            {
-                $guardianFullname = $data['guardianName'] . ' ' . $data['guardianLastName'];
-                
-                M06::updateOrCreate(
-                    [
-                        'mobileno' => $data['guardianPhone'],
-                        'd_name' => $guardianFullname,
-                        'isguardian' => true,
-                        'updatedby' => $parent->d_name
-                    ],
-                    [
-                        'd_name' => $guardianFullname,
-                        'firstname' => $data['guardianName'],
-                        'lastname' => $data['guardianLastName'],
-                        'birthday' => $data['guardianBirthday'] ?? null,
-                        'mobileno' => $data['guardianPhone'],
-                        'isparent' => false,
-                        'isguardian' => true,
-                        'guardianauthorized' => $data['guardianAuthorized'],
-                        'createdby' => $data['parentName'] . ' ' . $data['parentLastName'],
-                        'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
-                    ]
-                );
-                
-            }
 
             $totalPrice = 0;
             $pricePerDuration = 100;
@@ -108,6 +88,35 @@ class PlayHouseController extends Controller
                         $photoPath = DecodeBase64File::makeFile($child['photo'], $folder, $filename);
                         $childM->photo = $photoPath;
                         $childM->save();
+                    }
+
+                    if($child['guardianName'] && $child['guardianLastName'])
+                    {
+                        $guardianFullname = $child['guardianName'] . ' ' . $child['guardianLastName'];
+                
+                        M06Guardian::updateOrCreate(
+                            [
+                                'd_code' => $parent->d_code,
+                                'd_code_c' => $childM->d_code_c,
+                                'firstname' => $child['guardianName'],
+                                'lastname' => $child['guardianLastName'],
+                                'mobileno' => $child['guardianPhone'],
+                            ],
+                            [
+                                'd_code' => $parent->d_code,
+                                'd_code_c' => $childM->d_code_c,
+                                'd_name' => $guardianFullname,
+                                'firstname' => $child['guardianName'],
+                                'lastname' => $child['guardianLastName'],
+                                'birthday' => $child['guardianBirthday'] ?? null,
+                                'mobileno' => $child['guardianPhone'],
+                                'isparent' => false,
+                                'isguardian' => true,
+                                'guardianauthorized' => $child['guardianAuthorized'],
+                                'createdby' => $data['parentName'] . ' ' . $data['parentLastName'],
+                                'updatedby' => $data['parentName'] . ' ' . $data['parentLastName']
+                            ]
+                        );
                     }
 
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
@@ -188,7 +197,7 @@ class PlayHouseController extends Controller
         ]);
     }
 
-public function makeOtp(Request $request)
+    public function makeOtp(Request $request)
     {
         try {
             $request->validate([
@@ -311,7 +320,7 @@ public function makeOtp(Request $request)
 
     public function searchReturnee($phoneNumber)
     {
-        $oldUserData = M06::with(['children', 'guardians'])
+        $oldUserData = M06::with(['children.guardians'])
                         ->where('mobileno', $phoneNumber)
                         ->where('isparent', true)
                         ->first();

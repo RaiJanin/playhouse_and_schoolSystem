@@ -2,6 +2,7 @@ import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
 import { attachCameraCapture } from '../utilities/cameraCapture.js';
 import { selectedSocksExistChild } from '../services/autoFill.js';
 import { validateSelectedChild } from '../components/existingChild.js';
+import { CustomCheckbox } from '../components/customCheckbox.js';
 
 export let addedChildEntries = 0;
 
@@ -32,19 +33,19 @@ window.document.addEventListener('DOMContentLoaded', function() {
                         <div class="guardian-form-local grid grid-cols-1 gap-3 mt-3 hidden">
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" name="guardianName" class="guardian-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" name="child[${childEntries}][guardianName]" class="guardian-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Will"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                                <input type="text" name="guardianLastName" class="guardian-last-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" name="child[${childEntries}][guardianLastName]" class="guardian-last-name-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="Smith"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" name="guardianPhone" class="guardian-phone-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                                <input type="tel" name="child[${childEntries}][guardianPhone]" class="guardian-phone-local bg-teal-100 w-full px-4 py-2 border-2 border-teal-500 shadow rounded-lg font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                                <div class="guardian-birthday-local bg-teal-100 rounded-lg" data-birthday-dropdown data-name="guardianBirthday${childEntries}"></div>
+                                <div class="guardian-birthday-local bg-teal-100 rounded-lg" data-birthday-dropdown data-name="child[${childEntries}][guardianBirthday]"></div>
                             </div>
                             <button type="button" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
@@ -55,6 +56,8 @@ window.document.addEventListener('DOMContentLoaded', function() {
                             <p class="guardian-underage-warning-local text-sm font-semibold text-red-600 hidden">
                                 Are you sure do you want to proceed this guardian below 18 yrs old?
                             </p>
+
+                            <input type="hidden" name="child[${childEntries}][guardianAuthorized]" id="guardianAuthorized-${childEntries}" value="0" />
                         </div>
                     </div>
                 </div>
@@ -106,7 +109,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
                 </button>
             </div>
         `;
-        attachEntryListeners(entry);
+        attachEntryListeners(entry, childEntries);
 
         const birthdayContainers = entry.querySelectorAll('[data-birthday-dropdown]');
         birthdayContainers.forEach((birthdayContainer) => attachBirthdayDropdown(birthdayContainer));
@@ -117,7 +120,7 @@ window.document.addEventListener('DOMContentLoaded', function() {
         return { entry, index };
     }
 
-    function attachEntryListeners(entry) {
+    function attachEntryListeners(entry, index) {
         const removeBtn = entry.querySelector('.remove-child');
         if (removeBtn) {
             removeBtn.addEventListener('click', () => {
@@ -186,12 +189,21 @@ window.document.addEventListener('DOMContentLoaded', function() {
                 localConfirmGuardianIcon.classList.toggle('fa-solid', confirmed);
                 localConfirmGuardianIcon.classList.toggle('fa-square-check', confirmed);
                 localConfirmGuardianIcon.classList.toggle('text-green-500', confirmed);
+
+                const hiddenValueT = document.getElementById(`guardianAuthorized-${index}`);
+
+                if(confirmed) {
+                    hiddenValueT.value = '1';
+                } else {
+                    hiddenValueT.value = '0';
+                }
                 updateLocalUnderageWarning();
             });
         }
         if (localGuardianBirthdayContainer) {
             localGuardianBirthdayContainer.addEventListener('change', updateLocalUnderageWarning);
         }
+
         addedChildEntries++;
         validateSelectedChild(true);
     }

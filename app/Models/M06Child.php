@@ -36,6 +36,11 @@ class M06Child extends Model
         return $this->belongsTo(M06::class, 'd_code', 'd_code');
     }
 
+    public function guardians()
+    {
+        return $this->hasMany(m06Guardian::class, 'd_code_c', 'd_code_c');
+    }
+
     public function orderItems()
     {
         return $this->hasMany(OrderItems::class, 'd_code_c', 'd_code_child');

@@ -20,6 +20,7 @@ import {
     disableDateInputs, 
     enableReadonly 
 } from '../utilities/formControl.js';
+import { CustomCheckbox } from '../components/customCheckbox.js';
 
 
 const existedChild = document.getElementById('exist-children');
@@ -119,8 +120,6 @@ export function autoFillChildren(data, parent) {
     returneeCustomer.hidden = false;
     addAnotherMessage.hidden = false;
 
-    const guardian = (oldUser.returneeData?.oldUserData?.guardians || [])[0] || null;
-
     data.forEach((child, index) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'exist-child-el flex flex-col p-3 gap-6 border border-teal-600 rounded-lg';
@@ -154,7 +153,7 @@ export function autoFillChildren(data, parent) {
                 // Add border to the selected child only
                 wrapper.classList.add('border-green-500', 'bg-green-50/50');
 
-                wrapper.insertAdjacentHTML('beforeend', attachFields(child, index, guardian));
+                wrapper.insertAdjacentHTML('beforeend', attachFields(child, index));
 
                 const attachedFields = wrapper.querySelector('.attached-fields');
                 if (attachedFields) {
@@ -172,11 +171,22 @@ export function autoFillChildren(data, parent) {
                             if (yearSelect) yearSelect.disabled = readonly;
                         };
 
-                        updateReadonly(true);
+                        if(child.guardians.length === 0) {
+                            updateReadonly(false);
 
+                            const addGuardianLocalChcBx = new CustomCheckbox(`add-guardian-checkbox-local-${index}`, `check-add-guardian-icon-local-${index}`, `check-add-guardian-info-local-${index}`);
+                            addGuardianLocalChcBx.setLabel(`Add Guardian `);
+                            addGuardianLocalChcBx.onChange(() => {
+                                attachedFields.querySelector('.new-guardian-form').classList.toggle('hidden');
+                            });
+                        } else {
+                            updateReadonly(true);
+                        }
+                        
                         const editGuardianBtn = attachedFields.querySelector('.edit-guardian-toggle');
                         const editGuardianIcon = attachedFields.querySelector('.edit-guardian-icon');
                         const guardianInputs = attachedFields.querySelectorAll('.guardian-existing-input');
+                        const changeGuardianBtn = attachedFields.querySelector('.change-guardian-btn');
 
                         let editingGuardian = false;
                         if (editGuardianBtn && editGuardianIcon) {
@@ -196,6 +206,20 @@ export function autoFillChildren(data, parent) {
                                 updateReadonly(!editingGuardian);
                             });
                         }
+
+                        guardianInputs.forEach(input => {
+                            if(input.value) {
+                                changeGuardianBtn.addEventListener('click', () => {
+                                    input.value = '';
+                                    input.readOnly = false;
+                                    updateReadonly(false);
+                                    editGuardianBtn.classList.add('hidden');
+                                    monthSelect.value = '';
+                                    daySelect.value = '';
+                                    yearSelect.value = '';
+                                })
+                            }
+                        });
 
                         // if(!guardian) {
                         //     guardianInputs.forEach(input => {
@@ -220,7 +244,7 @@ export function autoFillChildren(data, parent) {
                                 confirmIcon.classList.toggle('fa-solid', confirmed);
                                 confirmIcon.classList.toggle('fa-square-check', confirmed);
                                 confirmIcon.classList.toggle('text-green-500', confirmed);
-                                syncGuardianFields();
+                                //syncGuardianFields();
                             });
                         }
 
@@ -252,8 +276,8 @@ export function autoFillChildren(data, parent) {
                             });
                         };
 
-                        guardianInputs.forEach(input => input.addEventListener('input', syncGuardianFields));
-                        if (birthdayContainer) birthdayContainer.addEventListener('change', syncGuardianFields);
+                        // guardianInputs.forEach(input => input.addEventListener('input', syncGuardianFields));
+                        // if (birthdayContainer) birthdayContainer.addEventListener('change', syncGuardianFields);
                     }
                 }
 

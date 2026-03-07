@@ -31,7 +31,6 @@ class M06Resource extends JsonResource
             'guardianauthorized' => $this->guardianauthorized,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
-            'guardians' => GuardianResource::collection($this->guardians),
             'children' => ChildrenResource::collection($this->children),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at, 
