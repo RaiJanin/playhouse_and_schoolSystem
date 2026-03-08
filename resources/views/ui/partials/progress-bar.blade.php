@@ -1,7 +1,7 @@
 <div class="mb-2 ">
     <div class="relative flex justify-between mb-2">
         <div class="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 -translate-y-1/2 z-0"></div>
-        <div id="filled-line" class="absolute top-1/2 left-0 h-1 bg-cyan-300 -translate-y-1/2 z-0 transition-all duration-500" style="width: 0%;"></div>
+        <div id="filled-line" class="absolute top-1/2 left-0 h-1 bg-primary-200 -translate-y-1/2 z-0 transition-all duration-500" style="width: 0%;"></div>
         <div class="relative z-10 flex justify-between w-full">
             <div id="step-1-num" class="w-8 h-8 rounded-full border-4 border-cyan-300 bg-amber-200 flex items-center justify-center font-semibold text-[#139eab]">1</div>
             <div id="step-2-num" class="w-8 h-8 rounded-full border-4 border-gray-300 bg-white flex items-center justify-center font-semibold text-gray-500">2</div>

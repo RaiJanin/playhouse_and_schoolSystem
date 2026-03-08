@@ -56,7 +56,7 @@ export function attachCameraCapture(container) {
 
     const startCameraBtn = document.createElement('button');
     startCameraBtn.type = 'button';
-    startCameraBtn.className = 'start-camera-btn flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-gradient-to-b from-teal-300 to-cyan-500 text-white font-semibold py-2.5 px-4 shadow-[0_6px_14px_rgba(48,128,151,0.32)] transition-all duration-200 hover:-translate-y-0.5 relative z-10';
+    startCameraBtn.className = 'start-camera-btn flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-gradient-to-b from-teal-300 to-[#139eab] text-white font-semibold py-2.5 px-4 shadow-[0_6px_14px_rgba(48,128,151,0.32)] transition-all duration-200 hover:-translate-y-0.5 relative z-10';
     startCameraBtn.innerHTML = '<span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/25 border border-white/30"><i class="fa-solid fa-camera text-sm"></i></span>';
 
     const uploadBtn = document.createElement('button');

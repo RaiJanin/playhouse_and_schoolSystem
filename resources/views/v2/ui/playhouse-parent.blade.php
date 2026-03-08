@@ -42,19 +42,19 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
             <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
-            <input type="text" id="parentName" name="parentName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="John" required />
+            <input type="text" id="parentName" name="parentName" class="bg-primary-200 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="John" required />
         </div>
         <div>
             <label for="parentLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
-            <input type="text" id="parentLastName" name="parentLastName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Doe" required />
+            <input type="text" id="parentLastName" name="parentLastName" class="bg-primary-200 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Doe" required />
         </div>
         <div>
             <label for="parentEmail" class="block text-base font-semibold text-gray-900 mb-2">Email Address <span class="text-red-600">*</span></label>
-            <input type="email" id="parentEmail" name="parentEmail" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com" required />
+            <input type="email" id="parentEmail" name="parentEmail" class="bg-primary-200 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com" required />
         </div>
         <div>
             <label for="parentBirthday" class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
-            <div id="parentBirthday" data-birthday-dropdown data-name="parentBirthday" required class="bg-cyan-100 rounded-lg"></div>
+            <div id="parentBirthday" data-birthday-dropdown data-name="parentBirthday" required class="bg-primary-200 rounded-lg"></div>
             <input type="hidden" id="parentBirthday-hidden" name="parentBirthday">
         </div>
     </div>

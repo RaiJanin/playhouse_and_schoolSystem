@@ -1,7 +1,7 @@
 <div class="absolute opacity-10 inset-0 pointer-events-none">
     <!-- Balloon -->
     <div class="fixed inset-0 transition-opacity z-0" aria-hidden="true">
-        <div class="absolute inset-0 bg-cyan-200 opacity-100"></div>
+        <div class="absolute inset-0 to-[var(--color-primary-full-dark)] opacity-100"></div>
     </div>
     <div
         class="absolute w-[80px] h-[100px] 
@@ -23,7 +23,7 @@
         class="absolute w-[100px] h-[60px] bg-white rounded-full
             shadow-[20px_0_0_white,-20px_0_0_white,10px_-20px_0_white,-10px_-20px_0_white]"
         style="top:5%; right:20%;"
-    ></div>
+    ></div> 
 
     <!-- Blue Balloon -->
     <div

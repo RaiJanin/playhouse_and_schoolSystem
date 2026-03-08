@@ -19,19 +19,19 @@
             <div class="child-entry space-y-4">
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Name <span class="text-red-600">*</span></label>
-                    <input type="text" name="child[0][name]" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
+                    <input type="text" name="child[0][name]" class="bg-[var(--color-primary-foggy)] w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
                 </div>
 
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>
-                    <input type="tel" id="child-0-birthday" data-birthday required class="bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="MM / DD / YYYY" inputmode="numeric" autocomplete="bday" />
+                    <input type="tel" id="child-0-birthday" data-birthday required class="bg-[var(--color-primary-foggy)] w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300" placeholder="MM / DD / YYYY" inputmode="numeric" autocomplete="bday" />
                     <input type="hidden" name="child[0][birthday]" />
                 </div>
 
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                     <div class="relative">
-                        <select name="child[0][playDuration]" class="child-duration bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                        <select name="child[0][playDuration]" class="child-duration bg-[var(--color-primary-foggy)] w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                             <option value="1">1 Hour = ₱100</option>  
                             <option value="2">2 Hours = ₱200</option> 
                             <option value="3">3 Hours = ₱300</option>
@@ -47,7 +47,7 @@
                 <div>
                     <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (₱50)</label>
                     <div class="relative">
-                        <select name="child[0][addSocks]" class="child-duration bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                        <select name="child[0][addSocks]" class="child-duration bg-[var(--color-primary-foggy)] w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
@@ -61,7 +61,7 @@
 
         <div class="pt-2">
             <button type="button" id="addChildBtn" 
-            class="text-sm font-bold text-[#118b96] bg-cyan-200/50 hover:bg-cyan-200 px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-cyan-300">
+            class="text-sm font-bold text-[var(--color-primary)] bg-[var(--color-primary-transparent)]/50 hover:bg-[var(--color-primary-transparent)] px-4 py-1.5 rounded-full transition-all duration-200 flex items-center gap-2 border border-[var(--color-primary)]">
                 <i class="fa-solid fa-plus text-xs"></i> Add another child
             </button>
         </div>

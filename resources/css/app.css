@@ -11,27 +11,26 @@
 }
 
 :root {
-  /* Primary Cyan/Teal Palette - Darker */
-  --color-primary: #0e7a85;
-  --color-primary-light: #1197a5;
-  --color-primary-lighter: #13b5c4;
-  --color-primary-foggy: #6dd5e8;
-  --color-primary-transparent: #9de5f5;
-  --color-primary-mid-dark: #0d6e78;
-  --color-primary-full-dark: #095961;
-  
-  /* Secondary Yellow/Amber Palette - Darker */
-  --color-secondary: #b88218;
-  --color-secondary-light: #c98f1c;
-  --color-secondary-lighter: #e0b045;
-  
-  /* Third/Accent Teal Palette - Darker */
-  --color-third: #14a891;
-  --color-third-light: #23c4ab;
-  --color-third-mid-dark: #12917e;
-  --color-third-full-dark: #0d7364;
-}
+  /* PRIMARY: Aqua Marine */
+  --color-primary: #139eab;
+  --color-primary-transparent: #caf8fc;
+  --color-primary-foggy: #95f4fc;
+  --color-primary-light: #17c1d1;
+  --color-primary-lighter: #1ad9eb;
+  --color-primary-mid-dark: #118b96;
+  --color-primary-full-dark: #0c737d;
 
+  /* SECONDARY: Amber */
+  --color-secondary: #d6991e;
+  --color-secondary-light: #eda921;
+  --color-secondary-lighter: #fcc658;
+
+  /* THIRD: Teal */
+  --color-third: #19d1b5;
+  --color-third-light: #2cf2d4;
+  --color-third-mid-dark: #16b59d;
+  --color-third-full-dark: #108f7c;
+}
 @layer utilities {
   .text-shadow-sm {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
@@ -45,8 +44,8 @@
     text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4);
   }
 
-  .text-glow-primary {
-    text-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+  .text-glow-cyan {
+    text-shadow: 0 0 5px #22d3ee, 0 0 10px #22d3ee, 0 0 20px #22d3ee;
   }
 
   .text-glow-red {
@@ -82,18 +81,17 @@
   animation: fadeOut 0.3s ease;
 }
 
-/* Birthday input - match email input visual style */
 .birthday-input {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
-  /* sizing comes from utility classes (px-4 py-2) — don't override height/font-size here */ 
+
 }
 .birthday-input-wrapper {
   position: relative;
 }
 .birthday-input-wrapper .birthday-input {
-  padding-right: 2.75rem; /* room for dropdown icon without changing overall height */
+  padding-right: 2.75rem;
 }
 .birthday-dropdown-button {
   position: absolute;
@@ -106,23 +104,22 @@
   padding: 0 0.75rem;
   background: transparent;
   border: none;
-  color: var(--color-primary-full-dark); /* darker cyan */
+  color: var(--color-primary-full-dark);
   cursor: pointer;
 }
 .birthday-dropdown-button:focus-visible {
-  outline: 2px solid var(--color-primary); /* darker cyan */
+  outline: 2px solid #06b6d4;
   outline-offset: 2px;
 }
 .birthday-input.birthday-active,
 .birthday-input:focus {
   outline: none !important;
-  box-shadow: 0 6px 18px rgba(20, 158, 171, 0.15), 0 0 0 4px rgba(20, 158, 171, 0.1);
-  border-color: var(--color-primary); /* cyan focus */
+  box-shadow: 0 6px 18px rgba(2,132,137,0.08), 0 0 0 4px rgba(6,182,212,0.06);
+  border-color: #06b6d4;
 }
 .birthday-input.birthday-valid {
-  border-color: #10b981; /* green */
+  border-color: #10b981;
 }
-/* show the red error border only when validation has been requested and the field is not focused */
 input[data-validation-triggered="true"].birthday-input.birthday-invalid:not(:focus) {
-  border-color: #ef4444; /* red */
+  border-color: #ef4444;
 }

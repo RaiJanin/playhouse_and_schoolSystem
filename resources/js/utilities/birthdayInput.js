@@ -34,7 +34,7 @@ export function attachBirthdayDropdown(container) {
 
     // Month select
     const monthSelect = document.createElement('select');
-    monthSelect.className = 'birthday-month-select flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 cursor-pointer';
+    monthSelect.className = 'birthday-month-select flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-[#17c1d1] focus:ring-2 focus:ring-[#caf8fc] cursor-pointer';
     monthSelect.setAttribute('aria-label', 'Month');
     
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -48,7 +48,7 @@ export function attachBirthdayDropdown(container) {
 
     // Day select
     const daySelect = document.createElement('select');
-    daySelect.className = 'birthday-day-select flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 cursor-pointer';
+    daySelect.className = 'birthday-day-select flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-[#17c1d1] focus:ring-2 focus:ring-[#caf8fc] cursor-pointer';
     daySelect.setAttribute('aria-label', 'Day');
     
     let dayOptions = '<option value="">Day</option>';
@@ -61,7 +61,7 @@ export function attachBirthdayDropdown(container) {
 
     // Year select
     const yearSelect = document.createElement('select');
-    yearSelect.className = 'birthday-year-select flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 cursor-pointer';
+    yearSelect.className = 'birthday-year-select flex-1 bg-teal-100 border-2 border-teal-500 rounded-lg px-2 py-2 text-sm font-semibold focus:outline-none focus:border-[#17c1d1] focus:ring-2 focus:ring-[#caf8fc] cursor-pointer';
     yearSelect.setAttribute('aria-label', 'Year');
     
     const currentYear = new Date().getFullYear();

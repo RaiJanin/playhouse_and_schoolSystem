@@ -34,7 +34,7 @@
         @include('v2.ui.partials.header')
         @include('v2.ui.partials.progress-bar')
         <div class="opacity-100 z-10">
-            <div class="bg-gradient-to-r from-cyan-100 to-cyan-200 border border-gray-200 rounded-xl p-3 shadow max-w-full">
+            <div class="bg-gradient-to-r from-[var(--color-primary-transparent)] to-[var(--color-primary-foggy)] border border-gray-200 rounded-xl p-3 shadow max-w-full">
                 <form id="playhouse-registration-form" enctype="multipart/form-data" class="overflow-x-hidden">
                     <div class="overflow-x-hidden overflow-y-auto max-h-[55vh]">
                         <div class="step" id="step1" data-step='phone'>

@@ -8,7 +8,7 @@
             {{-- Header --}}
             <div class="bg-gradient-to-r from-[var(--color-primary-mid-dark)] to-[var(--color-primary-mid-dark)] px-6 py-6 text-white">
                 <h1 class="text-2xl font-bold">Order Information</h1>
-                <p class="text-cyan-100 text-sm mt-1">Mimo Play Cafe</p>
+                <p class="text-[var(--color-primary-foggy)] text-sm mt-1">Mimo Play Cafe</p>
             </div>
 
             <div class="p-6 space-y-6">
@@ -72,9 +72,9 @@
                 </div>
 
                 {{-- Total --}}
-                <div class="bg-gradient-to-r from-cyan-100 to-cyan-100 rounded-lg p-4 border-2 border-cyan-400">
+                <div class="bg-gradient-to-r from-[var(--color-primary-foggy)] to-[var(--color-primary-foggy)] rounded-lg p-4 border-2 border-[var(--color-primary-light)]">
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-cyan-800">Total</span>
+                        <span class="text-lg font-bold text-[var(--color-primary-mid-dark)]">Total</span>
                         <span class="text-2xl font-bold text-[var(--color-primary-mid-dark)]">₱{{ number_format($order->total_amnt, 2) }}</span>
                     </div>
                 </div>
@@ -89,3 +89,4 @@
         </div>
     </div>
 @endsection
+

@@ -30,7 +30,7 @@
     </div>
     <div class="flex items-center justify-center mt-8 mb-2">
         <div class="flex flex-col mt-2">
-            <button type="button" onclick="window.location.href=`{{ route('playhouse.start') }}`" class="bg-[#118b96] text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[#139eab] focus:ring-2 focus:ring-offset-2 ring-[#139eab] disabled:cursor-not-allowed disabled:bg-cyan-400 disabled:shadow-none transition-all duration-300">Create Another Registration</button>
+            <button type="button" onclick="window.location.href=`{{ route('playhouse.start') }}`" class="bg-[#118b96] text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[#139eab] focus:ring-2 focus:ring-offset-2 ring-[#139eab] disabled:cursor-not-allowed disabled:bg-primary-200 disabled:shadow-none transition-all duration-300">Create Another Registration</button>
         </div>
     </div>
 </div> 

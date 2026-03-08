@@ -26,7 +26,7 @@
     <div class="flex flex-col items-center gap-3 mt-6 mb-2">
         <a id="order-info-link" href="#" target="_blank" class="text-[var(--color-primary-mid-dark)] hover:text-[var(--color-primary-full-dark)] font-medium text-sm underline hidden">View Invoice</a>
         <div class="flex flex-col mt-2">
-            <button type="button" onclick="window.location.href=`{{ route('v2.playhouse.checkin.source') }}`" class="bg-[var(--color-primary-mid-dark)] text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[var(--color-primary)] focus:ring-2 focus:ring-offset-2 ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:bg-cyan-400 disabled:shadow-none transition-all duration-300">Create Another Registration</button>
+            <button type="button" onclick="window.location.href=`{{ route('v2.playhouse.checkin.source') }}`" class="bg-[var(--color-primary-mid-dark)] text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[var(--color-primary)] focus:ring-2 focus:ring-offset-2 ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:bg-primary-200 disabled:shadow-none transition-all duration-300">Create Another Registration</button>
         </div>
     </div>
 </div> 
