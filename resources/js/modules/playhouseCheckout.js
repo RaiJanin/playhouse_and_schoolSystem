@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <button 
                         data-check-out-id="${item.id}"
-                        class="check-out-btn mt-3 w-full bg-[#0d9984] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0a7a6a] transition-colors"
+                        class="check-out-btn mt-3 w-full bg-gradient-to-t from-[var(--color-primary)] to-[var(--color-primary-light)] text-white font-bold py-2 px-4 rounded-lg hover:bg-[var(--color-primary-light)] transition-colors"
                     >
                         Check out
                     </button>
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         orders.forEach(order => {
             const orderCard = document.createElement('div');
-            orderCard.className = 'bg-gray-50 border border-gray-200 rounded-lg p-4';
+            orderCard.className = 'bg-gray-50 border border-gray-50 rounded-lg shadow-md p-4';
             
             const orderItems = order.order_items || [];
             const childrenCount = orderItems.length;
@@ -215,7 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
             orderItems.forEach(item => {
                 const duration = item.durationhours == 5 ? 'Unlimited' : item.durationhours + ' hours';
                 const socks = item.socksqty > 0 ? `, ${item.socksqty} pair(s) of socks` : '';
-                itemsHtml += `<li class="text-gray-600">${duration}${socks}</li>`;
+                const child = `${item.child.firstname} ${item.child.lastname}`;
+                itemsHtml += `<li class="text-gray-600"><span class="text-gray-800 font-medium">${child}</span> ${duration}${socks}</li>`;
             });
 
             orderCard.innerHTML = `
@@ -237,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     data-items='${JSON.stringify(order.order_items)}'
                     data-orderNum='${order.ord_code_ph}'
                     onclick="viewOrder(this)"
-                    class="w-full bg-[#0d9984] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0a7a6a] transition-colors"
+                    class="w-full bg-gradient-to-t from-[var(--color-primary)] to-[var(--color-primary-light)] text-white font-bold py-2 px-4 rounded-lg hover:bg-[var(--color-primary-light)]] transition-colors"
                 >
                     View Order
                 </button>

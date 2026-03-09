@@ -12,6 +12,8 @@ import {
     getOrDelete, 
     submitData 
 } from "../services/requestApi.js";
+import { editParentChkBx } from "./playhouseParent.js";
+import { enableEditInfo } from "../utilities/formControl.js";
 
 
 const container = document.getElementById('otp-choices');
@@ -96,6 +98,7 @@ function generateOtpChoices(correctOtp, otpId) {
                                 // Check if returnee data is valid before auto-filling
                                 if (returneeData && returneeData.userLoaded && returneeData.oldUserData) {
                                     autoFillFields(returneeData);
+                                    enableEditInfo();
                                 }
                                 window.showSteps(2, 'next');
                                 
@@ -106,7 +109,7 @@ function generateOtpChoices(correctOtp, otpId) {
                                 await new Promise(resolve => setTimeout(resolve, 300));
                                 
                                 // Check if returnee data has children before auto-filling
-                                if (returneeData && returneeData.userLoaded && returneeData.oldUserData && returneeData.oldUserData.children && returneeData.oldUserData.children.length >= 1) {
+                                if (returneeData.oldUserData.children.length >= 1) {
                                     autoFillChildren(returneeData.oldUserData.children, returneeData.oldUserData.d_name);
                                 }
                             }
@@ -199,7 +202,7 @@ async function generateOtp(phoneNumber, email = null) {
         showConsole('log', 'OTP: ', otp.code, true);
         otpLoading.classList.add('hidden');
         
-        if (otp && otp.code) {
+        if (otp.code) {
             generateOtpChoices(otp.code, otp.id, phoneNumber);
         } else {
             showConsole('error', 'No OTP code returned or error:', otp);

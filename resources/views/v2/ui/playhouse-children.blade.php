@@ -74,7 +74,7 @@
     }
 </style>
 
-<div class="p-4">
+<div class="p-1 sm:p-4">
     <div id="new-customer-header">
         <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center">Children Information</h2>
         <p class="text-center text-gray-600 mb-5 font-semibold">
@@ -92,7 +92,7 @@
         <p id="add-child-prompt" class="text-center text-sm text-red-600 mb-5 font-semibold" hidden></p>
     </div>
     <div id="childrenForm" class="space-y-5">
-        <div id="exist-children" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-3" hidden>
+        <div id="exist-children" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-1 sm:p-3" hidden>
 
         </div>
         <p id="existing-children-add-m" class="text-start text-gray-600 mt-5 font-semibold" hidden>

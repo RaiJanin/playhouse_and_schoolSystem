@@ -1,4 +1,4 @@
-<div class="absolute opacity-10 inset-0 pointer-events-none">
+<div class="absolute opacity-40 inset-0 pointer-events-none">
     <!-- Balloon -->
     <div class="fixed inset-0 transition-opacity z-0" aria-hidden="true">
         <div class="absolute inset-0 to-[var(--color-primary-full-dark)] opacity-100"></div>
@@ -29,7 +29,7 @@
     <div
         class="absolute w-[80px] h-[100px]
             bg-[radial-gradient(circle,_#4dabf7,_#339af0)]
-            rounded-[50%_50%_50%_0]"
+            rounded-[50%_50%_50%_0] z-0"
         style="bottom:15%; right:5%;"
     ></div>
 

@@ -5,7 +5,7 @@
     </p>
     
     <div class="mb-4 px-5 flex justify-center items-center">
-        <div class="flex flex-col items-center bg-white p-3 rounded-xl shadow-lg border-2 border-gray-200">
+        <div class="flex flex-col items-center bg-white/80 backdrop-blur p-3 rounded-xl shadow-lg border-2 border-gray-200">
             <div class="flex flex-col items-center">
                 <p class="text-gray-600 text-lg font-semibold">Order #</p>
                 <h2 id="order-number-text" class="text-2xl font-bold">-0000-</h2>
@@ -16,13 +16,13 @@
         </div>
     </div>
     
-    <div class="px-5">
+    {{-- <div class="px-5">
         <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
             <p class="text-sm text-green-800 font-medium">
                 Please save this QR code for future reference.
             </p>
         </div>
-    </div>
+    </div> --}}
     <div class="flex flex-col items-center gap-3 mt-6 mb-2">
         <a id="order-info-link" href="#" target="_blank" class="text-[var(--color-primary-mid-dark)] hover:text-[var(--color-primary-full-dark)] font-medium text-sm underline hidden">View Invoice</a>
         <div class="flex flex-col mt-2">

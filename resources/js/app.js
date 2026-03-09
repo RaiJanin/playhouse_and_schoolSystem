@@ -74,15 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const phoneInputEl = document.getElementById('phone');
         const emailInputEl = document.getElementById('gmail');
-        const nextBtnEl = document.getElementById('next-btn');
 
         let currentStep = 0;
         let replyFromBackend = '';
 
 //----Simple scripts--------------------------------------------------------------
 
-        if (phoneInputEl && nextBtnEl) {
-            nextBtnEl.disabled = true;
+        if (phoneInputEl && nextBtn) {
+            nextBtn.disabled = true;
         }
         
         // Initialize submit button as disabled
@@ -95,11 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Handle next button (I Agree)
             if (current !== 'phone') {
-                if (nextBtnEl) nextBtnEl.disabled = false;
+                if (nextBtn) nextBtn.disabled = false;
             } else {
                 const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
-                if (nextBtnEl) {
-                    nextBtnEl.disabled = !phoneValid;
+                if (nextBtn) {
+                    nextBtn.disabled = !phoneValid;
                 }
             }
             
@@ -170,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     showConsole('log', 'Phone validation passed, calling generateOtp');
                     phoneInputEl.classList.remove('border-red-500');
-
+                    nextBtn.classList.remove('hidden');
                     generateOtp(phoneInputEl.value, emailInputEl.value);
                 }
             }
@@ -193,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if(getCurrentStepName() === 'parent') {
                 parentsValid = validateDateInputs(currentForm);
                 if(!parentsValid || !generalValid) valid = false;
+                prevBtn.disabled = false;
             }
 
             if(getCurrentStepName() === 'children') {
@@ -215,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
         prevBtn.addEventListener('click', () => {
             if(getCurrentStepName() === 'children') {
                 disableBirthdayonSubmit(false);
+                prevBtn.disabled = true;
             }
             showSteps(currentStep - 1,'prev');
         });
@@ -271,9 +272,9 @@ document.addEventListener('DOMContentLoaded', function () {
             stepNums.forEach((num, i) => {
                 if (i <= step) {
                     num.classList.remove('border-gray-300', 'bg-white', 'text-gray-500');
-                    num.classList.add('border-teal-300', 'bg-amber-200', 'text-teal-500');
+                    num.classList.add('border-[var(--color-primary-light)]', 'bg-[var(--color-accent-mid-dark)]', 'text-[var(--color-primary-light)]');
                 } else {
-                    num.classList.remove('border-teal-300', 'bg-amber-200', 'text-teal-500');
+                    num.classList.remove('border-[var(--color-primary-light)]', 'bg-[var(--color-accent-mid-dark)]', 'text-[var(--color-primary-light)]');
                     num.classList.add('border-gray-300', 'bg-white', 'text-gray-500');
                 }
             });
@@ -384,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 childrenItems += `
-                        <div class="bg-teal-50 border border-teal-200 rounded p-3">
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-3">
                             <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name}</span></p> 
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
@@ -399,11 +400,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if(addguardianCheckBx.isChecked()) {
                 // Show guardian birthday in step 5 summary when guardian is enabled.
                 guardianInfo = `
-                    <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
+                    <div class="flex items-center border-b border-[var(--color-primary)] py-2 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-fit">Guardian:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${data.get('guardianName')} ${data.get('guardianLastName')} ${guardianPhone}</span>
                     </div>
-                    <div class="flex items-center border-b border-cyan-400 py-2">
+                    <div class="flex items-center border-b border-[var(--color-primary)] py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Guardian Birthdate:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${guardianBirthday ? dateToString('shortDate', guardianBirthday) : '-'}</span>
                     </div>
@@ -416,15 +417,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const existingFbUrl = data.get('fb_pp_url') || '';
             
             summary.innerHTML = `
-                    <div class="flex items-center border-b border-cyan-400 py-2 max-w-full overflow-auto">
+                    <div class="flex items-center border-b border-[var(--color-primary)] py-2 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-fit">Parent:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${parentFullName} ${parentEmail}</span>
                     </div>
-                    <div class="flex items-start border-b border-cyan-400 py-2">
+                    <div class="flex items-start border-b border-[var(--color-primary)] py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${data.get('phone')}</span>
                     </div>
-                    <div class="flex items-center border-b border-cyan-400 py-2">
+                    <div class="flex items-center border-b border-[var(--color-primary)] py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${data.get('parentBirthday') ? dateToString('shortDate', data.get('parentBirthday')) : hiPVal}</span>
                     </div>
@@ -435,8 +436,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             ${childrenItems}
                         </div>
                     </div>
-                    <div class="mt-6 pt-4 border-t-2 border-cyan-400 space-y-4">
-                        <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
+                    <div class="mt-6 pt-4 border-t-2 border-[var(--color-primary)] space-y-4">
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
                             <p class="text-lg font-bold text-teal-800 mb-2">DISCOUNT CODE</p>
                             <p class="text-xs text-gray-600 mb-3">Got a discount? Enter it below — and come back soon for more offers!</p>
                             <div class="flex flex-col sm:flex-row gap-3">
@@ -444,12 +445,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <button type="button" id="apply-discount-btn" class="min-h-[44px] px-5 py-3 text-base font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition-colors touch-manipulation">Apply</button>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
                             <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 30% off</p>
                             <p class="text-xs text-gray-600 mb-3">Already following? Paste your Facebook profile link below to claim your discount.</p>
                             <input type="url" id="fb-pp-url-input" name="fb_pp_url" value="${existingFbUrl}" placeholder="https://facebook.com/your-profile" class="w-full min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
                         </div>
-                        <div class="bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400 rounded-lg p-4">
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
                             <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Item: ₱${socksTotalCost}</p>
                         </div>

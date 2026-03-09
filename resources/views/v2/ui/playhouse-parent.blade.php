@@ -26,7 +26,7 @@
     }
 </style>
 
-<div class="p-4">
+<div class="p-0 sm:p-4">
     <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center">Parent Information</h2>
     <p class="text-center text-gray-600 mb-5 font-semibold">
         Please provide your details
@@ -39,18 +39,18 @@
             </span>
         </button>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 sm:p-6 border-2 border-gray-50 backdrop-blur bg-white/40 rounded-xl shadow-md">
         <div>
             <label for="parentName" class="block text-base font-semibold text-gray-900 mb-2">First Name <span class="text-red-600">*</span></label>
-            <input type="text" id="parentName" name="parentName" class="bg-primary-200 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="John" required />
+            <input type="text" id="parentName" name="parentName" class="bg-primary-200 w-full px-4 py-2 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="John" required />
         </div>
         <div>
             <label for="parentLastName" class="block text-base font-semibold text-gray-900 mb-2">Last Name <span class="text-red-600">*</span></label>
-            <input type="text" id="parentLastName" name="parentLastName" class="bg-primary-200 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Doe" required />
+            <input type="text" id="parentLastName" name="parentLastName" class="bg-primary-200 w-full px-4 py-2 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Doe" required />
         </div>
         <div>
             <label for="parentEmail" class="block text-base font-semibold text-gray-900 mb-2">Email Address <span class="text-red-600">*</span></label>
-            <input type="email" id="parentEmail" name="parentEmail" class="bg-primary-200 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com" required />
+            <input type="email" id="parentEmail" name="parentEmail" class="bg-primary-200 w-full px-4 py-2 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="john.doe@email.com" required />
         </div>
         <div>
             <label for="parentBirthday" class="block text-base font-semibold text-gray-900 mb-2">Birthday <span class="text-red-600">*</span></label>

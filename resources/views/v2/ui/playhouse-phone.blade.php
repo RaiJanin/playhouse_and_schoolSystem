@@ -1,17 +1,17 @@
-<div class="flex flex-col px-auto mx-auto max-w-4xl items-center justify-center">
+<div class="flex flex-col px-auto mx-auto max-w-4xl items-center justify-center ">
     <div class="flex flex-col items-center">
-        <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center"> Enter Your Phone Number or Email</h2>
+        <h2 class="font-bold text-2xl text-[var(--color-primary-full-dark)] mb-2 text-center"> Enter Your Phone Number or Email</h2>
         <p class="text-center text-gray-600 mb-5 font-semibold">
             We'll send a verification code to your number and email
         </p>
     </div>
-    <div class="mb-5 px-5">
+    <div class="mb-5 px-5 rounded-2xl border-2 border-gray-100 shadow-md backdrop-blur-xl bg-white/50 p-4 sm:p-8">
         <label for="phone" class="mb-5 font-semibold text-gray-700">Phone Number <span class="text-red-600">*</span></label>
         <input
             type="tel" 
             id="phone"
             name="phone"
-            class="bg-primary-200 w-full px-4 py-3 border-2 border-[var(--color-primary)] shadow rounded-md font-semibold focus:outline-none focus:border-[var(--color-primary-light)] focus:shadow-none transition-all duration-300"  
+            class="backdrop-blur-2xl bg-teal-50 w-full px-4 py-3 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-light)] focus:shadow-none transition-all duration-300"  
             title="Philippine mobile number (e.g., 09171234567, 639171234567, or 9171234567)"
             required
         >
@@ -32,7 +32,7 @@
                 type="text" 
                 id="gmail"
                 name="gmail"
-                class="bg-primary-200  w-full px-4 py-3 border-2 border-[var(--color-primary)] shadow rounded-md font-semibold focus:outline-none focus:border-[var(--color-primary-light)] focus:shadow-none transition-all duration-300"  
+                class="backdrop-blur-2xl bg-teal-50 w-full px-4 py-3 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-light)] focus:shadow-none transition-all duration-300"  
                 title="Gmail."
             >
         </div>

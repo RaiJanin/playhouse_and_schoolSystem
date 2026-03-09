@@ -11,26 +11,27 @@
 }
 
 :root {
-  /* PRIMARY: Aqua Marine */
-  --color-primary: #139eab;
-  --color-primary-transparent: #caf8fc;
-  --color-primary-foggy: #95f4fc;
-  --color-primary-light: #17c1d1;
-  --color-primary-lighter: #1ad9eb;
-  --color-primary-mid-dark: #118b96;
-  --color-primary-full-dark: #0c737d;
-
-  /* SECONDARY: Amber */
+  --color-primary: #13a6ab;
+  --color-primary-transparent: #dcfbfc;
+  --color-primary-foggy: #a1fcff;
+  --color-primary-light: #16c1c7;
+  --color-primary-lighter: #1ae1e8;
+  --color-primary-mid-dark: #108b8f;
+  --color-primary-full-dark: #0d6f73;
+  --color-accent: #fff2d9;
+  --color-accent-mid-dark: #fce3b3;
+  --color-accent-secondary: #a2fcd5;
+  --color-accent-secondary-light: #c7ffe7;
+  --color-accent-secondary-mid-dark: #62bd95;
   --color-secondary: #d6991e;
   --color-secondary-light: #eda921;
   --color-secondary-lighter: #fcc658;
-
-  /* THIRD: Teal */
   --color-third: #19d1b5;
   --color-third-light: #2cf2d4;
   --color-third-mid-dark: #16b59d;
   --color-third-full-dark: #108f7c;
 }
+
 @layer utilities {
   .text-shadow-sm {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);

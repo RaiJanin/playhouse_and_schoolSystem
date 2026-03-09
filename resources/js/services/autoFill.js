@@ -122,7 +122,7 @@ export function autoFillChildren(data, parent) {
 
     data.forEach((child, index) => {
         const wrapper = document.createElement('div');
-        wrapper.className = 'exist-child-el flex flex-col p-3 gap-6 border border-teal-600 rounded-lg';
+        wrapper.className = 'exist-child-el flex flex-col p-3 gap-6 border border-gray-50 backdrop-blur shadow-md rounded-lg';
 
         // Get child name for button label - use firstname which is the correct property
         const childName = child.firstname || child.c_name || child.name || 'this child';
@@ -149,9 +149,6 @@ export function autoFillChildren(data, parent) {
                 checkIcon.classList.add('fa-check', 'text-2xl', 'font-bold', 'text-green-500');
                 addExistChildBtn.classList.add('text-green-500');
                 addExistChildBtn.innerHTML = '<i class="check-i fa-solid fa-check"></i> <span class="child-name-label">Added ' + childName + '</span>';
-
-                // Add border to the selected child only
-                wrapper.classList.add('border-green-500', 'bg-green-50/50');
 
                 wrapper.insertAdjacentHTML('beforeend', attachFields(child, index));
 

@@ -77,15 +77,6 @@ editParentChkBx.onChange(checked => {
     disableDateInputs(document.getElementById('parentBirthday'), !checked);
 
     showConsole('log', 'Returnee Data: ', oldUser.returneeData);
-    if(oldUser.returneeData.oldUserData.guardians.length >=1) {
-        enableReadonly(guardianFields, !checked);
-        const guardianBirthdayContainer = document.getElementById('guardianBirthday');
-        if (guardianBirthdayContainer) {
-            // Keep guardian birthday dropdown readonly in returnee mode unless editing is enabled.
-            disableDateInputs(guardianBirthdayContainer, !checked);
-        }
-    }
-    
 });
 
 export const confirmGuardianCheckBx = new CustomCheckbox('confirm-guardian-checkbox', 'confirm-guardian-icon', 'confirm-guardian-info');
