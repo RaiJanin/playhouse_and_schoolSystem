@@ -447,6 +447,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                         <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
                             <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 30% off</p>
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg shadow">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </div>
+                            <div class="flex-1 mb-3">
+                                <p class="text-sm font-semibold text-gray-800">
+                                    Follow our Facebook Page
+                                </p>
+                                <div class="flex gap-2 mt-3">
+                                    <button
+                                    type="button"
+                                        id="ff-page-btn"
+                                        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition"
+                                    >
+                                        <i class="fa-brands fa-facebook"></i>
+                                        Follow Page
+                                </button>
+                                </div>
+                            </div>
                             <p class="text-xs text-gray-600 mb-3">Already following? Paste your Facebook profile link below to claim your discount.</p>
                             <input type="url" id="fb-pp-url-input" name="fb_pp_url" value="${existingFbUrl}" placeholder="https://facebook.com/your-profile" class="w-full min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
                         </div>
@@ -476,6 +494,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     dscCodeInput.removeAttribute('readonly');
                     applyDscBtn.textContent = 'Apply';
                 }
+            });
+
+            document.getElementById('ff-page-btn').addEventListener('click', () => {
+                const hiddenValueForFfFlag = document.getElementById('isFollowedFlag');
+
+                if(hiddenValueForFfFlag.value === '0') {
+                    document.getElementById('isFollowedFlag').value = '1';
+                }
+                window.open('https://www.facebook.com/mimoplaycafe', '_blank');
             })
 
             const fbUrlInput = document.getElementById('fb-pp-url-input');
