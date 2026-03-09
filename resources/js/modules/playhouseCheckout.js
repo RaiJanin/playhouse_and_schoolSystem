@@ -29,15 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const phone = document.getElementById('search-phone').value.trim();
         const guardian = document.getElementById('search-guardian').value.trim();
+        const orderCode = document.getElementById('search-order').value.trim();
         
-        if (!phone && !guardian) {
-            showError('Please enter either a phone number or a guardian/parent name.');
+        if (!phone && !guardian &&!orderCode) {
+            showError('Please enter either a phone number, order number or guardian/parent name.');
             return;
         }
 
         loading.classList.remove('hidden');
         
-        const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}`, []);
+        const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}&ord_code=${orderCode}`);
         
         showConsole('log', 'Orders: ', data);
             

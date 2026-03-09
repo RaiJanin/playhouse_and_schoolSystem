@@ -232,7 +232,7 @@ function readAttempts(otpId) {
         });
 
         setTimeout(async () => {
-            await getOrDelete('DELETE', API_ROUTES.deleteOtpURL, [otpId]);
+            await getOrDelete('DELETE', API_ROUTES.deleteOtpURL, otpId);
             location.reload();
         }, 1000);
         

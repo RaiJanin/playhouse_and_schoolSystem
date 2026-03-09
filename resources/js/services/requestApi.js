@@ -35,13 +35,13 @@ export async function submitData(apiLink, dataObject, method = 'POST', routePara
  * Sends GET or DELETE requests
  * 
  * @param {string} apiLink - The API endpoint URL
- * @param {Array} routeParam - Route parameter
+ * @param {*} routeParam - Route parameter
  * @param {'GET'|'DELETE'} method - Request Method
  * @returns Server response
  */
 export async function getOrDelete(method, apiLink, routeParam = null) {
     try {
-        const reqURl = routeParam.length === 0 ? apiLink : `${apiLink}/${routeParam}`;
+        const reqURl = routeParam === null ? apiLink : `${apiLink}/${routeParam}`;
         const options = {
             method: method.toUpperCase(),
             headers: {

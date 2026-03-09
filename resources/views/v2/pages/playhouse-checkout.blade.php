@@ -34,6 +34,18 @@
                             placeholder="Enter guardian or parent name"
                         >
                     </div>
+
+                    <div class="text-center text-gray-500 font-medium">- OR -</div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Order Number</label>
+                        <input 
+                            type="text" 
+                            id="search-order" 
+                            class="w-full px-4 py-3 border border-[var(--color-primary)] rounded-xl shadow-md focus:ring-2 focus:ring-[#0d9984] focus:border-transparent outline-none"
+                            placeholder="Enter order number (e.g. G0201)"
+                        >
+                    </div>
                     
                     <button 
                         type="submit"

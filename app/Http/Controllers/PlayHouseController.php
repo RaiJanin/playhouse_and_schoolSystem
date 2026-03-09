@@ -357,6 +357,7 @@ class PlayHouseController extends Controller
     {
         $phoneNum = $request->query('ph_num') ?? null;
         $guardian = $request->query('grdian_name') ?? null;
+        $orderCode = $request->query('ord_code') ?? null;
 
         if($phoneNum)
         {
@@ -383,7 +384,7 @@ class PlayHouseController extends Controller
                 'orders' => $orderToCheckout
             ]);
         }
-
+        
         if($guardian)
         {
             $isParent = M06::where('d_name', $guardian)->where('isparent', true)->first();
@@ -422,6 +423,24 @@ class PlayHouseController extends Controller
                 
             ]);
         }
+        
+        if($orderCode)
+        {
+            $orderToCheckout = Orders::where('ord_code_ph', $orderCode)
+                    ->whereHas('orderItems', function($query) {
+                        $query->where('checked_out', false);
+                    })
+                    ->with(['orderItems' => function($item) {
+                        $item->with('child')->where('checked_out', false);
+                    }])
+                    ->get();
+
+            return response()->json([
+                'orders' => $orderToCheckout
+                
+            ]);
+        }
+        
     }
 
     public function checkOut($orderItemId)
