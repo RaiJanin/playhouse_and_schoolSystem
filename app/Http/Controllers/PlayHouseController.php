@@ -125,7 +125,7 @@ class PlayHouseController extends Controller
                 }
             }
 
-            $fbProfileUrl = $data['fb_pp_url'] ?? Session::get('pending_fb_pp_url');
+            $fbProfileUrl = $data['fb_pp_url'] ?? null;
 
             $order = Orders::create([
                 'guardian' => $parent->d_name,
@@ -222,7 +222,7 @@ class PlayHouseController extends Controller
 
                 if($request->filled('email'))
                 {
-                    Mail::to($request->email)->queue(new SendOtpMail($OTP));
+                    Mail::to($request->email)->send(new SendOtpMail($OTP));
                 }
                 
                 if(!$smsStatus['success'])

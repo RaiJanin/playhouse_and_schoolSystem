@@ -113,19 +113,19 @@
                         <div id="guardian-form" class="grid grid-cols-1 gap-3 mt-3" hidden>
                             <div>
                                 <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="guardianName" name="guardianName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" id="guardianName" name="child[0][guardianName]" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
                             </div>
                             <div>
                                 <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="guardianLastName" name="guardianLastName" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" id="guardianLastName" name="child[0][guardianLastName]" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
                             </div>
                             <div>
                                 <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" id="guardianPhone" name="guardianPhone" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                                <input type="tel" id="guardianPhone" name="child[0][guardianPhone]" class="bg-cyan-100 w-full px-4 py-2 border-2 border-[var(--color-primary)] shadow rounded-lg font-semibold focus:outline-none focus:border-[var(--color-primary)] focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
                             </div>
                             <div>
                                 <label for="guardianBirthday" class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                                <div id="guardianBirthday" data-birthday-dropdown data-name="guardianBirthday" class="bg-cyan-100 rounded-lg"></div>
+                                <div id="guardianBirthday" data-birthday-dropdown data-name="child[0][guardianBirthday]" class="bg-cyan-100 rounded-lg"></div>
                             </div>
                             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
