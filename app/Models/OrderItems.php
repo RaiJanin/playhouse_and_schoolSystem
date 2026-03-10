@@ -10,6 +10,7 @@ class OrderItems extends Model
     protected $fillable = [
         'ord_code_ph',
         'd_code_child',
+        'guardian',
         'durationhours',
         'durationsubtotal',
         'socksqty',

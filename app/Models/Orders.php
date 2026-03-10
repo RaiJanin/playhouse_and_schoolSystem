@@ -12,7 +12,8 @@ class Orders extends Model
     protected $table = 'ordhdr';
     protected $fillable = [
         'ord_code_ph',
-        'guardian',
+        'parent',
+        'mkt_code',
         'd_code',
         'total_amnt',
         'xtra_chrg_amnt',

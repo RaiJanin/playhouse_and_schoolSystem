@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             M06TableSeeder::class,      // ← Parent table
             M06ChildTableSeeder::class, // ← Child table (after parent)
+            ItemsPricesSeeder::class
         ]);
     }
 }

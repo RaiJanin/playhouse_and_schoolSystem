@@ -1,4 +1,4 @@
-@extends('v2.layout.app')
+@extends('layout.app')
 
 @section('title', 'Order Info - ' . $order->ord_code_ph)
 
@@ -37,8 +37,8 @@
 
                 {{-- Guardian / Parent --}}
                 <div class="border-b border-gray-200 pb-4">
-                    <h2 class="text-gray-800 font-semibold mb-2">Guardian / Parent</h2>
-                    <p class="text-gray-700">{{ $order->guardian }}</p>
+                    <h2 class="text-gray-800 font-semibold mb-2">Parent</h2>
+                    <p class="text-gray-700">{{ $order->parent }}</p>
                 </div>
 
                 {{-- Order items (children) --}}
@@ -49,6 +49,9 @@
                             <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
                                 <p class="font-medium text-gray-800">
                                     {{ $item->child ? $item->child->firstname . ' ' . $item->child->lastname : 'Child' }}
+                                </p>
+                                <p class="text-gray-600">
+                                    {{ $item->guardian ? 'Guarian: ' . $item->guardian : '' }}
                                 </p>
                                 <div class="mt-2 space-y-1 text-sm text-gray-600">
                                     <div class="flex justify-between">
@@ -81,7 +84,7 @@
 
                 {{-- Back link --}}
                 <div class="pt-4 text-center">
-                    <a href="{{ route('v2.playhouse.start') }}" class="inline-flex items-center gap-2 text-[var(--color-primary-mid-dark)] hover:text-[var(--color-primary-full-dark)] font-medium">
+                    <a href="{{ route('playhouse.start') }}" class="inline-flex items-center gap-2 text-[var(--color-primary-mid-dark)] hover:text-[var(--color-primary-full-dark)] font-medium">
                         ← Back to Home
                     </a>
                 </div>

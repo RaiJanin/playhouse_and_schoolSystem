@@ -1,5 +1,3 @@
-import '../config/masterFile.js';
-
 import { API_ROUTES } from "../config/api.js";
 import { showConsole } from "../config/debug.js";
 import { 
@@ -18,7 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderModal = document.getElementById('modal-container');
     orderModal.querySelector('.modal-footer').classList.add('hidden');
 
-    searchForm.addEventListener('submit', async function(e) {
+    let phone = null;
+    let guardian = null;
+    let orderCode = null;
+
+    searchForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // Reset UI
@@ -27,33 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.classList.add('hidden');
         ordersList.innerHTML = '';
         
-        const phone = document.getElementById('search-phone').value.trim();
-        const guardian = document.getElementById('search-guardian').value.trim();
-        const orderCode = document.getElementById('search-order').value.trim();
+        phone = document.getElementById('search-phone').value.trim();
+        guardian = document.getElementById('search-guardian').value.trim();
+        orderCode = document.getElementById('search-order').value.trim();
         
         if (!phone && !guardian &&!orderCode) {
             showError('Please enter either a phone number, order number or guardian/parent name.');
             return;
         }
 
-        loading.classList.remove('hidden');
-        
-        const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}&ord_code=${orderCode}`);
-        
-        showConsole('log', 'Orders: ', data);
-            
-        loading.classList.add('hidden');
-        
-        if (data.not_found) {
-            showError(data.message);
-            return;
-        }
-        
-        if (data.orders && data.orders.length >= 1) {
-            displayOrders(data.orders);
-        } else {
-            noResults.classList.remove('hidden');
-        }
+        getOrders(phone, guardian, orderCode);
         
     });
 
@@ -84,29 +69,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 const chargeUnits = Math.ceil(overtimeMinutes / window.masterfile.minutesPerCharge);
 
                 itemsHtml += `
-                    <div class="mb-4 border-b border-gray-200 pb-2">
-                        <p><strong>Child:</strong> ${item.child?.firstname || 'N/A'} ${item.child?.lastname || ''}</p>
-                        <p><strong>Play Duration:</strong> ${item.durationhours} hr(s) — ₱${Number(item.durationsubtotal).toFixed(2)}</p>
-                        <p><strong>Socks:</strong> ₱${Number(item.socksprice).toFixed(2)}</p>
-                        <p><strong>Subtotal:</strong> ₱${subtotal.toFixed(2)}</p>
+                    <div class="mb-5 rounded-xl border border-gray-200 bg-white shadow-sm p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="font-semibold text-gray-800">
+                                ${item.child?.firstname || 'N/A'} ${item.child?.lastname || ''}
+                            </p>
+                            <span class="text-xs px-2 py-1 bg-teal-100 text-teal-700 rounded-lg">
+                                ${item.durationhours} hr(s)
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-y-1 text-sm text-gray-600">
+                            <span>Play Duration</span>
+                            <span class="text-right font-medium text-gray-800">
+                                ₱${Number(item.durationsubtotal).toFixed(2)}
+                            </span>
+                            <span>Socks</span>
+                            <span class="text-right font-medium text-gray-800">
+                                ₱${Number(item.socksprice).toFixed(2)}
+                            </span>
+                            <span class="font-semibold text-gray-700">Subtotal</span>
+                            <span class="text-right font-semibold text-gray-900">
+                                ₱${subtotal.toFixed(2)}
+                            </span>
+                        </div>
                         ${extraCharge > 0 ? `
-                            <div class="text-red-500">
-                                <p><strong>Extra Charges:</strong> ₱${extraCharge.toFixed(2)}</p>
-                                <p>Overtime: ${Math.max(0, Math.round(overtimeMinutes))} minute(s)</p>
-                                <p>Charge units: ${chargeUnits} × ₱${window.masterfile.chargeOfMinutes} per ${window.masterfile.minutesPerCharge} min</p>
+                            <div class="mt-3 rounded-lg bg-red-50 border border-red-200 p-3 text-sm">
+                                <p class="font-semibold text-red-600 mb-1">⚠ Extra Charges</p>
+                                <div class="grid grid-cols-2 gap-y-1 text-red-600">
+                                    <span>Overtime</span>
+                                    <span class="text-right">${Math.max(0, Math.round(overtimeMinutes))} min</span>
+                                    <span>Charge Units</span>
+                                    <span class="text-right">${chargeUnits}</span>
+                                    <span>Rate</span>
+                                    <span class="text-right">
+                                        ₱${window.masterfile.chargeOfMinutes} / ${window.masterfile.minutesPerCharge} min
+                                    </span>
+                                    <span class="font-semibold">Extra Total</span>
+                                    <span class="text-right font-semibold">
+                                        ₱${extraCharge.toFixed(2)}
+                                    </span>
+                                </div>
                             </div>
                         ` : ''}
-                        <p><strong>Total:</strong> ₱${total.toFixed(2)}</p>
+                        <div class="mt-3 flex justify-between border-t pt-2">
+                            <span class="font-semibold text-gray-800">Total</span>
+                            <span class="font-bold text-lg text-teal-600">
+                                ₱${total.toFixed(2)}
+                            </span>
+                        </div>
                     </div>
-                `;
+                    `;
                 
-
                 const detailsHtml = `
-                    <p><strong>Order #:</strong> ${orderNumber}</p>
-                    <p><strong>Guardian:</strong> ${item.order.guardian}</p>
-                    ${itemsHtml}
-                    <p><strong>Order Total:</strong> ₱${Number(item.order.total_amnt).toFixed(2)}</p>
-                `;
+                    <div class="space-y-4">
+                        <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                            <p class="text-sm text-gray-500">Order Number</p>
+                            <p class="font-bold text-lg text-gray-800">${item.order.ord_code_ph}</p>
+
+                            <p class="text-sm text-gray-500 mt-2">Parent</p>
+                            <p class="font-semibold text-gray-700">${item.order.parent}</p>
+                        </div>
+                        ${itemsHtml}
+                        <div class="rounded-xl bg-teal-50 border border-teal-200 p-4 space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Holding Order Total</span>
+                                <span class="font-semibold text-gray-800">
+                                    ₱${Number(response.holdingTotal).toFixed(2)}
+                                </span>
+                            </div>
+                            <div class="flex justify-between text-lg border-t pt-2">
+                                <span class="font-bold text-gray-800">New Order Total</span>
+                                <span class="font-bold text-teal-600">
+                                    ₱${Number(item.order.total_amnt).toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    `;
 
                 document.getElementById('checkout-details').innerHTML = detailsHtml;
                 successModal.classList.remove('hidden');
@@ -125,7 +164,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     orderModal.querySelector('.close-modal').addEventListener('click', () => {
         orderModal.classList.add('hidden');
-    })
+    });
+
+    successModal.querySelector('.close-success-modal').addEventListener('click', (e) => {
+        e.preventDefault();
+        successModal.classList.add('hidden');
+        ordersList.innerHTML = '';
+        getOrders(phone, guardian, orderCode);
+    });
+
+    async function getOrders(phone = '', guardian = '', orderCode = '') {
+        loading.classList.remove('hidden');
+        
+        const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}&ord_code=${orderCode}`);
+        
+        showConsole('log', 'Orders: ', data);
+            
+        loading.classList.add('hidden');
+        
+        if (data.not_found) {
+            showError(data.message);
+            return;
+        }
+        
+        if (data.orders && data.orders.length >= 1) {
+            displayOrders(data.orders);
+        } else {
+            noResults.classList.remove('hidden');
+        }
+    }
 
     function viewOrder(btn) {
         const items = JSON.parse(btn.dataset.items);
@@ -171,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="text-sm text-gray-600 mt-1">
                             <p>Overtime: ${details.extraMinutes} minute(s) (actual ${details.actualMinutes} - paid ${details.paidMinutes})</p>
                             <p>Rate: ₱${window.masterfile.chargeOfMinutes} per ${window.masterfile.minutesPerCharge} minutes</p>
-                            <p>Number of 2-minute blocks: ${details.chargeUnits}</p>
+                            <p>Number of ${window.masterfile.minutesPerCharge}-minute blocks: ${details.chargeUnits}</p>
                             <p>Extra Charge = ${details.chargeUnits} × ₱${window.masterfile.chargeOfMinutes} = ₱${details.extraCharge.toFixed(2)}</p>
                         </div>
                     </div>
@@ -224,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <h4 class="font-bold text-gray-800">Order #${order.ord_code_ph}</h4>
-                        <p class="text-sm text-gray-600">Guardian: ${order.guardian}</p>
+                        <p class="text-sm text-gray-600">Parent: ${order.parent}</p>
                         <p class="text-sm text-gray-600">Total: ₱${order.total_amnt}</p>
                     </div>
                     <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">

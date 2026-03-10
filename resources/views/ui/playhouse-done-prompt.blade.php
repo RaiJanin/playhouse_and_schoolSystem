@@ -1,19 +1,10 @@
-<div class="p-3">
+<div class="p-1 sm:p-3">
 	<h1 class="text-2xl font-bold text-gray-900 mb-2">Play Now!</h1>
 	<p class="text-gray-600 mb-6">Please review your information before submitting.</p>
 
-	<div class="bg-gradient-to-br from-[var(--color-primary-t)] to-[var(--color-primary-foggy)] border-2 border-[var(--color-primary)] rounded-lg p-6 mb-6 shadow-sm">
+	<div class="backdrop-blur bg-white/40 border-2 border-gray-50 rounded-lg p-4 sm:p-6 mb-6 shadow-md">
 		<div id="summaryContainer" class="space-y-4">
 			<!-- Summary items will be loaded here -->
 		</div>
-	</div>
-
-	<div class="flex items-center mb-2">
-		<button id="agree-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
-			<span class="flex items-center">
-				<i id="check-agree-icon" class="fa-solid fa-square-xmark text-red-500 text-xl"></i>
-				<p id="check-agree-info" class="ml-2"></p>
-			</span>
-		</button>
 	</div>
 </div>

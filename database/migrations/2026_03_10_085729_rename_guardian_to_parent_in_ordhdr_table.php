@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('phone_number_otp', function (Blueprint $table) {
-            $table->string('phone_number', 20)->nullable()->change();
+        Schema::table('ordhdr', function (Blueprint $table) {
+            $table->renameColumn('guardian', 'parent');
         });
     }
 
@@ -21,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+        Schema::table('ordhdr', function (Blueprint $table) {
+            //
+        });
     }
 };

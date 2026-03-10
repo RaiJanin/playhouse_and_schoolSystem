@@ -1,4 +1,4 @@
-import { dateToString } from "../utilities/dateString";
+import { dateToString } from "../utilities/dateString.js";
 
 export let selectedChildState = {
     selectCount: 0
@@ -110,11 +110,9 @@ export function attachFields(data, index) {
                 <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                 <div class="relative">
                     <select name="child[${index}][playDuration]" class="child-duration bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                        <option value="1">1 Hour = ₱100</option>  
-                        <option value="2">2 Hours = ₱200</option> 
-                        <option value="3">3 Hours = ₱300</option>
-                        <option value="4">4 Hours = ₱400</option>
-                        <option value="unlimited">Unlimited = ₱500</option>
+                        ${Object.entries(window.masterfile.durationMap).map(([key, duration]) => 
+                            `<option value="${key}">${duration}</option>`
+                        ).join('')}
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-teal-500">
                         <i class="fa-solid fa-chevron-down text-sm"></i>

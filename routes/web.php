@@ -10,17 +10,10 @@ Route::get('/', function () {
     return view('pages.playhouse-landing');
 })->name('playhouse.start');
 
-Route::get('/registration', function () { return view('pages.playhouse-registration'); })->name('playhouse.registration');
-
-//----- Version 2 UI
-Route::prefix('v2')->group(function () {
-    Route::get('/', function () { return view('v2.pages.playhouse-landing'); })->name('v2.playhouse.start');
-    Route::get('/check-in-source', [PlayHouseController::class, 'checkInSource'])->name('v2.playhouse.checkin.source');
-    Route::get('/registration', function () { return view('v2.pages.playhouse-registration'); })->name('v2.playhouse.registration');
-});
-
+Route::get('/check-in-source', [PlayHouseController::class, 'checkInSource'])->name('playhouse.checkin.source');
+Route::get('/registration', [PlayHOuseController::class, 'registration'])->name('playhouse.registration');
 Route::get('/order-info/{order_no}', [PlayHouseController::class, 'orderInfo'])->name('order.info');
-Route::get('/checkout', function () { return view('v2.pages.playhouse-checkout'); })->name('playhouse.checkout');
+Route::get('/checkout', [PlayHouseController::class, 'checkoutPage'])->name('playhouse.checkout');
 
 
 //--------------TESTING

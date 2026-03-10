@@ -19,41 +19,68 @@
 
 @section('main-content')
     @include('components.backdrop')
-    <div class="container max-w-4xl mx-auto">
+    <div class="container max-w-full mx-auto">
         @include('ui.partials.header')
         <div class="opacity-100 z-10">
-            <div class="relative max-w-full mx-auto p-8 md:p-10 text-center bg-[#b2f2ea] rounded-2xl shadow-md border border-[#1abc9c] overflow-hidden">
+            <div class="relative max-w-full mx-auto sm:p-2 md:p-10 text-center">
                 <div class="absolute -top-6 left-1/4 text-4xl animate-float" style="animation-delay: 0s; color: #1abc9c">🎉</div>
                 <div class="absolute -bottom-4 right-1/3 text-3xl animate-float" style="animation-delay: 0.5s; color: #0d9984">✨</div>
-                <div class="absolute top-1/4 right-6 text-3xl animate-float" style="animation-delay: 1.2s; color: #1abc9c">🎈</div>
-                <div class="text-8xl mb-6 text-[#1abc9c] animate-bounce-slow">🎊</div>
-                <h3 class="text-[#0d9984] text-2xl md:text-3xl font-bold mb-3">
-                  Welcome!
-                </h3>
-                <p class="text-lg md:text-xl mb-4 text-gray-700">
-                  A fun and creative space where little imaginations grow big
-                </p>
-                <p class="text-lg text-[#0d9984] font-medium mb-8">
-                  Let your child explore, learn, play, and socialize while you relax and enjoy quality time
-                </p>
-                <div class="absolute top-0 left-0 w-16 h-16 border-l-4 border-t-4 border-[#1abc9c] rounded-bl-full"></div>
-                <div class="absolute top-0 right-0 w-16 h-16 border-r-4 border-t-4 border-[#0d9984] rounded-br-full"></div>
-                <div class="absolute bottom-0 left-0 w-16 h-16 border-l-4 border-b-4 border-[#0d9984] rounded-tl-full"></div>
-                <div class="absolute bottom-0 right-0 w-16 h-16 border-r-4 border-b-4 border-[#1abc9c] rounded-tr-full"></div>
+                <div class="absolute top-1/4 right-2 text-3xl animate-float" style="animation-delay: 1.2s; color: #1abc9c">🎈</div>
+                
+                <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div class="flex flex-col items-center sm:items-start px-2 sm:px-8 mt-12 sm:mt-2">
+                        <div class="flex items-start sm:mb-6">
+                            <h1 class="text-[#0d9984] text-4xl md:text-6xl font-extrabold mb-3">
+                                Welcome!
+                            </h1>
+                        </div>
+                        <div class="z-20 flex flex-col mb-6">
+                            <h1 class="text-2xl sm:text-5xl text-pretty max-w-xl sm:text-start mb-4 font-bold text-gray-700">
+                                A fun and creative space where 
+                                <span class="text-amber-600 text-xl sm:text-4xl">little imaginations</span> 
+                                grow <span class="text-[var(--color-primary-mid-dark)] font-extrabold">BIG</span>
+                            </h1>
+                        </div>
+                        
+                        <p class="text-base sm:text-xl sm:w-xl text-start text-[#0d9984] font-medium mb-8">
+                            Let your child explore, learn, play, and socialize while you relax and enjoy quality time
+                        </p>
+                        
+                        <div class="flex sm:flex-row sm:justify-evenly gap-8 flex-col">
+                            <!-- Start Now Button -->
+                            <button 
+                                onclick="window.location.href='{{route('playhouse.checkin.source')}}'"
+                                class="group relative px-12 py-5 bg-[#0d9984] text-white font-bold text-xl 
+                                        rounded-full shadow-lg overflow-hidden transition-all duration-300 
+                                        hover:shadow-xl hover:scale-105 active:scale-95">
+                                <span class="relative z-10 flex items-center justify-center gap-3">
+                                    Check in
+                                    <span class="transition-transform group-hover:translate-x-1 text-2xl">➔</span>
+                                </span>
+                            </button>
 
-                <div class="flex sm:flex-row sm:justify-evenly gap-3 flex-col">
-                    <button 
-                        onclick="window.location.href=`{{ route('playhouse.registration', ['type' => 'new']) }}`"
-                        class="group relative px-8 py-4 bg-[#0d9984] text-white font-bold text-lg 
-                                rounded-full shadow-md overflow-hidden transition-all duration-300 
-                                hover:shadow-lg hover:scale-105 active:scale-95">
-                        <span class="relative z-10 flex items-center justify-center gap-2">
-                            Start Registration
-                            <span class="transition-transform group-hover:translate-x-1">→</span>
-                        </span>
-                    </button>
+                            <button 
+                                onclick="window.location.href='{{route('playhouse.checkout')}}'"
+                                class="group relative px-12 py-5 bg-[#0d9984] text-white font-bold text-xl 
+                                        rounded-full shadow-lg overflow-hidden transition-all duration-300 
+                                        hover:shadow-xl hover:scale-105 active:scale-95">
+                                <span class="relative z-10 flex items-center justify-center gap-3">
+                                    Check out
+                                    <span class="transition-transform group-hover:translate-x-1 text-2xl">➔</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex items-center">
+                        <div class="text-8xl mb-6 text-[#1abc9c] animate-bounce-slow">🎊</div>
+                        <div class="w-md p-4 overflow-hidden">
+                            <img src="{{ asset('images/mimo-logo.png')}}" alt="" class="w-full h-full">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+

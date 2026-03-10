@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('phone_number_otp', function (Blueprint $table) {
-            $table->string('phone_number', 20)->nullable()->change();
+        Schema::table('ordhdr', function (Blueprint $table) {
+            if (!Schema::hasColumn('mkt_code', 'ordhdr')) {
+                $table->string('mkt_code', 10)->nullable()->after('parent');
+            }
         });
     }
 
@@ -21,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+        Schema::table('ordhdr', function (Blueprint $table) {
+            //
+        });
     }
 };

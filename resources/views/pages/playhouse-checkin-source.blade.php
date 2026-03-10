@@ -1,11 +1,11 @@
-@extends('v2.layout.app')
+@extends('layout.app')
 
 @section('title', 'Mimo Play Cafe')
 
 @section('main-content')
     @include('components.backdrop')
     <div class="container max-w-full mx-auto">
-        @include('v2.ui.partials.header')
+        @include('ui.partials.header')
 
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
             <div class="bg-gradient-to-r from-[var(--color-accent-secondary-light)] to-[var(--color-accent-secondary)] border backdrop-blur-xl border-gray-50 rounded-2xl shadow-md p-6 sm:p-8">
@@ -29,7 +29,7 @@
                     <button
                     hidden
                         type="button"
-                        onclick="window.location.href='{{ route('v2.playhouse.start') }}'"
+                        onclick="window.location.href='{{ route('playhouse.start') }}'"
                         class="px-5 py-2.5 rounded-lg shadow-md text-[var(--color-accent)] font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] transition-colors duration-200"
                     >
                         Back
@@ -37,7 +37,7 @@
                     <button
                         type="button"
                         id="continueCheckin"
-                        data-registration-url="{{ route('v2.playhouse.registration') }}"
+                        data-registration-url="{{ route('playhouse.registration') }}"
                         class="px-5 py-2.5 rounded-lg bg-[#118b96] text-white font-semibold hover:bg-[#139eab] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >

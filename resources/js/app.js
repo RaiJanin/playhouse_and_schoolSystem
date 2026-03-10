@@ -351,14 +351,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let childrenTotalCost = 0;
             let parentBirthdayIsFilled = false;
 
-            const durationPriceMap = {
-                '1': 100,
-                '2': 200, 
-                '3': 300,
-                '4': 400,
-                'unlimited': 500
-            };
-
             document.querySelectorAll('.child-entry').forEach((child, i) => {
                 const nameEl = child.querySelector('input[name*="[name]"]');
                 const birthdayEl = child.querySelector('input[name*="[birthday]"]');
@@ -370,18 +362,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const duration = durationEl ? durationEl.value : '';
                 const socksBool = addedSocksEl ? (addedSocksEl.value === '1' ? 'Socks Added' : '') : '';
 
-                const durationMap = {
-                    '1': '1 hr = ₱100',
-                    '2': '2 hrs = ₱200', 
-                    '3': '3 hrs = ₱300',
-                    '4': '4 hrs = ₱400',
-                    'unlimited': 'Unlimited = ₱500'
-                };
-
-                const durationDefs = durationMap[duration] || duration;
+                const durationDefs = window.masterfile.durationMap[duration] || duration;
                 
-                if (durationPriceMap[duration]) {
-                    childrenTotalCost += durationPriceMap[duration];
+                if (window.masterfile.durationPriceMap[duration]) {
+                    childrenTotalCost += window.masterfile.durationPriceMap[duration];
                 }
 
                 childrenItems += `

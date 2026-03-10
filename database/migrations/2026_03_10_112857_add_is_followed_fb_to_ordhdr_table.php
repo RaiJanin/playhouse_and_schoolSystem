@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('phone_number_otp', function (Blueprint $table) {
-            $table->string('phone_number', 20)->nullable()->change();
+        Schema::table('ordhdr', function (Blueprint $table) {
+            if (!Schema::hasColumn('is_followed_fb', 'ordhdr')) {
+                $table->boolean('is_followed_fb')->default(false)->after('fb_pp_url');
+            }
         });
     }
 
@@ -21,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+        Schema::table('ordhdr', function (Blueprint $table) {
+            //
+        });
     }
 };

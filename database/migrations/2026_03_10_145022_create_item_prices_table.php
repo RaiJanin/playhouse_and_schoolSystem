@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('phone_number_otp', function (Blueprint $table) {
-            $table->string('phone_number', 20)->nullable()->change();
+        Schema::create('item_prices', function (Blueprint $table) {
+            $table->id();
+            $table->string('item');
+            $table->string('price');
         });
     }
 
@@ -21,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+        Schema::table('item_prices', function (Blueprint $table) {
+            //
+        });
     }
 };

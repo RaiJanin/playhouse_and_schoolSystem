@@ -5,32 +5,28 @@
     </p>
     
     <div class="mb-4 px-5 flex justify-center items-center">
-        <div class="flex flex-col items-center bg-white p-3 rounded-xl shadow-lg border-2 border-gray-200">
+        <div class="flex flex-col items-center bg-white/80 backdrop-blur p-3 rounded-xl shadow-lg border-2 border-gray-200">
             <div class="flex flex-col items-center">
                 <p class="text-gray-600 text-lg font-semibold">Order #</p>
                 <h2 id="order-number-text" class="text-2xl font-bold">-0000-</h2>
             </div>
-            {{-- <img 
-                src="{{asset('images/Qr.png')}}"
-                alt="QR Code" 
-                class="w-48 h-48 rounded-lg"
-            /> --}}
             <div id="qr-image" class="p-4">
                 <div class="flex flex-col items-center p-20">- - -</div>
             </div>
         </div>
     </div>
     
-    <div class="px-5">
+    {{-- <div class="px-5">
         <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
             <p class="text-sm text-green-800 font-medium">
                 Please save this QR code for future reference.
             </p>
         </div>
-    </div>
-    <div class="flex items-center justify-center mt-8 mb-2">
+    </div> --}}
+    <div class="flex flex-col items-center gap-3 mt-6 mb-2">
+        <a id="order-info-link" href="#" target="_blank" class="text-[var(--color-primary-mid-dark)] hover:text-[var(--color-primary-full-dark)] font-medium text-sm underline hidden">View Invoice</a>
         <div class="flex flex-col mt-2">
-            <button type="button" onclick="window.location.href=`{{ route('playhouse.start') }}`" class="bg-[#118b96] text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[#139eab] focus:ring-2 focus:ring-offset-2 ring-[#139eab] disabled:cursor-not-allowed disabled:bg-primary-200 disabled:shadow-none transition-all duration-300">Create Another Registration</button>
+            <button type="button" onclick="window.location.href=`{{ route('playhouse.checkin.source') }}`" class="bg-[var(--color-primary-mid-dark)] text-white px-6 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[var(--color-primary)] focus:ring-2 focus:ring-offset-2 ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:bg-primary-200 disabled:shadow-none transition-all duration-300">Create Another Registration</button>
         </div>
     </div>
 </div> 

@@ -10,6 +10,8 @@ use App\Models\M06Child;
 use App\Models\Orders;
 use App\Models\OrderItems;
 use App\Models\Market;
+use App\Models\DurationPrices;
+use App\Models\ItemsPrices;
 use App\Services\DecodeBase64File;
 use App\Http\Resources\M06Resource;
 use App\Services\SendSmsService;
@@ -22,9 +24,27 @@ use Carbon\Carbon;
 
 class PlayHouseController extends Controller
 {
-    public function landing()
+    public function registration()
     {
-        return view('pages.playhouse-landing');
+        $durations = DurationPrices::all();
+        $items = ItemsPrices::pluck('price', 'item');
+
+        return view('pages.playhouse-registration', compact('durations', 'items')); 
+    }
+
+    public function checkInSource()
+    {
+        $data = Market::getAllMarket();
+
+        return view('pages.playhouse-checkin-source', compact('data'));
+    }
+
+    public function checkoutPage()
+    {
+        $durations = DurationPrices::all();
+        $items = ItemsPrices::pluck('price', 'item');
+
+        return view('pages.playhouse-checkout', compact('durations', 'items')); 
     }
 
     public function store(StorePlayhouseFormRequest $request)
@@ -58,8 +78,8 @@ class PlayHouseController extends Controller
             ]);
 
             $totalPrice = 0;
-            $pricePerDuration = 100;
-            $socksPrice = 100;
+            $durationPrices = DurationPrices::pluck('price', 'duration_hour');
+            $socksPrice = ItemsPrices::where('item', 'socks_price')->first();
 
             if($request->has('child'))
             {
@@ -98,9 +118,6 @@ class PlayHouseController extends Controller
                             [
                                 'd_code' => $parent->d_code,
                                 'd_code_c' => $childM->d_code_c,
-                                'firstname' => $child['guardianName'],
-                                'lastname' => $child['guardianLastName'],
-                                'mobileno' => $child['guardianPhone'],
                             ],
                             [
                                 'd_code' => $parent->d_code,
@@ -120,7 +137,7 @@ class PlayHouseController extends Controller
                     }
 
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
-                    $childprice = ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice);
+                    $childprice = ($durationPrices[$duration] ?? 0) + ($child['addSocks'] * $socksPrice->price);
                     $totalPrice += $childprice;
                 }
             }
@@ -128,7 +145,8 @@ class PlayHouseController extends Controller
             $fbProfileUrl = $data['fb_pp_url'] ?? null;
 
             $order = Orders::create([
-                'guardian' => $parent->d_name,
+                'parent' => $parent->d_name,
+                'mkt_code' => $data['mkt_code'],
                 'd_code' => $parent->d_code,
                 'total_amnt' => $totalPrice,
                 'fb_pp_url' => $fbProfileUrl
@@ -143,14 +161,17 @@ class PlayHouseController extends Controller
 
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
 
+                    $grdFullName = trim(($child['guardianName'] ?? '') . ' ' . ($child['guardianLastName'] ?? ''));
+
                     OrderItems::create([
                         'ord_code_ph' => $order->ord_code_ph,
                         'd_code_child' => $childModel->d_code_c,
+                        'guardian' => $grdFullName ?: null,
                         'durationhours' => $duration,
-                        'durationsubtotal' => $duration * $pricePerDuration,
+                        'durationsubtotal' => $durationPrices[$duration] ?? 0,
                         'socksqty' => $child['addSocks'],
-                        'socksprice' => $child['addSocks'] * $socksPrice,
-                        'subtotal' => ($duration * $pricePerDuration) + ($child['addSocks'] * $socksPrice),
+                        'socksprice' => $child['addSocks'] * $socksPrice->price,
+                        'subtotal' => ($durationPrices[$duration] ?? 0) + ($child['addSocks'] * $socksPrice->price),
                         'disc_code' => $data['discountCode']
                     ]);
                 }
@@ -335,13 +356,6 @@ class PlayHouseController extends Controller
         ]);
     }
 
-    public function checkInSource()
-    {
-        $data = Market::getAllMarket();
-
-        return view('v2.pages.playhouse-checkin-source', compact('data'));
-    }
-
     public function orderInfo($orderNo)
     {
         $order = Orders::with(['parentPl', 'orderItems'])->where('ord_code_ph', $orderNo)->first();
@@ -350,7 +364,7 @@ class PlayHouseController extends Controller
             $item->child = M06Child::find($item->d_code_child);
         });
 
-        return view('v2.pages.order-info', compact('order'));
+        return view('pages.order-info', compact('order'));
     }
 
     public function getOrders(Request $request)
@@ -358,12 +372,16 @@ class PlayHouseController extends Controller
         $phoneNum = $request->query('ph_num') ?? null;
         $guardian = $request->query('grdian_name') ?? null;
         $orderCode = $request->query('ord_code') ?? null;
+        
+        $query = Orders::query();
+        $d_code_query = null;
 
         if($phoneNum)
         {
             $getRecordUsingMobile = M06::where('mobileno', $phoneNum)->first();
 
-            if (!$getRecordUsingMobile) {
+            if (!$getRecordUsingMobile) 
+            {
                 return response()->json([
                     'orders' => [],
                     'message' => 'Phone number not found in our records.',
@@ -371,82 +389,52 @@ class PlayHouseController extends Controller
                 ]);
             }
 
-            $orderToCheckout = Orders::where('d_code', $getRecordUsingMobile->d_code)
-                    ->whereHas('orderItems', function($query) {
-                        $query->where('checked_out', false);
-                    })
-                    ->with(['orderItems' => function($item) {
-                        $item->with('child')->where('checked_out', false);
-                    }])
-                    ->get();
-
-            return response()->json([
-                'orders' => $orderToCheckout
-            ]);
+            $d_code_query = $getRecordUsingMobile->d_code;
         }
-        
+
         if($guardian)
         {
             $isParent = M06::where('d_name', $guardian)->where('isparent', true)->first();
             $getparent = $isParent;
 
-            if (!$isParent) 
+            if(!$isParent)
             {
-                $getRecordUsingGuardian = M06::where('d_name', $guardian)->where('isguardian', true)->get();
-                
-                if ($getRecordUsingGuardian->isEmpty()) {
-                    return response()->json([
-                        'orders' => [],
-                        'message' => 'Guardian/Parent name not found in our records.',
-                        'not_found' => true
-                    ]);
-                }
-                
-                $updatedByValues = $getRecordUsingGuardian->pluck('updatedby')->unique();
-                $getparent = M06::whereIn('updatedby', $updatedByValues)
-                    ->where('isparent', true)
-                    ->first();
-                    
+                $query->where('guardian', $guardian);
             }
-            
-            $orderToCheckout = Orders::where('d_code', $getparent->d_code)
-                    ->whereHas('orderItems', function($query) {
-                        $query->where('checked_out', false);
-                    })
-                    ->with(['orderItems' => function($item) {
-                        $item->with('child')->where('checked_out', false);
-                    }])
-                    ->get();
+            else
+            {
+                $d_code_query = $getparent->d_code;
+            }
 
-            return response()->json([
-                'orders' => $orderToCheckout
-                
-            ]);
         }
-        
+
         if($orderCode)
         {
-            $orderToCheckout = Orders::where('ord_code_ph', $orderCode)
-                    ->whereHas('orderItems', function($query) {
-                        $query->where('checked_out', false);
-                    })
-                    ->with(['orderItems' => function($item) {
-                        $item->with('child')->where('checked_out', false);
-                    }])
-                    ->get();
-
-            return response()->json([
-                'orders' => $orderToCheckout
-                
-            ]);
+            $query->where('ord_code_ph', $orderCode);
         }
-        
+
+        if($d_code_query)
+        {
+            $query->where('d_code', $d_code_query);
+        }
+
+        $orderToCheckout = $query->whereHas('orderItems', function($qu) {
+                $qu->where('checked_out', false);
+            })->with(['orderItems' => function($item) {
+                $item->with('child')->where('checked_out', false);
+            }])->get();
+
+        return response()->json([
+            'orders' => $orderToCheckout
+        ]);
     }
 
     public function checkOut($orderItemId)
     {
         try {
             DB::beginTransaction();
+
+            $items = ItemsPrices::pluck('price', 'item');
 
             $orderItem = OrderItems::with('order')
                 ->where('id', $orderItemId)
@@ -477,8 +465,8 @@ class PlayHouseController extends Controller
 
             if ($actualMinutes > $paidMinutes) {
                 $extraMinutes = $actualMinutes - $paidMinutes;
-                $chargeUnits = ceil($extraMinutes / 2);
-                $extraCharge = $chargeUnits * 20;
+                $chargeUnits = ceil($extraMinutes / $items['minutes_per_charge']);
+                $extraCharge = $items['charge_of_minutes'] * $chargeUnits;
 
                 $orderItem->lne_xtra_chrg = $extraCharge;
             }
@@ -488,8 +476,10 @@ class PlayHouseController extends Controller
 
             // update parent order totals
             $order = $orderItem->order;
+            $currentTotal = $order->total_amnt;
+
             $order->xtra_chrg_amnt += $extraCharge;
-            $order->total_amnt += $extraCharge;
+            $order->total_amnt = $orderItem->lne_xtra_chrg + $currentTotal;
             $order->save();
 
             DB::commit();
@@ -498,6 +488,7 @@ class PlayHouseController extends Controller
                 'checked_out' => true,
                 'message' => 'Child checked out successfully',
                 'extraCharge' => $extraCharge,
+                'holdingTotal' => $currentTotal,
                 'orderItem' => $orderItem->load('child'),
             ]);
 
