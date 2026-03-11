@@ -5,6 +5,7 @@ import {
     getOrDelete,
     submitData
 } from "../services/requestApi.js";
+import { dateToString } from '../utilities/dateString.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.getElementById('checkout-search-form');
@@ -225,6 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span>Socks</span>
                             <span>₱${Number(item?.socksprice).toFixed(2) || ''}</span>
                         </div>
+                        <div class="flex justify-between">
+                            <span>Check-in Time</span>
+                            <span>${dateToString('timeOnly12', item?.created_at)}</span>
+                        </div>
                     </div>
                     <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-medium text-gray-800">
                         <span>Subtotal</span>
@@ -323,13 +328,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const paidMinutes = item.durationhours * 60;
 
         // actual minutes stayed
-        const actualMinutes = Math.ceil((now - checkIn) / 60000);
+        let actualMinutes = Math.ceil((now - checkIn) / 60000);
+
+        const maxMinutes = 5 * 60;
+        if(actualMinutes > maxMinutes) {
+            actualMinutes = maxMinutes;
+        }
 
         let extraMinutes = 0;
         let chargeUnits = 0;
         let extraCharge = 0;
 
-        if (actualMinutes > paidMinutes) {
+        if ((actualMinutes > paidMinutes) && (item.durationhours !== 5)) {
             extraMinutes = actualMinutes - paidMinutes;
             chargeUnits = Math.ceil(extraMinutes / window.masterfile.minutesPerCharge);
             extraCharge = chargeUnits * window.masterfile.chargeOfMinutes;

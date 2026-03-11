@@ -430,7 +430,8 @@ class PlayHouseController extends Controller
 
     public function checkOut($orderItemId)
     {
-        try {
+        try 
+        {
             DB::beginTransaction();
 
             $items = ItemsPrices::pluck('price', 'item');
@@ -439,14 +440,16 @@ class PlayHouseController extends Controller
                 ->where('id', $orderItemId)
                 ->first();
 
-            if (!$orderItem) {
+            if (!$orderItem) 
+            {
                 return response()->json([
                     'checked_out' => false,
                     'message' => 'Order item not found'
                 ]);
             }
 
-            if ($orderItem->checked_out) {
+            if ($orderItem->checked_out) 
+            {
                 return response()->json([
                     'checked_out' => false,
                     'message' => 'This child is already checked out'
@@ -460,9 +463,16 @@ class PlayHouseController extends Controller
             $paidMinutes = $orderItem->durationhours * 60;
             $actualMinutes = $checkIn->diffInMinutes($checkOut);
 
+            $maxMinutes = 5 * 60;
+            if($actualMinutes > $maxMinutes)
+            {
+                $actualMinutes = $maxMinutes;
+            }
+
             $extraCharge = 0;
 
-            if ($actualMinutes > $paidMinutes) {
+            if (($actualMinutes > $paidMinutes) && ($orderItem->durationhours !== 5)) 
+            {
                 $extraMinutes = $actualMinutes - $paidMinutes;
                 $chargeUnits = ceil($extraMinutes / $items['minutes_per_charge']);
                 $extraCharge = $items['charge_of_minutes'] * $chargeUnits;
