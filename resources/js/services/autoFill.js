@@ -1,3 +1,4 @@
+import '../config/global.js';
 import { dateToString } from '../utilities/dateString.js';
 import { showConsole } from '../config/debug.js';
 import { oldUser } from './olduserState.js';
@@ -295,7 +296,7 @@ export function autoFillChildren(data, parent) {
     });
 
     showConsole('log', 'Children auto-filled successfully');
-    removeFirstChild(data.length);
+    App.formControl.removeFirstChild(data.length);
 }
 
 export function selectedSocksExistChild() {

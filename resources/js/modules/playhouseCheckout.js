@@ -1,3 +1,4 @@
+import '../config/global.js';
 import { API_ROUTES } from "../config/api.js";
 import { showConsole } from "../config/debug.js";
 import { 
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
     });
 
-    window.handleCheckout = async function (orderNumber) {
+    App.utilites.handleCheckout = async function (orderNumber) {
         if (!confirm('Are you sure you want to check out this order?')) {
             return;
         }
@@ -212,24 +213,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="font-medium text-gray-800">
                         ${item.child.firstname} ${item.child.lastname}
                     </p>
+                    <p class="text-sm text-gray-800">
+                        <span class="font-medium">Guardian: </span>${!item.guardian ? item.child.updatedby : item.guardian}
+                    </p>
                     <div class="mt-2 space-y-1 text-sm text-gray-600">
                         <div class="flex justify-between">
                             <span>Play duration</span>
-                            <span>${item.durationhours} hr(s) — ₱${Number(item?.durationsubtotal).toFixed(2) }</span>
+                            <span>${item.durationhours === 5 ? 'Unlimited' : item.durationhours} hr(s) — ₱${Number(item?.durationsubtotal).toFixed(2) }</span>
                         </div>
-                        
                         <div class="flex justify-between">
                             <span>Socks</span>
                             <span>₱${Number(item?.socksprice).toFixed(2) || ''}</span>
                         </div>
-                        
                     </div>
                     <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-medium text-gray-800">
                         <span>Subtotal</span>
                         <span>₱${details.subtotal.toFixed(2)}</span>
                     </div>
-
-                    
                     <div class="mt-2 text-red-500">
                         <div class="flex justify-between">
                             <span>Extra Charge (Preview)</span>
@@ -242,8 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>Extra Charge = ${details.chargeUnits} × ₱${window.masterfile.chargeOfMinutes} = ₱${details.extraCharge.toFixed(2)}</p>
                         </div>
                     </div>
-                    
-
                     <div class="mt-1 pt-1 border-t border-gray-200 flex justify-between font-semibold">
                         <span>Total (Preview)</span>
                         <span>₱${details.totalWithExtra.toFixed(2)}</span>
@@ -263,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const orderItemId = e.currentTarget.dataset.checkOutId;
                 showConsole('log', 'Check out ID: ', orderItemId);
                 orderModal.classList.add('hidden');
-                handleCheckout(orderItemId);
+                App.utilites.handleCheckout(orderItemId);
             });
         });
     }

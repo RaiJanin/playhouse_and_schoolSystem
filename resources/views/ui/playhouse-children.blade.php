@@ -157,12 +157,7 @@
                         <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                         <div class="relative">
                             <select id="duration-first-child" name="child[0][playDuration]" class="child-duration bg-cyan-100 w-full px-4 py-2 border-2 border-[#139eab] shadow rounded-lg font-semibold focus:outline-none focus:border-[#139eab] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
-                                
-                                {{-- <option value="1">1 Hour = &#8369;100</option>
-                                <option value="2">2 Hours = &#8369;200</option>
-                                <option value="3">3 Hours = &#8369;300</option>
-                                <option value="4">4 Hours = &#8369;400</option>
-                                <option value="unlimited">Unlimited = &#8369;500</option> --}}
+                                {{-- Selection for first child already loaded @ views/pages/playhouse-registration.blade --}}
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[#139eab]">
                                 <i class="fa-solid fa-chevron-down text-sm"></i>

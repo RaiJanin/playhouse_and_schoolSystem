@@ -2,6 +2,7 @@ import './bootstrap';
 
 import { API_ROUTES } from './config/api.js';
 import { showConsole } from './config/debug.js';
+import './config/global.js';
 
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
@@ -44,13 +45,6 @@ import {
 
 document.addEventListener('DOMContentLoaded', function () {
 //-------variables-----------------------------------------------------------------
-        window.showSteps = showSteps;
-        window.getCurrentStep = () => currentStep;
-        window.getSteps = () => steps;
-        window.populateSummary = populateSummary;
-        window.openEditModal = openEditModal;
-
-    
         const form = document.getElementById('playhouse-registration-form');
         const steps = document.querySelectorAll('.step');
         const prevBtn = document.getElementById('prev-btn');
@@ -76,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const emailInputEl = document.getElementById('gmail');
 
         let currentStep = 0;
-        let replyFromBackend = '';
+        App.dynamicState.getCurrentStep = () => currentStep;
 
 //----Simple scripts--------------------------------------------------------------
 
@@ -84,15 +78,13 @@ document.addEventListener('DOMContentLoaded', function () {
             nextBtn.disabled = true;
         }
         
-        // Initialize submit button as disabled
         if (submitBtn) {
             submitBtn.disabled = true;
         }
 
-        window.updateNextBtnState = function() {
-            const current = getCurrentStepName();
+        App.dynamicState.updateNextBtnState = function() {
+            const current = App.dynamicState.getCurrentStepName();
             
-            // Handle next button (I Agree)
             if (current !== 'phone') {
                 if (nextBtn) nextBtn.disabled = false;
             } else {
@@ -102,9 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             
-            // Handle submit button - enable when on final step and form is valid
             if (currentStep === steps.length - 1) {
-                // Check if form is valid before enabling submit
                 const formValid = form ? form.checkValidity() : false;
                 if (submitBtn) submitBtn.disabled = !formValid;
             } else {
@@ -114,14 +104,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (phoneInputEl) {
             phoneInputEl.addEventListener('input', () => {
-                // Remove + and - signs from phone input (keep only 63, not +63)
                 const currentValue = phoneInputEl.value;
                 const cleanedValue = currentValue.replace(/[+\-]/g, '');
                 if (currentValue !== cleanedValue) {
                     phoneInputEl.value = cleanedValue;
                 }
                 
-                if (window.updateNextBtnState) window.updateNextBtnState();
+                App.dynamicState.updateNextBtnState();
             });
         }
 
@@ -159,9 +148,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             requestBirthdayDropdownValidation(currentForm);
 
-            if (getCurrentStepName() === 'phone') {
+            if (App.dynamicState.getCurrentStepName() === 'phone') {
                 showConsole('log', 'Phone input detected, validating...');
-                if (!validatePhone(phoneInputEl)) {
+                if (!App.validations.validatePhone(phoneInputEl)) {
                     showConsole('log', 'Phone validation failed');
                     phoneInputEl.classList.remove('border-teal-500');
                     phoneInputEl.classList.add('border-red-500');
@@ -170,11 +159,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     showConsole('log', 'Phone validation passed, calling generateOtp');
                     phoneInputEl.classList.remove('border-red-500');
                     nextBtn.classList.remove('hidden');
-                    generateOtp(phoneInputEl.value, emailInputEl.value);
+                    App.utilites.generateOtp(phoneInputEl.value, emailInputEl.value);
                 }
             }
 
-            if(getCurrentStepName() === 'otp') {
+            if(App.dynamicState.getCurrentStepName() === 'otp') {
                 if(!correctCode) {
                     valid = false;
                 }
@@ -189,13 +178,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            if(getCurrentStepName() === 'parent') {
+            if(App.dynamicState.getCurrentStepName() === 'parent') {
                 parentsValid = validateDateInputs(currentForm);
                 if(!parentsValid || !generalValid) valid = false;
                 prevBtn.disabled = false;
             }
 
-            if(getCurrentStepName() === 'children') {
+            if(App.dynamicState.getCurrentStepName() === 'children') {
                 childrenValid = validateDateInputs(currentForm);
                 if(!childrenValid || !generalValid) valid = false;
 
@@ -207,17 +196,17 @@ document.addEventListener('DOMContentLoaded', function () {
             if(!valid)return;
             
             if(currentStep < steps.length - 1) {
-                showSteps(currentStep + 1,'next');
-                if (currentStep + 1 === steps.length -1) populateSummary();
+                App.formControl.showSteps(currentStep + 1,'next');
+                if (currentStep + 1 === steps.length -1) App.component.populateSummary();
             }
         });
     
         prevBtn.addEventListener('click', () => {
-            if(getCurrentStepName() === 'children') {
+            if(App.dynamicState.getCurrentStepName() === 'children') {
                 disableBirthdayonSubmit(false);
                 prevBtn.disabled = true;
             }
-            showSteps(currentStep - 1,'prev');
+            App.formControl.showSteps(currentStep - 1,'prev');
         });
         
         
@@ -236,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
             showConsole('log', 'Before submit: ', jsonData);
 
-            replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
+            const replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
             showConsole('log', "Reply from Backend", replyFromBackend);
 
             if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
@@ -259,12 +248,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //--------Functions section-------------------------------------------------------------
 
-        function getCurrentStepName() {
+        App.dynamicState.getCurrentStepName = function() {
             return steps[currentStep].dataset.step;
         }
-        window.getCurrentStepName = getCurrentStepName;
 
-        function showSteps(step, direction = 'next', override = null) {
+        App.formControl.showSteps = function(step, direction = 'next', override = null) {
             const currentStepEl = steps[currentStep];
             let nextStepIndex = currentStep;
             let nextStepEl = steps[0];
@@ -332,12 +320,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 nextBtn.classList.toggle('hidden', currentStep === steps.length - 1 || currentStep === 1);
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
                 
-                if (window.updateNextBtnState) window.updateNextBtnState();
+                App.dynamicState.updateNextBtnState();
             }, 300);
 
         }
 
-        function populateSummary() {
+        App.component.populateSummary = function() {
             const summary = document.getElementById('summaryContainer');
             const data = new FormData(document.getElementById('playhouse-registration-form'));
             let parentEmail = data.get('parentEmail') ? `(${data.get('parentEmail')})` : '';
@@ -378,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
             });
 
-            const socksTotalCost = countSelectedSocks();
+            const socksTotalCost = App.dynamicState.countSelectedSocks();
             const overallTotal = childrenTotalCost + socksTotalCost;
 
             if(addguardianCheckBx.isChecked()) {
@@ -601,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     });
                     
-                    window.openEditModal(reviewData);
+                    openEditModal(reviewData);
                 });
             }
 

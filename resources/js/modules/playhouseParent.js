@@ -84,31 +84,6 @@ confirmGuardianCheckBx.setLabel(`
     This guardian is allowed to pick up my child
 `);
 
-function getAgeFromIsoDate(isoDate) {
-    if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return null;
-    const birthDate = new Date(`${isoDate}T00:00:00`);
-    if (Number.isNaN(birthDate.getTime())) return null;
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
-}
-
-function updateGuardianUnderageWarning() {
-    const guardianBirthdayContainer = document.getElementById('guardianBirthday');
-    const warningEl = document.getElementById('guardian-underage-warning');
-    if (!guardianBirthdayContainer || !warningEl) return;
-
-    const hiddenInput = guardianBirthdayContainer.querySelector('input[type="hidden"]');
-    const guardianBirthday = hiddenInput ? hiddenInput.value : '';
-    const age = getAgeFromIsoDate(guardianBirthday);
-    const shouldShow = confirmGuardianCheckBx.isChecked() && (age === null || age < 18);
-    warningEl.classList.toggle('hidden', !shouldShow);
-}
-
 confirmGuardianCheckBx.onChange(() => {
     if(confirmGuardianCheckBx.isChecked()) {
         document.getElementById('guardianAuthorized-1').value = '1';

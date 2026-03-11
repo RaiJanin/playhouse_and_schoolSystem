@@ -136,8 +136,7 @@ class PlayHouseController extends Controller
                         );
                     }
 
-                    $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
-                    $childprice = ($durationPrices[$duration] ?? 0) + ($child['addSocks'] * $socksPrice->price);
+                    $childprice = ($durationPrices[$child['playDuration']] ?? 0) + ($child['addSocks'] * $socksPrice->price);
                     $totalPrice += $childprice;
                 }
             }
@@ -168,10 +167,10 @@ class PlayHouseController extends Controller
                         'd_code_child' => $childModel->d_code_c,
                         'guardian' => $grdFullName ?: null,
                         'durationhours' => $duration,
-                        'durationsubtotal' => $durationPrices[$duration] ?? 0,
+                        'durationsubtotal' => $durationPrices[$child['playDuration']] ?? 0,
                         'socksqty' => $child['addSocks'],
                         'socksprice' => $child['addSocks'] * $socksPrice->price,
-                        'subtotal' => ($durationPrices[$duration] ?? 0) + ($child['addSocks'] * $socksPrice->price),
+                        'subtotal' => ($durationPrices[$child['playDuration']] ?? 0) + ($child['addSocks'] * $socksPrice->price),
                         'disc_code' => $data['discountCode']
                     ]);
                 }

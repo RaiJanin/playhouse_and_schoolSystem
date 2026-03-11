@@ -1,12 +1,14 @@
+import '../config/global.js'
 import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
 import { attachCameraCapture } from '../utilities/cameraCapture.js';
 import { selectedSocksExistChild } from '../services/autoFill.js';
 import { validateSelectedChild } from '../components/existingChild.js';
 import { CustomCheckbox } from '../components/customCheckbox.js';
+import { showConsole } from '../config/debug.js';
 
 export let addedChildEntries = 0;
 
-window.document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('childrenContainer');
     const addBtn = document.getElementById('addChildBtn');
 
@@ -158,61 +160,55 @@ window.document.addEventListener('DOMContentLoaded', function() {
             localUnderageWarning.classList.toggle('hidden', !shouldShow);
         };
 
-        if (localGuardianToggle && localGuardianForm && localGuardianIcon) {
-            let checked = false;
-            localGuardianToggle.addEventListener('click', () => {
-                checked = !checked;
-                localGuardianForm.classList.toggle('hidden', !checked);
-                localGuardianIcon.classList.toggle('fa-square', !checked);
-                localGuardianIcon.classList.toggle('fa-square-check', checked);
-                localGuardianIcon.classList.toggle('text-red-500', !checked);
-                localGuardianIcon.classList.toggle('text-green-500', checked);
-                if (!checked) {
-                    confirmed = false;
-                    if (localConfirmGuardianIcon) {
-                        localConfirmGuardianIcon.classList.remove('fa-solid', 'fa-square-check', 'text-green-500');
-                        localConfirmGuardianIcon.classList.add('fa-regular', 'fa-square', 'text-red-500');
-                    }
-                    updateLocalUnderageWarning();
-                }
-            });
-        }
-
-        if (localConfirmGuardianToggle && localConfirmGuardianIcon) {
-            localConfirmGuardianToggle.addEventListener('click', () => {
-                confirmed = !confirmed;
-                localConfirmGuardianIcon.classList.toggle('fa-regular', !confirmed);
-                localConfirmGuardianIcon.classList.toggle('fa-square', !confirmed);
-                localConfirmGuardianIcon.classList.toggle('text-red-500', !confirmed);
-                localConfirmGuardianIcon.classList.toggle('fa-solid', confirmed);
-                localConfirmGuardianIcon.classList.toggle('fa-square-check', confirmed);
-                localConfirmGuardianIcon.classList.toggle('text-green-500', confirmed);
-
-                const hiddenValueT = document.getElementById(`guardianAuthorized-${index}`);
-
-                if(confirmed) {
-                    hiddenValueT.value = '1';
-                } else {
-                    hiddenValueT.value = '0';
+        let checked = false;
+        localGuardianToggle.addEventListener('click', () => {
+            checked = !checked;
+            localGuardianForm.classList.toggle('hidden', !checked);
+            localGuardianIcon.classList.toggle('fa-square', !checked);
+            localGuardianIcon.classList.toggle('fa-square-check', checked);
+            localGuardianIcon.classList.toggle('text-red-500', !checked);
+            localGuardianIcon.classList.toggle('text-green-500', checked);
+            if (!checked) {
+                confirmed = false;
+                if (localConfirmGuardianIcon) {
+                    localConfirmGuardianIcon.classList.remove('fa-solid', 'fa-square-check', 'text-green-500');
+                    localConfirmGuardianIcon.classList.add('fa-regular', 'fa-square', 'text-red-500');
                 }
                 updateLocalUnderageWarning();
-            });
-        }
-        if (localGuardianBirthdayContainer) {
-            localGuardianBirthdayContainer.addEventListener('change', updateLocalUnderageWarning);
-        }
+            }
+        });
+        
+        localConfirmGuardianToggle.addEventListener('click', () => {
+            confirmed = !confirmed;
+            localConfirmGuardianIcon.classList.toggle('fa-regular', !confirmed);
+            localConfirmGuardianIcon.classList.toggle('fa-square', !confirmed);
+            localConfirmGuardianIcon.classList.toggle('text-red-500', !confirmed);
+            localConfirmGuardianIcon.classList.toggle('fa-solid', confirmed);
+            localConfirmGuardianIcon.classList.toggle('fa-square-check', confirmed);
+            localConfirmGuardianIcon.classList.toggle('text-green-500', confirmed);
 
+            const hiddenValueT = document.getElementById(`guardianAuthorized-${index}`);
+
+            if(confirmed) {
+                hiddenValueT.value = '1';
+            } else {
+                hiddenValueT.value = '0';
+            }
+            updateLocalUnderageWarning();
+        });
+        
+        localGuardianBirthdayContainer.addEventListener('change', updateLocalUnderageWarning);
+        
         addedChildEntries++;
         validateSelectedChild(true);
     }
 
-    function removeFirstChild(index) {
+    App.formControl.removeFirstChild = function(index) {
         childEntries = index;
         document.getElementById('first-child').remove();
     }
-    window.removeFirstChild = removeFirstChild;
 
-    function countSelectedSocks() {
+    App.dynamicState.countSelectedSocks = function() {
         const socksSelects = container.querySelectorAll('select[name$="[addSocks]"]');
 
         let count = 0;
@@ -222,7 +218,6 @@ window.document.addEventListener('DOMContentLoaded', function() {
 
         return (count + selectedSocksExistChild()) * window.masterfile.socksPrice;
     }
-    window.countSelectedSocks = countSelectedSocks;
 
     addBtn.addEventListener('click', () => {
         const newEntry = createChildEntry();
@@ -231,16 +226,16 @@ window.document.addEventListener('DOMContentLoaded', function() {
                 
         // Update button with child name when child name input is filled
         const childNameInput = newEntry.entry.querySelector('input[name^="child["]');
-        if (childNameInput) {
-            childNameInput.addEventListener('input', (e) => {
-                const childName = e.target.value.trim();
-                if (childName) {
-                    addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add`;
-                } else {
-                    addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add another child`;
-                }
-            });
-        }
+        
+        childNameInput.addEventListener('input', (e) => {
+            const childName = e.target.value.trim();
+            if (childName) {
+                addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add`;
+            } else {
+                addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add another child`;
+            }
+        });
+        
     });
 });
 

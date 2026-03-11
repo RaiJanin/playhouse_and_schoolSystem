@@ -1,3 +1,4 @@
+import '../config/global.js'
 import { API_ROUTES } from "../config/api.js";
 import { showConsole } from "../config/debug.js";
 
@@ -10,7 +11,7 @@ import {
 
 import { 
     getOrDelete, 
-    submitData 
+    submitData
 } from "../services/requestApi.js";
 import { editParentChkBx } from "./playhouseParent.js";
 import { enableEditInfo } from "../utilities/formControl.js";
@@ -20,12 +21,7 @@ const container = document.getElementById('otp-choices');
 const messageDiv = document.getElementById('otp-message');
 const otpLoading = document.getElementById('otpLoading');
 
-let correctCode = false;
-let storePhone = 0;
 let storeEmail = null;
-window.correctCode = correctCode;
-window.storePhone = storePhone;
-
 let otpAttempt = 0;
 
 function generateOtpChoices(correctOtp, otpId) {
@@ -64,7 +60,7 @@ function generateOtpChoices(correctOtp, otpId) {
                 btn.classList.add('border-gray-300', 'opacity-70');
             });
             
-            const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", storePhone);
+            const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", App.staticState.storePhone);
 
             if(sendOtpAttempt.isCorrectOtp) {
                 button.classList.remove('border-gray-300', 'opacity-70');
@@ -72,8 +68,8 @@ function generateOtpChoices(correctOtp, otpId) {
                 messageDiv.textContent = '✓ Correct!';
                 messageDiv.className = 'text-center text-green-600 font-medium';
                 
-                window.correctCode = true;
-                phoneReadOnly(true);
+                App.staticState.correctCode = true;
+                App.inputFieldControl.phoneReadOnly(true);
                 
                 if(sendOtpAttempt.isOldUser) {
                     oldUser.isOldUser = sendOtpAttempt.isOldUser;
@@ -93,18 +89,18 @@ function generateOtpChoices(correctOtp, otpId) {
                                 showConsole('log', 'Returnee data: ', returneeData);
                             }
                         
-                            if (window.showSteps) {
+                            if (App.formControl.showSteps) {
                                 
                                 // Check if returnee data is valid before auto-filling
                                 if (returneeData && returneeData.userLoaded && returneeData.oldUserData) {
                                     autoFillFields(returneeData);
                                     enableEditInfo();
                                 }
-                                window.showSteps(2, 'next');
+                                App.formControl.showSteps(2, 'next');
                                 
                                 await new Promise(resolve => setTimeout(resolve, 300));
                                 
-                                window.showSteps(3, 'next');
+                                App.formControl.showSteps(3, 'next');
                                 
                                 await new Promise(resolve => setTimeout(resolve, 300));
                                 
@@ -114,9 +110,9 @@ function generateOtpChoices(correctOtp, otpId) {
                                 }
                             }
                         } else {
-                            if (window.showSteps) {
-                                const currentStep = window.getCurrentStep ? window.getCurrentStep() : 0;
-                                window.showSteps(currentStep + 1, 'next');
+                            if (App.formControl.showSteps) {
+                                const currentStep = App.dynamicState.getCurrentStep ? App.dynamicState.getCurrentStep() : 0;
+                                App.formControl.showSteps(currentStep + 1, 'next');
                             }
                         }
                         
@@ -173,17 +169,17 @@ function shuffleArray(array) {
     return array;
 }
 
-async function generateOtp(phoneNumber, email = null) {
+App.utilites.generateOtp = async function (phoneNumber, email = null) {
     showConsole('log', 'generateOtp called with:', phoneNumber);
     showConsole('log', 'and email:', email);
-    showConsole('log', 'Current storePhone:', storePhone);
+    showConsole('log', 'Current storePhone:', App.staticState.storePhone);
     
-    if((storePhone !== 0 && storePhone === phoneNumber) && (email === storeEmail)) {
+    if((App.staticState.storePhone !== 0 && App.staticState.storePhone === phoneNumber) && (email === storeEmail)) {
         showConsole('log', 'Same phone number or email, skipping OTP generation');
         return;
     }
 
-    storePhone = phoneNumber;
+    App.staticState.storePhone = phoneNumber;
     storeEmail = email;
     otpAttempt = 0;
     
@@ -216,7 +212,6 @@ async function generateOtp(phoneNumber, email = null) {
         messageDiv.className = 'text-center text-red-600 font-medium';
     }
 }
-window.generateOtp = generateOtp;
 
 function readAttempts(otpId) {
     otpAttempt++;
