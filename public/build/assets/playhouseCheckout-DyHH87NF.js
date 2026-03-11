@@ -1,4 +1,4 @@
-import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEventListener("DOMContentLoaded",()=>{const E=document.getElementById("checkout-search-form"),c=document.getElementById("search-results"),b=document.getElementById("orders-list"),w=document.getElementById("no-results"),u=document.getElementById("loading"),f=document.getElementById("error-message"),y=document.getElementById("success-modal"),l=document.getElementById("modal-container");l.querySelector(".modal-footer").classList.add("hidden");let p=null,g=null,h=null;E.addEventListener("submit",function(a){if(a.preventDefault(),c.classList.add("hidden"),w.classList.add("hidden"),f.classList.add("hidden"),b.innerHTML="",p=document.getElementById("search-phone").value.trim(),g=document.getElementById("search-guardian").value.trim(),h=document.getElementById("search-order").value.trim(),!p&&!g&&!h){x("Please enter either a phone number, order number or guardian/parent name.");return}$(p,g,h)}),window.handleCheckout=async function(a){if(confirm("Are you sure you want to check out this order?")){u.classList.remove("hidden"),c.classList.add("hidden");try{const e=await O(L.checkOutURL,null,"PATCH",a);if(m("log","Child checked out: ",e),u.classList.add("hidden"),e.checked_out){const t=e.orderItem,n=Number(t.durationsubtotal)+Number(t.socksprice),r=Number(t.lne_xtra_chrg||0),s=n+r;let d="";const o=Math.max(0,(new Date(t.updated_at)-new Date(t.created_at))/6e4-t.durationhours*60),i=Math.ceil(o/window.masterfile.minutesPerCharge);d+=`
+import{a as O,A as L,s as p,g as I,d as _}from"./requestApi-BQivj6Nk.js";document.addEventListener("DOMContentLoaded",()=>{const k=document.getElementById("checkout-search-form"),u=document.getElementById("search-results"),f=document.getElementById("orders-list"),$=document.getElementById("no-results"),m=document.getElementById("loading"),y=document.getElementById("error-message"),v=document.getElementById("success-modal"),c=document.getElementById("modal-container");c.querySelector(".modal-footer").classList.add("hidden");let g=null,h=null,x=null;k.addEventListener("submit",function(r){if(r.preventDefault(),u.classList.add("hidden"),$.classList.add("hidden"),y.classList.add("hidden"),f.innerHTML="",g=document.getElementById("search-phone").value.trim(),h=document.getElementById("search-guardian").value.trim(),x=document.getElementById("search-order").value.trim(),!g&&!h&&!x){b("Please enter either a phone number, order number or guardian/parent name.");return}w(g,h,x)}),App.utilites.handleCheckout=async function(r){if(confirm("Are you sure you want to check out this order?")){m.classList.remove("hidden"),u.classList.add("hidden");try{const e=await O(L.checkOutURL,null,"PATCH",r);if(p("log","Child checked out: ",e),m.classList.add("hidden"),e.checked_out){const t=e.orderItem,n=Number(t.durationsubtotal)+Number(t.socksprice),s=Number(t.lne_xtra_chrg||0),a=n+s;let d="";const o=Math.max(0,(new Date(t.updated_at)-new Date(t.created_at))/6e4-t.durationhours*60),i=Math.ceil(o/window.masterfile.minutesPerCharge);d+=`
                     <div class="mb-5 rounded-xl border border-gray-200 bg-white shadow-sm p-4">
                         <div class="flex items-center justify-between mb-2">
                             <p class="font-semibold text-gray-800">
@@ -22,7 +22,7 @@ import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEv
                                 ₱${n.toFixed(2)}
                             </span>
                         </div>
-                        ${r>0?`
+                        ${s>0?`
                             <div class="mt-3 rounded-lg bg-red-50 border border-red-200 p-3 text-sm">
                                 <p class="font-semibold text-red-600 mb-1">⚠ Extra Charges</p>
                                 <div class="grid grid-cols-2 gap-y-1 text-red-600">
@@ -36,7 +36,7 @@ import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEv
                                     </span>
                                     <span class="font-semibold">Extra Total</span>
                                     <span class="text-right font-semibold">
-                                        ₱${r.toFixed(2)}
+                                        ₱${s.toFixed(2)}
                                     </span>
                                 </div>
                             </div>
@@ -44,11 +44,11 @@ import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEv
                         <div class="mt-3 flex justify-between border-t pt-2">
                             <span class="font-semibold text-gray-800">Total</span>
                             <span class="font-bold text-lg text-teal-600">
-                                ₱${s.toFixed(2)}
+                                ₱${a.toFixed(2)}
                             </span>
                         </div>
                     </div>
-                    `;const v=`
+                    `;const l=`
                     <div class="space-y-4">
                         <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
                             <p class="text-sm text-gray-500">Order Number</p>
@@ -73,55 +73,56 @@ import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEv
                             </div>
                         </div>
                     </div>
-                    `;document.getElementById("checkout-details").innerHTML=v,y.classList.remove("hidden")}else x(e.message||"Checkout failed. Please try again."),c.classList.remove("hidden")}catch(e){u.classList.add("hidden"),x("Error during checkout: "+e.message),console.error(e),m("error","Error during checkout: ",e.message),c.classList.remove("hidden")}}},l.querySelector(".close-modal").addEventListener("click",()=>{l.classList.add("hidden")}),y.querySelector(".close-success-modal").addEventListener("click",a=>{a.preventDefault(),y.classList.add("hidden"),b.innerHTML="",$(p,g,h)});async function $(a="",e="",t=""){u.classList.remove("hidden");const n=await I("GET",`${L.getOrdersURL}?ph_num=${a}&grdian_name=${e}&ord_code=${t}`);if(m("log","Orders: ",n),u.classList.add("hidden"),n.not_found){x(n.message);return}n.orders&&n.orders.length>=1?C(n.orders):w.classList.remove("hidden")}function k(a){const e=JSON.parse(a.dataset.items),t=a.dataset.orderNum,n=document.getElementById("items-subcat-container");n.innerHTML="",m("log","Order Items: ",e),l.classList.remove("hidden"),l.querySelector(".modal-title").textContent=t,n.innerHTML=e.map(r=>{const s=M(r);return`
+                    `;document.getElementById("checkout-details").innerHTML=l,v.classList.remove("hidden")}else b(e.message||"Checkout failed. Please try again."),u.classList.remove("hidden")}catch(e){m.classList.add("hidden"),b("Error during checkout: "+e.message),console.error(e),p("error","Error during checkout: ",e.message),u.classList.remove("hidden")}}},c.querySelector(".close-modal").addEventListener("click",()=>{c.classList.add("hidden")}),v.querySelector(".close-success-modal").addEventListener("click",r=>{r.preventDefault(),v.classList.add("hidden"),f.innerHTML="",w(g,h,x)});async function w(r="",e="",t=""){m.classList.remove("hidden");const n=await I("GET",`${L.getOrdersURL}?ph_num=${r}&grdian_name=${e}&ord_code=${t}`);if(p("log","Orders: ",n),m.classList.add("hidden"),n.not_found){b(n.message);return}n.orders&&n.orders.length>=1?C(n.orders):$.classList.remove("hidden")}function E(r){const e=JSON.parse(r.dataset.items),t=r.dataset.orderNum,n=document.getElementById("items-subcat-container");n.innerHTML="",p("log","Order Items: ",e),c.classList.remove("hidden"),c.querySelector(".modal-title").textContent=t,n.innerHTML=e.map(s=>{const a=M(s);return`
                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-300 mb-3">
                     <p class="font-medium text-gray-800">
-                        ${r.child.firstname} ${r.child.lastname}
+                        ${s.child.firstname} ${s.child.lastname}
+                    </p>
+                    <p class="text-sm text-gray-800">
+                        <span class="font-medium">Guardian: </span>${s.guardian?s.guardian:s.child.updatedby}
                     </p>
                     <div class="mt-2 space-y-1 text-sm text-gray-600">
                         <div class="flex justify-between">
                             <span>Play duration</span>
-                            <span>${r.durationhours} hr(s) — ₱${Number(r?.durationsubtotal).toFixed(2)}</span>
+                            <span>${s.durationhours===5?"Unlimited":s.durationhours} hr(s) — ₱${Number(s?.durationsubtotal).toFixed(2)}</span>
                         </div>
-                        
                         <div class="flex justify-between">
                             <span>Socks</span>
-                            <span>₱${Number(r?.socksprice).toFixed(2)||""}</span>
+                            <span>₱${Number(s?.socksprice).toFixed(2)||""}</span>
                         </div>
-                        
+                        <div class="flex justify-between">
+                            <span>Check-in Time</span>
+                            <span>${_("timeOnly12",s?.created_at)}</span>
+                        </div>
                     </div>
                     <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-medium text-gray-800">
                         <span>Subtotal</span>
-                        <span>₱${s.subtotal.toFixed(2)}</span>
+                        <span>₱${a.subtotal.toFixed(2)}</span>
                     </div>
-
-                    
                     <div class="mt-2 text-red-500">
                         <div class="flex justify-between">
                             <span>Extra Charge (Preview)</span>
-                            <span>₱${s.extraCharge.toFixed(2)}</span>
+                            <span>₱${a.extraCharge.toFixed(2)}</span>
                         </div>
                         <div class="text-sm text-gray-600 mt-1">
-                            <p>Overtime: ${s.extraMinutes} minute(s) (actual ${s.actualMinutes} - paid ${s.paidMinutes})</p>
+                            <p>Overtime: ${a.extraMinutes} minute(s) (actual ${a.actualMinutes} - paid ${a.paidMinutes})</p>
                             <p>Rate: ₱${window.masterfile.chargeOfMinutes} per ${window.masterfile.minutesPerCharge} minutes</p>
-                            <p>Number of ${window.masterfile.minutesPerCharge}-minute blocks: ${s.chargeUnits}</p>
-                            <p>Extra Charge = ${s.chargeUnits} × ₱${window.masterfile.chargeOfMinutes} = ₱${s.extraCharge.toFixed(2)}</p>
+                            <p>Number of ${window.masterfile.minutesPerCharge}-minute blocks: ${a.chargeUnits}</p>
+                            <p>Extra Charge = ${a.chargeUnits} × ₱${window.masterfile.chargeOfMinutes} = ₱${a.extraCharge.toFixed(2)}</p>
                         </div>
                     </div>
-                    
-
                     <div class="mt-1 pt-1 border-t border-gray-200 flex justify-between font-semibold">
                         <span>Total (Preview)</span>
-                        <span>₱${s.totalWithExtra.toFixed(2)}</span>
+                        <span>₱${a.totalWithExtra.toFixed(2)}</span>
                     </div>
                     <button 
-                        data-check-out-id="${r.id}"
+                        data-check-out-id="${s.id}"
                         class="check-out-btn mt-3 w-full bg-gradient-to-t from-[var(--color-primary)] to-[var(--color-primary-light)] text-white font-bold py-2 px-4 rounded-lg hover:bg-[var(--color-primary-light)] transition-colors"
                     >
                         Check out
                     </button>
                 </div>
-            `}).join(""),n.querySelectorAll(".check-out-btn").forEach(r=>{r.addEventListener("click",s=>{const d=s.currentTarget.dataset.checkOutId;m("log","Check out ID: ",d),l.classList.add("hidden"),handleCheckout(d)})})}window.viewOrder=k;function C(a){c.classList.remove("hidden"),a.forEach(e=>{const t=document.createElement("div");t.className="bg-gray-50 border border-gray-50 rounded-lg shadow-md p-4";const n=e.order_items||[],r=n.length;let s="";n.forEach(d=>{const o=d.durationhours==5?"Unlimited":d.durationhours+" hours",i=d.socksqty>0?`, ${d.socksqty} pair(s) of socks`:"",v=`${d.child.firstname} ${d.child.lastname}`;s+=`<li class="text-gray-600"><span class="text-gray-800 font-medium">${v}</span> ${o}${i}</li>`}),t.innerHTML=`
+            `}).join(""),n.querySelectorAll(".check-out-btn").forEach(s=>{s.addEventListener("click",a=>{const d=a.currentTarget.dataset.checkOutId;p("log","Check out ID: ",d),c.classList.add("hidden"),App.utilites.handleCheckout(d)})})}window.viewOrder=E;function C(r){u.classList.remove("hidden"),r.forEach(e=>{const t=document.createElement("div");t.className="bg-gray-50 border border-gray-50 rounded-lg shadow-md p-4";const n=e.order_items||[],s=n.length;let a="";n.forEach(d=>{const o=d.durationhours==5?"Unlimited":d.durationhours+" hours",i=d.socksqty>0?`, ${d.socksqty} pair(s) of socks`:"",l=`${d.child.firstname} ${d.child.lastname}`;a+=`<li class="text-gray-600"><span class="text-gray-800 font-medium">${l}</span> ${o}${i}</li>`}),t.innerHTML=`
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <h4 class="font-bold text-gray-800">Order #${e.ord_code_ph}</h4>
@@ -129,12 +130,12 @@ import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEv
                         <p class="text-sm text-gray-600">Total: ₱${e.total_amnt}</p>
                     </div>
                     <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
-                        ${r} child(ren)
+                        ${s} child(ren)
                     </span>
                     
                 </div>
                 <ul class="mb-4 ml-4">
-                    ${s}
+                    ${a}
                 </ul>
                 <button 
                     data-items='${JSON.stringify(e.order_items)}'
@@ -144,4 +145,4 @@ import{a as O,A as L,s as m,g as I}from"./requestApi-CHIgbzXx.js";document.addEv
                 >
                     View Order
                 </button>
-            `,b.appendChild(t)})}function M(a){const e=Number(a?.durationsubtotal)+Number(a?.socksprice),t=new Date(a.created_at),n=new Date,r=a.durationhours*60,s=Math.ceil((n-t)/6e4);let d=0,o=0,i=0;return s>r&&(d=s-r,o=Math.ceil(d/window.masterfile.minutesPerCharge),i=o*window.masterfile.chargeOfMinutes),{subtotal:e,actualMinutes:s,paidMinutes:r,extraMinutes:d,chargeUnits:o,extraCharge:i,totalWithExtra:e+i}}function x(a){f.textContent=a,f.classList.remove("hidden")}});
+            `,f.appendChild(t)})}function M(r){const e=Number(r?.durationsubtotal)+Number(r?.socksprice),t=new Date(r.created_at),n=new Date,s=r.durationhours*60;let a=Math.ceil((n-t)/6e4);const d=300;a>d&&(a=d);let o=0,i=0,l=0;return a>s&&r.durationhours!==5&&(o=a-s,i=Math.ceil(o/window.masterfile.minutesPerCharge),l=i*window.masterfile.chargeOfMinutes),{subtotal:e,actualMinutes:a,paidMinutes:s,extraMinutes:o,chargeUnits:i,extraCharge:l,totalWithExtra:e+l}}function b(r){y.textContent=r,y.classList.remove("hidden")}});
