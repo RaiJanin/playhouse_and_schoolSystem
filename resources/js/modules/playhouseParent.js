@@ -1,8 +1,6 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
-import { API_ROUTES } from '../config/api.js';
 import { showConsole } from '../config/debug.js';
 import { oldUser } from '../services/olduserState.js';
-import { getOrDelete } from '../services/requestApi.js';
 import { 
     disableDateInputs, 
     enableReadonly 

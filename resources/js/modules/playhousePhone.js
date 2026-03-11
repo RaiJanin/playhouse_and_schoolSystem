@@ -3,21 +3,28 @@ import { CustomCheckbox } from '../components/customCheckbox.js';
 import { API_ROUTES } from '../config/api.js';
 import { showConsole } from '../config/debug.js';
 
+/**
+ * Validates a phone number input (Philippines format)
+ * @function validatePhone
+ * @memberof App.validations
+ * @param {HTMLInputElement} phoneInput - The phone input element to validate
+ * @returns {boolean} True if valid Philippine mobile number, false otherwise
+ */
 App.validations.validatePhone = function (phoneInput) {
     const value = phoneInput.value.trim();
-
-    // Remove +, spaces, and dashes for phone checking
     const cleanPhone = value.replace(/[+\s\-]/g, '');
-
-    // Philippine mobile formats:
-    // 09XXXXXXXXX
-    // 639XXXXXXXXX
-    // 9XXXXXXXXX
     const phMobilePattern = /^(?:63|0)?9\d{9}$/;
 
     return cleanPhone && phMobilePattern.test(cleanPhone);
 };
 
+/**
+ * Sets the readonly state of phone and email input fields
+ * @function phoneReadOnly
+ * @memberof App.inputFieldControl
+ * @param {boolean} [verifiedPhone=false] - If true, sets fields to readonly; if false, removes readonly
+ * @returns {void}
+ */
 App.inputFieldControl.phoneReadOnly = function (verifiedPhone = false) {
     const phoneInput = document.getElementById('phone');
     const emailInput = document.getElementById('gmail');

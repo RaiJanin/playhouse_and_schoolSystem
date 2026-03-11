@@ -4,6 +4,16 @@
 
 import { showConsole } from "../config/debug";
 
+/**
+ * Attaches a camera capture UI to a given container element.
+ * Allows users to take a photo via webcam or upload an image file.
+ * Includes preview, retake, and remove functionality, and stores the
+ * captured image as a Base64 string in a hidden input.
+ *
+ * @param {HTMLElement} container - The container element to attach the camera UI to.
+ *                                   Must be a valid HTMLElement.
+ * @returns {void} - Modifies the DOM by appending camera UI elements.
+ */
 export function attachCameraCapture(container) {
     if (!container || container.dataset.cameraAttached) return;
 
@@ -286,6 +296,13 @@ export function attachCameraCapture(container) {
     container.dataset.cameraAttached = '1';
 }
 
+/**
+ * Initializes camera capture UI for all elements within a given scope
+ * that have the `data-camera-input` attribute.
+ * 
+ * @param {Document|HTMLElement} scope - The container in which to search for camera inputs. Defaults to `document`.
+ * @returns {void} - Attaches camera capture functionality to matching elements.
+ */
 export function initCameraCaptures(scope = document) {
     const containers = scope.querySelectorAll('[data-camera-input]');
     containers.forEach(attachCameraCapture);

@@ -10,33 +10,18 @@ import './modules/playhouseOtp.js';
 import './modules/playhouseParent.js';
 
 import { addedChildEntries } from './modules/playhouseChildren.js';
+import { addguardianCheckBx } from './modules/playhouseParent.js';
 
 import { submitData } from './services/requestApi.js'
 import { oldUser } from './services/olduserState.js';
+import { parseBracketedFormData } from './services/parseFlatJson.js';
 
 import { dateToString } from './utilities/dateString.js';
-import { parseBracketedFormData } from './services/parseFlatJson.js';
-import { initCameraCaptures } from './utilities/cameraCapture.js';
+import { addEventListenersForLastForm } from './utilities/summaryFormHandlers.js';
+import { disableBirthdayonSubmit } from './utilities/formControl.js';
 
-import { CustomCheckbox } from './components/customCheckbox.js';
-import { openEditModal } from './components/reviewEdit.js';
+import { generateQR } from './components/qrCode.js';
 import { validateSelectedChild } from './components/existingChild.js';
-
-import {    
-    addguardianCheckBx, 
-    confirmGuardianCheckBx, 
-    parentFields,
-} from './modules/playhouseParent.js';
-
-import { 
-    autoFillFields,
-    autoFillChildren
-} from './services/autoFill.js';
-
-import { 
-    disableBirthdayonSubmit, 
-    enableEditInfo 
-} from './utilities/formControl.js';
 
 import { 
     requestBirthdayDropdownValidation,
@@ -82,6 +67,12 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.disabled = true;
         }
 
+        /**
+         * Updates the enabled/disabled state of next and submit buttons based on form validity
+         * @function updateNextBtnState
+         * @memberof App.dynamicState
+         * @returns {void}
+         */
         App.dynamicState.updateNextBtnState = function() {
             const current = App.dynamicState.getCurrentStepName();
             
@@ -228,7 +219,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
             showConsole('log', "Reply from Backend", replyFromBackend);
 
-            if(replyFromBackend.isFormSubmitted) generateQR(replyFromBackend.orderNum);
+            if(replyFromBackend.isFormSubmitted) {
+                form.classList.add('hidden');
+                stepTexts.forEach(text => {
+                    text.classList.remove('text-gray-700');
+                    text.classList.add('text-teal-500');
+                });
+                generateQR(replyFromBackend.orderNum);
+            }
 
         });
         
@@ -248,10 +246,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //--------Functions section-------------------------------------------------------------
 
+        /**
+         * Gets the name of the current step from the dataset
+         * @function getCurrentStepName
+         * @memberof App.dynamicState
+         * @returns {string} The current step name (e.g., 'phone', 'otp', 'parent', 'children')
+         */
         App.dynamicState.getCurrentStepName = function() {
             return steps[currentStep].dataset.step;
         }
 
+        /**
+         * Controls step navigation in the multi-step form with animations
+         * @function showSteps
+         * @memberof App.formControl
+         * @param {number} step - The target step index to navigate to
+         * @param {string} [direction='next'] - Direction of navigation: 'next' or 'prev'
+         * @param {number|null} [override=null] - Optional override for step increment (e.g., +2 or -2)
+         * @returns {void}
+         */
         App.formControl.showSteps = function(step, direction = 'next', override = null) {
             const currentStepEl = steps[currentStep];
             let nextStepIndex = currentStep;
@@ -325,6 +338,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
+        /**
+         * Populates the summary/review section with form data
+         * @function populateSummary
+         * @memberof App.component
+         * @returns {void}
+         */
         App.component.populateSummary = function() {
             const summary = document.getElementById('summaryContainer');
             const data = new FormData(document.getElementById('playhouse-registration-form'));
@@ -452,181 +471,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
             `;
 
-            const dscCodeInput = document.getElementById('discount-code-input');
-            const applyDscBtn = document.getElementById('apply-discount-btn');
-            let apply = false;
-
-            applyDscBtn.addEventListener('click', () => {
-                apply = !apply;
-
-                if(apply) {
-                    dscCodeInput.setAttribute('readonly', true);
-                    applyDscBtn.textContent = 'Edit';
-                } else {
-                    dscCodeInput.removeAttribute('readonly');
-                    applyDscBtn.textContent = 'Apply';
-                }
-            });
-
-            document.getElementById('ff-page-btn').addEventListener('click', () => {
-                const hiddenValueForFfFlag = document.getElementById('isFollowedFlag');
-
-                if(hiddenValueForFfFlag.value === '0') {
-                    document.getElementById('isFollowedFlag').value = '1';
-                }
-                window.open('https://www.facebook.com/mimoplaycafe', '_blank');
-            })
-
-            const fbUrlInput = document.getElementById('fb-pp-url-input');
-            if (fbUrlInput) {
-                let fbUrlSaveTimeout = null;
-
-                const normalizeFbUrl = (rawValue) => {
-                    const trimmedUrl = rawValue.trim();
-
-                    if (!trimmedUrl) {
-                        return '';
-                    }
-
-                    if (!/^https?:\/\//i.test(trimmedUrl)) {
-                        return `https://${trimmedUrl}`;
-                    }
-
-                    return trimmedUrl;
-                };
-
-                const isValidUrl = (urlValue) => {
-                    if (!urlValue) {
-                        return true;
-                    }
-
-                    try {
-                        new URL(urlValue);
-                        return true;
-                    } catch (error) {
-                        return false;
-                    }
-                };
-
-                const saveFbUrlToSession = async (rawValue) => {
-                    const normalizedUrl = normalizeFbUrl(rawValue);
-                    if (!isValidUrl(normalizedUrl)) {
-                        return;
-                    }
-
-                    try {
-                        await submitData(API_ROUTES.saveFbProfileURL, {
-                            fb_pp_url: normalizedUrl || null
-                        });
-                    } catch (error) {
-                        showConsole('error', 'FB URL autosave failed:', error);
-                    }
-                };
-
-                fbUrlInput.addEventListener('input', () => {
-                    if (fbUrlSaveTimeout) {
-                        clearTimeout(fbUrlSaveTimeout);
-                    }
-
-                    fbUrlSaveTimeout = setTimeout(() => {
-                        saveFbUrlToSession(fbUrlInput.value);
-                    }, 600);
-                });
-
-                fbUrlInput.addEventListener('blur', () => {
-                    if (fbUrlSaveTimeout) {
-                        clearTimeout(fbUrlSaveTimeout);
-                    }
-
-                    const normalizedUrl = normalizeFbUrl(fbUrlInput.value);
-                    fbUrlInput.value = normalizedUrl;
-                    saveFbUrlToSession(normalizedUrl);
-                });
-            }
-
-            if(data.get('parentBirthday')) parentBirthdayIsFilled = true;
-            
-            // Add event listener for edit button
-            const editBtn = document.getElementById('edit-review-btn');
-            if (editBtn) {
-                editBtn.addEventListener('click', () => {
-                    const reviewData = {
-                        parent: {
-                            first_name: data.get('parentName'),
-                            last_name: data.get('parentLastName'),
-                            email: data.get('parentEmail'),
-                            birthday: data.get('parentBirthday')
-                        },
-                        phone: data.get('phone'),
-                        // Include guardian data if checkbox is checked
-                        guardian: addguardianCheckBx.isChecked() ? {
-                            first_name: data.get('guardianName'),
-                            last_name: data.get('guardianLastName'),
-                            phone: data.get('guardianPhone'),
-                            // Pass guardian birthday into edit modal so it can be reviewed/edited.
-                            birthday: data.get('guardianBirthday')
-                        } : null,
-                        children: []
-                    };
-                    
-                    // Collect children data
-                    document.querySelectorAll('.child-entry').forEach((child) => {
-                        const nameEl = child.querySelector('input[name*="[name]"]');
-                        const birthdayEl = child.querySelector('input[name*="[birthday]"]');
-                        const durationEl = child.querySelector('select[name*="[playDuration]"]');
-                        const addedSocksEl = child.querySelector('select[name*="[addSocks]"]');
-                        const socksIcon = child.querySelector('[id*="add-socks-child-icon"]');
-
-                        // Check if socks are added - either from select value or from icon class (backwards compat)
-                        const hasSocks = (addedSocksEl && addedSocksEl.value === '1') || 
-                                         (socksIcon && socksIcon.classList.contains('fa-check-square'));
-                        
-                        reviewData.children.push({
-                            name: nameEl ? nameEl.value : '',
-                            birthday: birthdayEl ? birthdayEl.value : '',
-                            playtime_duration: durationEl ? durationEl.value : '',
-                            add_socks: hasSocks
-                        });
-                    });
-                    
-                    openEditModal(reviewData);
-                });
-            }
-
-            showConsole('log', 'Is Parent Birthdate filled? ', parentBirthdayIsFilled);
-
-            if(parentBirthdayIsFilled) {
-                disableBirthdayonSubmit(false);
-            } else {
-                disableBirthdayonSubmit();
-            }
-        }
-
-        function generateQR(orderNum) {
-            const qrContainer = document.getElementById('qr-container');
-            const orderNumText = document.getElementById('order-number-text');
-            const qrImage = document.getElementById('qr-image');
-
-            form.classList.add('hidden');
-            stepTexts.forEach(text => {
-                text.classList.remove('text-gray-700');
-                text.classList.add('text-teal-500');
-            });
-            
-            qrContainer.classList.remove('hidden');
-            orderNumText.textContent = orderNum;
-            qrImage.innerHTML = "";
-
-            const orderInfoLink = document.getElementById('order-info-link');
-            if (orderInfoLink) {
-                orderInfoLink.href = `/order-info/${orderNum}`;
-                orderInfoLink.classList.remove('hidden');
-            }
-
-            new QRCode(qrImage, {
-                text: orderNum,
-                width: 150,
-                height: 150
-            });
+            addEventListenersForLastForm(data, parentBirthdayIsFilled);
         }
     });

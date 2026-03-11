@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let childEntries = container.querySelectorAll('.child-entry').length - 1;
 
+    /**
+     * Creates a new child entry form block and initializes its UI components.
+     *
+     * @function createChildEntry
+     * @returns {{
+     *   entry: HTMLDivElement,
+     *   index: number
+     * }} An object containing the created entry element and its index.
+     */
     function createChildEntry() {
         childEntries = childEntries + 1;
         const index = childEntries;
@@ -120,6 +129,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return { entry, index };
     }
 
+    /**
+     * Attaches event listeners and guardian logic to a child entry form.
+     *
+     * @function attachEntryListeners
+     * @param {HTMLDivElement} entry - The child entry DOM element where listeners will be attached.
+     * @param {number} index - The index of the child entry used for unique element references.
+     * @returns {void}
+     */
     function attachEntryListeners(entry, index) {
         const removeBtn = entry.querySelector('.remove-child');
         if (removeBtn) {
@@ -203,11 +220,24 @@ document.addEventListener('DOMContentLoaded', function() {
         validateSelectedChild(true);
     }
 
+    /**
+     * Removes the first child entry form and sets a new child entry counter.
+     *
+     * @memberof App.formControl
+     * @param {number} index - The index used to set a new childEntries counter.
+     * @returns {void}
+     */
     App.formControl.removeFirstChild = function(index) {
         childEntries = index;
         document.getElementById('first-child').remove();
     }
 
+    /**
+     * Counts all selected socks from child entries and calculates the total socks cost.
+     *
+     * @memberof App.dynamicState
+     * @returns {number} The total price for all selected socks.
+     */
     App.dynamicState.countSelectedSocks = function() {
         const socksSelects = container.querySelectorAll('select[name$="[addSocks]"]');
 

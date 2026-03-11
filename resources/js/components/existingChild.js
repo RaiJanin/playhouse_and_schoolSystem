@@ -4,6 +4,13 @@ export let selectedChildState = {
     selectCount: 0
 };
 
+/**
+ * Attaches form fields for an existing child to the DOM
+ * @function attachFields
+ * @param {Object} data - Child data object
+ * @param {number} index - Index of the child in the list
+ * @returns {string} HTML string containing the form fields
+ */
 export function attachFields(data, index) {
     const hasPhoto = data.photo && data.photo.length > 0;
     const photoHtml = hasPhoto 
@@ -136,6 +143,12 @@ export function attachFields(data, index) {
     `;
 }
 
+/**
+ * Validates that at least one child has been selected
+ * @function validateSelectedChild
+ * @param {boolean} [removePrompt=false] - Whether to remove/hide the validation prompt
+ * @returns {boolean} True if validation passes, false otherwise
+ */
 export function validateSelectedChild(removePrompt = false) {
     let validated = true;
     const addChildPrompt = document.getElementById('add-child-prompt');

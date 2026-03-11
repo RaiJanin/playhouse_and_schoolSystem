@@ -1,6 +1,14 @@
+import "../config/global.js";
 import { createBirthdayDropdownHtml } from "../utilities/birthdayInput.js";
 
-
+/**
+ * Opens the edit modal and populates it with review data.
+ *
+ * @function openEditModal
+ * @memberof App.component
+ * @param {Object|null} [reviewData=null] - Data used to populate the edit modal.
+ * @returns {void}
+ */
 export function openEditModal(reviewData = null) {
     const modal = document.getElementById('modal-container');
     const modalTitle = document.getElementById('modal-title');
@@ -353,11 +361,8 @@ export function openEditModal(reviewData = null) {
         
         // Close modal
         modal.classList.add('hidden');
+        App.component.populateSummary();
         
-        // Refresh summary
-        if (window.populateSummary) {
-            window.populateSummary();
-        }
     });
     
     // Show the modal

@@ -24,6 +24,17 @@ const otpLoading = document.getElementById('otpLoading');
 let storeEmail = null;
 let otpAttempt = 0;
 
+/**
+ * Generates OTP choice buttons and handles verification logic.
+ *
+ * @function generateOtpChoices
+ * @memberof App.utilities
+ *
+ * @param {string} correctOtp - The correct OTP code that should be included in the choices.
+ * @param {number|string} otpId - The OTP record ID used for tracking attempts.
+ *
+ * @returns {void}
+ */
 function generateOtpChoices(correctOtp, otpId) {
     showConsole('log', 'generateOtpChoices called with:', `${correctOtp}, ${otpId}`);
     
@@ -139,6 +150,13 @@ function generateOtpChoices(correctOtp, otpId) {
     });
 }
 
+/**
+ * Generate decoy OTP values by slightly modifying the real OTP.
+ *
+ * @function generateDecoys
+ * @param {string} realOtp - The original OTP (e.g. "123").
+ * @returns {string[]} An array containing two decoy OTP codes.
+ */
 function generateDecoys(realOtp) {
     const digits = realOtp.split('');
     const decoys = [];
@@ -161,6 +179,13 @@ function generateDecoys(realOtp) {
     return decoys;
 }
 
+/**
+ * Randomly shuffles the elements of an array using the Fisher–Yates algorithm.
+ *
+ * @function shuffleArray
+ * @param {Array<any>} array - The array to shuffle.
+ * @returns {Array<any>} The shuffled array.
+ */
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -169,6 +194,16 @@ function shuffleArray(array) {
     return array;
 }
 
+/**
+ * Generate OTP for phone number or email.
+ *
+ * @function generateOtp
+ * @memberof App.utilites
+ * @async
+ * @param {string} phoneNumber - The phone number to receive OTP.
+ * @param {string|null} email - Optional email address.
+ * @returns {Promise<void>}
+ */
 App.utilites.generateOtp = async function (phoneNumber, email = null) {
     showConsole('log', 'generateOtp called with:', phoneNumber);
     showConsole('log', 'and email:', email);
@@ -213,6 +248,13 @@ App.utilites.generateOtp = async function (phoneNumber, email = null) {
     }
 }
 
+/**
+ * Track OTP verification attempts and terminate the form after multiple failures.
+ *
+ * @function readAttempts
+ * @param {number|string} otpId - The OTP record ID used to delete the OTP when attempts exceed the limit.
+ * @returns {void}
+ */
 function readAttempts(otpId) {
     otpAttempt++;
     

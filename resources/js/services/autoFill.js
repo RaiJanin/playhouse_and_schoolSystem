@@ -1,32 +1,27 @@
 import '../config/global.js';
-import { dateToString } from '../utilities/dateString.js';
 import { showConsole } from '../config/debug.js';
+import { parentFields } from '../modules/playhouseParent.js';
+import { CustomCheckbox } from '../components/customCheckbox.js';
+import { dateToString } from '../utilities/dateString.js';
+import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
 import { oldUser } from './olduserState.js';
-
 import { 
     attachFields,
     selectedChildState,
     validateSelectedChild
 } from '../components/existingChild.js';
-import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
-
-import {   
-    addguardianCheckBx, 
-    confirmGuardianCheckBx, 
-    guardianFields,
-    parentFields
-} from '../modules/playhouseParent.js'; 
-
 import { 
     disableDateInputs, 
     enableReadonly 
 } from '../utilities/formControl.js';
-import { CustomCheckbox } from '../components/customCheckbox.js';
-
 
 const existedChild = document.getElementById('exist-children');
 
-
+/**
+ * Auto-fills the parent form fields with returnee data.
+ *
+ * @param {Object} data - The returnee data object containing userLoaded and oldUserData.
+ */
 export function autoFillFields(data) {
     showConsole('log', 'Auto-filling fields with:', data);
     
@@ -55,58 +50,17 @@ export function autoFillFields(data) {
         birthdayContainer.querySelector('.birthday-day-select').value = dd;
         birthdayContainer.querySelector('.birthday-year-select').value = yyyy;
     }
-
-    if(data.oldUserData.guardians && data.oldUserData.guardians.length >= 1) {
-        data.oldUserData.guardians.forEach(guardian => {
-            document.getElementById('guardianName').value = guardian.firstname;
-            document.getElementById('guardianLastName').value = guardian.lastname;
-            document.getElementById('guardianPhone').value = guardian.mobileno;
-
-            // Prefill guardian birthday dropdown for returnee records when birthday exists.
-            const guardianBirthdayContainer = document.getElementById('guardianBirthday');
-            const guardianBirthdayRaw = guardian.birthday || guardian.birthdate || '';
-            const guardianBirthday = dateToString('iso', guardianBirthdayRaw);
-            if (
-                guardianBirthdayContainer &&
-                guardianBirthday &&
-                /^\d{4}-\d{2}-\d{2}$/.test(guardianBirthday)
-            ) {
-                guardianBirthdayContainer.dataset.birthdayValue = guardianBirthday;
-                const gMonth = guardianBirthday.slice(5, 7);
-                const gDay = guardianBirthday.slice(8, 10);
-                const gYear = guardianBirthday.slice(0, 4);
-
-                const monthSelect = guardianBirthdayContainer.querySelector('.birthday-month-select');
-                const daySelect = guardianBirthdayContainer.querySelector('.birthday-day-select');
-                const yearSelect = guardianBirthdayContainer.querySelector('.birthday-year-select');
-                const hiddenInput = guardianBirthdayContainer.querySelector('input[type="hidden"]');
-
-                if (monthSelect) monthSelect.value = gMonth;
-                if (daySelect) daySelect.value = gDay;
-                if (yearSelect) yearSelect.value = gYear;
-                if (hiddenInput) hiddenInput.value = guardianBirthday;
-            }
-
-            document.getElementById('add-guardian-checkbox').classList.add('hidden');
-            addguardianCheckBx.toggle();
-
-            if(guardian.guardianauthorized) {
-                confirmGuardianCheckBx.toggle();
-            }
-        })
-        document.getElementById('guardian-form').hidden = false;
-        enableReadonly(guardianFields, true);
-        const guardianBirthdayContainer = document.getElementById('guardianBirthday');
-        if (guardianBirthdayContainer) {
-            // Lock guardian birthday when returnee fields are set to readonly.
-            disableDateInputs(guardianBirthdayContainer, true);
-        }
-    }
     enableReadonly(parentFields, true);
     disableDateInputs(document.getElementById('parentBirthday'), true);
 
 }
 
+/**
+ * Auto-fills existing children for a returnee parent.
+ *
+ * @param {Array} data - Array of child objects to auto-fill.
+ * @param {string} parent - Parent name to display.
+ */
 export function autoFillChildren(data, parent) {
     showConsole('log', "Children data: ", data)
     
@@ -219,14 +173,7 @@ export function autoFillChildren(data, parent) {
                             }
                         });
 
-                        // if(!guardian) {
-                        //     guardianInputs.forEach(input => {
-                        //         input.readOnly = editingGuardian;
-                        //     });
-                        //     updateReadonly(editingGuardian);
-                        //     editGuardianBtn.classList.add('hidden');
-                        // }
-
+                        
                         const confirmBtn = attachedFields.querySelector('.confirm-guardian-existing');
                         const confirmIcon = attachedFields.querySelector('.confirm-guardian-existing-icon');
                         const authorizedHidden = attachedFields.querySelector('.guardian-existing-authorized');
@@ -242,40 +189,9 @@ export function autoFillChildren(data, parent) {
                                 confirmIcon.classList.toggle('fa-solid', confirmed);
                                 confirmIcon.classList.toggle('fa-square-check', confirmed);
                                 confirmIcon.classList.toggle('text-green-500', confirmed);
-                                //syncGuardianFields();
+                            
                             });
                         }
-
-                        // Keep all attached guardian editors in sync to avoid duplicate-name conflicts on submit.
-                        const syncGuardianFields = () => {
-                            const nameVal = attachedFields.querySelector('.guardian-existing-name')?.value || '';
-                            const lastNameVal = attachedFields.querySelector('.guardian-existing-last-name')?.value || '';
-                            const phoneVal = attachedFields.querySelector('.guardian-existing-phone')?.value || '';
-                            const birthdayVal = birthdayHidden ? birthdayHidden.value : '';
-                            const authVal = authorizedHidden ? authorizedHidden.value : '0';
-
-                            existedChild.querySelectorAll('.guardian-existing-name').forEach(el => { if (el !== attachedFields.querySelector('.guardian-existing-name')) el.value = nameVal; });
-                            existedChild.querySelectorAll('.guardian-existing-last-name').forEach(el => { if (el !== attachedFields.querySelector('.guardian-existing-last-name')) el.value = lastNameVal; });
-                            existedChild.querySelectorAll('.guardian-existing-phone').forEach(el => { if (el !== attachedFields.querySelector('.guardian-existing-phone')) el.value = phoneVal; });
-                            existedChild.querySelectorAll('.guardian-existing-authorized').forEach(el => { if (el !== authorizedHidden) el.value = authVal; });
-                            existedChild.querySelectorAll('.guardian-existing-birthday').forEach(el => {
-                                if (el === birthdayContainer) return;
-                                const hidden = el.querySelector('input[type="hidden"]');
-                                if (hidden) hidden.value = birthdayVal;
-                                el.dataset.birthdayValue = birthdayVal;
-                                const m = el.querySelector('.birthday-month-select');
-                                const d = el.querySelector('.birthday-day-select');
-                                const y = el.querySelector('.birthday-year-select');
-                                if (birthdayVal && /^\d{4}-\d{2}-\d{2}$/.test(birthdayVal)) {
-                                    if (m) m.value = birthdayVal.slice(5, 7);
-                                    if (d) d.value = birthdayVal.slice(8, 10);
-                                    if (y) y.value = birthdayVal.slice(0, 4);
-                                }
-                            });
-                        };
-
-                        // guardianInputs.forEach(input => input.addEventListener('input', syncGuardianFields));
-                        // if (birthdayContainer) birthdayContainer.addEventListener('change', syncGuardianFields);
                     }
                 }
 
@@ -299,6 +215,11 @@ export function autoFillChildren(data, parent) {
     App.formControl.removeFirstChild(data.length);
 }
 
+/**
+ * Counts the number of existing children who have selected socks.
+ *
+ * @returns {number} - Total count of selected socks among existing children.
+ */
 export function selectedSocksExistChild() {
     const selectedSocks = existedChild.querySelectorAll('.edit-child-socks');
 

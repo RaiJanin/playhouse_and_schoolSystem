@@ -1,11 +1,14 @@
 import '../config/global.js';
 import { API_ROUTES } from "../config/api.js";
 import { showConsole } from "../config/debug.js";
+
+import { dateToString } from '../utilities/dateString.js';
+import { computeExtraChargeDetails } from '../services/calculations.js';
+
 import { 
     getOrDelete,
     submitData
 } from "../services/requestApi.js";
-import { dateToString } from '../utilities/dateString.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.getElementById('checkout-search-form');
@@ -44,6 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
     });
 
+    /**
+     * Handles the checkout process for a specific order.
+     * Prompts the user for confirmation, sends a PATCH request to the checkout API,
+     * calculates totals including extra charges for overtime, and displays detailed
+     * order information in the success modal.
+     *
+     * @async
+     * @memberof App.utilites
+     * @param {string|number} orderNumber - The unique identifier for the order to check out.
+     */
     App.utilites.handleCheckout = async function (orderNumber) {
         if (!confirm('Are you sure you want to check out this order?')) {
             return;
@@ -175,6 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
         getOrders(phone, guardian, orderCode);
     });
 
+    /**
+     * Fetches orders based on optional filters: phone number, guardian name, or order code.
+     * Shows a loading indicator during the request and displays the results or an error message.
+     *
+     * @async
+     * @param {string} [phone=''] - Phone number to filter orders.
+     * @param {string} [guardian=''] - Guardian name to filter orders.
+     * @param {string} [orderCode=''] - Order code to filter orders.
+     */
     async function getOrders(phone = '', guardian = '', orderCode = '') {
         loading.classList.remove('hidden');
         
@@ -196,6 +218,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Displays order details in a modal and attaches checkout buttons for each order item.
+     *
+     * @param {HTMLElement} btn - The button element that triggered viewing the order. 
+     *                            Must have data-items (JSON string) and data-order-num attributes.
+     */
     function viewOrder(btn) {
         const items = JSON.parse(btn.dataset.items);
         const orderNum = btn.dataset.orderNum;
@@ -272,6 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.viewOrder = viewOrder;
 
+    /**
+     * Renders a list of orders into the orders container with a "View Order" button for each.
+     *
+     * @param {Array} orders - Array of order objects to display.
+     */
     function displayOrders(orders) {
         searchResults.classList.remove('hidden');
         
@@ -317,43 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             ordersList.appendChild(orderCard);
         });
-    }
-
-    function computeExtraChargeDetails(item) {
-        const subtotal = Number(item?.durationsubtotal) + Number(item?.socksprice);
-
-        // times
-        const checkIn = new Date(item.created_at);
-        const now = new Date(); // can use current time or simulate checkout
-        const paidMinutes = item.durationhours * 60;
-
-        // actual minutes stayed
-        let actualMinutes = Math.ceil((now - checkIn) / 60000);
-
-        const maxMinutes = 5 * 60;
-        if(actualMinutes > maxMinutes) {
-            actualMinutes = maxMinutes;
-        }
-
-        let extraMinutes = 0;
-        let chargeUnits = 0;
-        let extraCharge = 0;
-
-        if ((actualMinutes > paidMinutes) && (item.durationhours !== 5)) {
-            extraMinutes = actualMinutes - paidMinutes;
-            chargeUnits = Math.ceil(extraMinutes / window.masterfile.minutesPerCharge);
-            extraCharge = chargeUnits * window.masterfile.chargeOfMinutes;
-        }
-
-        return {
-            subtotal,
-            actualMinutes,
-            paidMinutes,
-            extraMinutes,
-            chargeUnits,
-            extraCharge,
-            totalWithExtra: subtotal + extraCharge
-        };
     }
 
     function showError(message) {

@@ -6,6 +6,12 @@
 // The container should have a `data-name` attribute for the hidden input name
 // Example: <div id="parentBirthday" data-birthday-dropdown data-name="parentBirthday" required></div>
 
+/**
+ * Attaches a birthday dropdown (Month/Day/Year) to a given container.
+ * Maintains a hidden input for form submission and validates the date.
+ *
+ * @param {HTMLElement} container - The container element to attach the dropdown to.
+ */
 export function attachBirthdayDropdown(container) {
     if (!container || container.dataset.birthdayDropdownAttached) return;
 
@@ -136,6 +142,12 @@ function initBirthdayDropdowns(scope = document) {
     containers.forEach(attachBirthdayDropdown);
 }
 
+/**
+ * Triggers validation on all birthday dropdowns within a given scope.
+ * This ensures that the hidden input and validity states are updated.
+ *
+ * @param {HTMLElement|Document} scope - The container to search for birthday dropdowns. Defaults to the entire document.
+ */
 export function requestBirthdayDropdownValidation(scope = document) {
     const containers = scope.querySelectorAll('[data-birthday-dropdown]');
     containers.forEach((container) => {
@@ -149,6 +161,14 @@ export function requestBirthdayDropdownValidation(scope = document) {
     });
 }
 
+/**
+ * Validates all birthday dropdowns inside a given scope.
+ * Ensures that month, day, and year are selected for required fields,
+ * or if any value is entered in optional fields.
+ *
+ * @param {Document|HTMLElement} scope - The container to search for birthday dropdowns. Defaults to `document`.
+ * @returns {boolean} - Returns true if all required fields are valid; false otherwise.
+ */
 export function validateDateInputs(scope = document) {
     const containers = scope.querySelectorAll('.birthday-dropdown-wrapper');
     // Start true so each birthday block can independently fail validation.
@@ -183,6 +203,12 @@ export function validateDateInputs(scope = document) {
     return allValid;
 }
 
+/**
+ * Validates a single input element and updates its border color based on validity.
+ *
+ * @param {HTMLInputElement|HTMLSelectElement} element - The input or select element to validate.
+ * @returns {boolean} - Returns true if the element has a value; false if empty.
+ */
 function checkInput(element) {
     let valid = true;
     if(!element.value) {
@@ -204,7 +230,14 @@ if (typeof document !== 'undefined') {
     });
 }
 
-// Helper function to generate birthday dropdown HTML
+/**
+ * Generates HTML for a birthday dropdown with month, day, and year selectors.
+ * Optionally pre-selects a value if an existing date string (YYYY-MM-DD) is provided.
+ *
+ * @param {string} name - The base name to use for the select elements' data-name attributes.
+ * @param {string} [existingValue=''] - An optional existing date string in "YYYY-MM-DD" format to pre-select.
+ * @returns {string} - HTML string for the birthday dropdown component.
+ */
 export function createBirthdayDropdownHtml(name, existingValue = '') {
     let currentMM = '', currentDD = '', currentYYYY = '';
     if (existingValue && /^\d{4}-\d{2}-\d{2}$/.test(existingValue)) {
