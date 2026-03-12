@@ -1,6 +1,9 @@
-<div class="sm:flex md:grid md:grid-cols-2 lg:grid-cols-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-mid-dark)] backdrop-blur rounded-xl mb-[30px] shadow-sm z-20">
-    <div class="w-[220] h-[80px] overflow-hidden flex items-center justify-center rounded-xl">
-        <img src="/images/mimo-logo.gif" alt="MIMO Play Cafe Logo" class="w-[200px] max-w-none object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
+<div class="sm:flex md:grid md:grid-cols-2 lg:grid-cols-3 bg-[var(--color-primary)] backdrop-blur rounded-xl mb-3 shadow-sm z-20">
+    <div class="hidden md:flex overflow-hidden items-center justify-center rounded-xl">
+        <img src="/images/mimo-logo.gif" alt="MIMO Play Cafe Logo" class="h-full object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
+    </div>
+    <div class="sm:hidden overflow-hidden flex items-center justify-center rounded-xl">
+        <img src="/images/mimo-logo.gif" alt="MIMO Play Cafe Logo" class="h-24 object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
     </div>
     <div class="flex flex-col md:col-span-2 sm:flex-row justify-start items-center gap-4 sm:gap-6 p-4">
         <div class="flex flex-col items-start text-left">

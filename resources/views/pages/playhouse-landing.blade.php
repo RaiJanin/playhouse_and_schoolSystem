@@ -74,7 +74,7 @@
                     <div class="hidden md:flex items-center">
                         <div class="text-8xl mb-6 text-[#1abc9c] animate-bounce-slow">🎊</div>
                         <div class="w-md p-4 overflow-hidden">
-                            <img src="{{ asset('images/mimo-logo.png')}}" alt="" class="w-full h-full">
+                            <img src="{{ asset('images/mimo-logo-playhouse.png')}}" alt="Mimo Play Cafe logo" class="w-full h-full">
                         </div>
                     </div>
                 </div>
