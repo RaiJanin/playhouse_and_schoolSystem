@@ -65,7 +65,7 @@ class PlayHouseController extends Controller
 
             $parent = M06::updateOrCreate(['mobileno' => $data['phone']],[
                 'd_name' => $data['parentName'] . ' ' . $data['parentLastName'],
-                'mkt_code' => $data['mkt_code'],
+                'mkt_code' => $data['mkt_code'] ?? null,
                 'firstname' => $data['parentName'],
                 'lastname' => $data['parentLastName'],
                 'birthday' => $data['parentBirthday'],
