@@ -221,7 +221,7 @@ class PlayHouseController extends Controller
 
                 if($request->filled('email'))
                 {
-                    Mail::to($request->email)->send(new SendOtpMail($OTP));
+                    Mail::to($request->email)->queue(new SendOtpMail($OTP));
                 }
                 
                 if(!$smsStatus['success'])

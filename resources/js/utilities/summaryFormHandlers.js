@@ -32,7 +32,7 @@ export function addEventListenersForLastForm(data, parentBirthdayIsFilled) {
         if(hiddenValueForFfFlag.value === '0') {
             document.getElementById('isFollowedFlag').value = '1';
         }
-        window.open('https://www.facebook.com/mimoplaycafe', '_blank');
+        window.open(window.masterfile.extras.myFacebookPage, '_blank');
     });
 
     const fbUrlInput = document.getElementById('fb-pp-url-input');

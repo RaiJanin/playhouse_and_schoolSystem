@@ -72,7 +72,7 @@
                             function openFb() {
                                 document.getElementById('isFollowedFlag').value = '1';
 
-                                window.open('https://www.facebook.com/mimoplaycafe', '_blank');
+                                window.open(window.masterfile.extras.myFacebookPage, '_blank');
                             }
                         </script>
                     </div>

@@ -76,20 +76,18 @@ document.addEventListener('DOMContentLoaded', function () {
         App.dynamicState.updateNextBtnState = function() {
             const current = App.dynamicState.getCurrentStepName();
             
-            if (current !== 'phone') {
-                if (nextBtn) nextBtn.disabled = false;
+            if (current === 'otp') {
+                nextBtn.disabled = false;
             } else {
                 const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
-                if (nextBtn) {
-                    nextBtn.disabled = !phoneValid;
-                }
+                nextBtn.disabled = !phoneValid;
             }
             
             if (currentStep === steps.length - 1) {
                 const formValid = form ? form.checkValidity() : false;
-                if (submitBtn) submitBtn.disabled = !formValid;
+                submitBtn.disabled = !formValid;
             } else {
-                if (submitBtn) submitBtn.disabled = true;
+                submitBtn.disabled = true;
             }
         };
 
@@ -141,6 +139,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (App.dynamicState.getCurrentStepName() === 'phone') {
                 showConsole('log', 'Phone input detected, validating...');
+
+                if(document.getElementById('gmail').value) {
+                    document.getElementById('parentEmail').value = document.getElementById('gmail').value.trim();
+                }
+
                 if (!App.validations.validatePhone(phoneInputEl)) {
                     showConsole('log', 'Phone validation failed');
                     phoneInputEl.classList.remove('border-teal-500');
@@ -155,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if(App.dynamicState.getCurrentStepName() === 'otp') {
-                if(!correctCode) {
+                if(!App.staticState.correctCode) {
                     valid = false;
                 }
             

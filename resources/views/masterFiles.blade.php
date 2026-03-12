@@ -12,6 +12,9 @@
                 "{{ $duration->duration_hour }}": "{{ $duration->label }}",
             @endforeach
         },
-        socksPrice: {{ $items['socks_price']}}
+        socksPrice: {{ $items['socks_price']}},
+        extras: {
+            myFacebookPage: 'https://www.facebook.com/mimoplaycafe',
+        }
     }
 </script>
