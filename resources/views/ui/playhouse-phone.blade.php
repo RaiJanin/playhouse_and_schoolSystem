@@ -36,49 +36,6 @@
                 title="Gmail."
             >
         </div>
-        <div class="mt-4 w-full">
-            <div class="relative overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-white to-blue-50 shadow-md p-5">
-                <div class="flex items-start gap-3">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg shadow">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-semibold text-gray-800">
-                            Follow our Facebook Page
-                        </p>
-                        <p class="text-xs text-gray-600 mt-1">
-                            Follow us on Facebook and receive an
-                            <span class="font-bold text-green-600">exclusive discount</span>.
-                        </p>
-                        <div class="flex gap-2 mt-3">
-                            <button
-                            type="button"
-                                onclick="openFb()"
-                                class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition"
-                            >
-                                <i class="fa-brands fa-facebook"></i>
-                                Follow Page
-                        </button>
-                            {{-- <button
-                                type="button"
-                                id="already-ff-btn"
-                                class="px-4 py-2 rounded-lg border border-gray-300 text-xs font-semibold hover:bg-gray-100 transition"
-                            >
-                                I Already Followed
-                            </button> --}}
-                        </div>
-                        <input type="hidden" id="isFollowedFlag" name='isfollowedFb' value="0">
-                        <script>
-                            function openFb() {
-                                document.getElementById('isFollowedFlag').value = '1';
-
-                                window.open(window.masterfile.extras.myFacebookPage, '_blank');
-                            }
-                        </script>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
