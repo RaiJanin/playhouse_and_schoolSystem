@@ -38,7 +38,7 @@ class M06Child extends Model
 
     public function guardians()
     {
-        return $this->hasMany(m06Guardian::class, 'd_code_c', 'd_code_c');
+        return $this->hasMany(M06Guardian::class, 'd_code_c', 'd_code_c');
     }
 
     public function orderItems()
