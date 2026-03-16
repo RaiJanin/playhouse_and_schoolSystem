@@ -101,7 +101,7 @@ class PlayHouseController extends Controller
 
                     $photoPath = null;
                     $filename = 'child_' . $childM->d_code_c . '_';
-                    $folder = 'children_photos/';
+                    $folder = 'children_photos';
 
                     if (!empty($child['photo']) && !$childM->photo &&$childM) 
                     {
