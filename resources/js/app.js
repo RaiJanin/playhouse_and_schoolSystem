@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         nextBtn.addEventListener('click', async () => {
             const currentForm = steps[currentStep];
+            showConsole('log', 'Current Form: ', currentForm);
             const inputs = currentForm.querySelectorAll(
                 'input[required], select[required]'
             );
@@ -119,18 +120,18 @@ document.addEventListener('DOMContentLoaded', function () {
             let childrenValid = true;
 
             inputs.forEach(input => {
-                const isInHiddenContainer = !!input.closest('[hidden], .hidden');
+                const isInHiddenContainer = input.closest('[hidden], .hidden');
                 if (isInHiddenContainer) {
                     return;
                 }
 
                 if (!input.checkValidity()) {
-                    input.classList.remove('border-teal-500');
+                    input.classList.remove('border-[var(--color-primary)]');
                     input.classList.add('border-red-600');
                     generalValid = false;
                 } else {
                     input.classList.remove('border-red-600');
-                    input.classList.add('border-teal-500');
+                    input.classList.add('border-[var(--color-primary)]');
                 }
                 
             });

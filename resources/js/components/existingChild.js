@@ -43,7 +43,7 @@ export function attachFields(data, index) {
                         <input type="text" name="child[${index}][guardianLastName]" class="guardian-existing-input guardian-existing-last-name backdrop-blur bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.lastname || ''}" readonly required />
                     </div>
                     <div>
-                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
                         <input type="tel" name="child[${index}][guardianPhone]" class="guardian-existing-input guardian-existing-phone backdrop-blur bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.mobileno || ''}" inputmode="tel" readonly required />
                     </div>
                     <div>
@@ -68,7 +68,7 @@ export function attachFields(data, index) {
                 <button id="add-guardian-checkbox-local-${index}" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
                         <i id="check-add-guardian-icon-local-${index}" class="fa-regular fa-square text-red-500 text-xl"></i>
-                        <p id="check-add-guardian-info-local-${index}" class="ml-2">Add Guardian <span class="text-red-600">*</span></p>
+                        <p id="check-add-guardian-info-local-${index}" class="ml-2">Add Guardian</p>
                     </span>
                 </button>
                 <div class="new-guardian-form hidden">
@@ -82,7 +82,7 @@ export function attachFields(data, index) {
                             <input type="text" name="child[${index}][guardianLastName]" class="guardian-existing-input guardian-existing-last-name bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
                         </div>
                         <div>
-                            <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number <span class="text-red-600">*</span></label>
+                            <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
                             <input type="tel" name="child[${index}][guardianPhone]" class="guardian-existing-input guardian-existing-phone bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" inputmode="tel"/>
                         </div>
                         <div>

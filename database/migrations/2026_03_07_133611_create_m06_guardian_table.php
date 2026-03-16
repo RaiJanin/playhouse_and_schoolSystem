@@ -20,11 +20,11 @@ return new class extends Migration
                 $table->string('d_code_c');
                 $table->foreign('d_code_c')->references('d_code_c')->on('m06_child')->onDelete('cascade');
                 $table->string('d_name', 100)->nullable();
-                $table->string('lastname', 100);
+                $table->string('lastname', 100)->nullable();
                 $table->string('firstname', 100);
                 $table->string('mi', 10)->nullable(); // Middle Initial
                 $table->date('birthday')->nullable();
-                $table->string('mobileno', 20);
+                $table->string('mobileno', 20)->nullable();
                 $table->string('email')->nullable();
                 $table->boolean('isparent')->default(true);
                 $table->boolean('isguardian')->default(false);

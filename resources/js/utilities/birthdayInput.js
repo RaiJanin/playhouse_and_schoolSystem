@@ -282,3 +282,12 @@ export function createBirthdayDropdownHtml(name, existingValue = '') {
         </div>
     `;
 }
+
+export function underageWarning(ageInput, warnMessageScope, toggled) {
+    if(toggled) {
+        const flag = ageInput.value < 18;
+        warnMessageScope.classList.toggle('hidden', !flag);
+    } else {
+        warnMessageScope.classList.add('hidden');
+    }
+}

@@ -27,3 +27,5 @@ Route::get('/test-mail', function () {
 
     return 'Email sent!';
 });
+
+require 'files.php';

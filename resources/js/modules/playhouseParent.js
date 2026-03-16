@@ -1,16 +1,14 @@
 import { CustomCheckbox } from '../components/customCheckbox.js';
 import { showConsole } from '../config/debug.js';
 import { oldUser } from '../services/olduserState.js';
+import { underageWarning } from '../utilities/birthdayInput.js';
+
 import { 
     disableDateInputs, 
     enableReadonly 
 } from '../utilities/formControl.js';
 
-export const guardianFields = [
-    document.getElementById('guardianName'),
-    document.getElementById('guardianLastName'),
-    document.getElementById('guardianPhone')
-];
+
 
 export const parentFields = [
     document.getElementById('parentName'),
@@ -18,53 +16,23 @@ export const parentFields = [
     document.getElementById('parentEmail')
 ];
 
-export const addguardianCheckBx = new CustomCheckbox('add-guardian-checkbox', 'check-add-guardian-icon', 'check-add-guardian-info');
-addguardianCheckBx.setLabel(`
-    Add Guardian <span class="text-red-600">*</span>
-`);
-addguardianCheckBx.onChange(checked => {
-    const guardianBirthdayContainer = document.getElementById('guardianBirthday');
+const guardianAge = document.getElementById('guardianAge');
+const guardianName = document.getElementById('guardianName');
+const guardianLastName = document.getElementById('guardianLastName');
+const guardianPhone = document.getElementById('guardianPhone');
 
-    document.getElementById('guardian-form').hidden = !checked;
+const guardianFields = [
+    guardianName,
+    guardianLastName,
+    guardianPhone,
+    guardianAge
+];
 
-    guardianFields.forEach(field => {
-        if (field) field.required = checked;
-    });
-    // Match parent birthday behavior: guardian birthday is required only when guardian is enabled.
-    if (guardianBirthdayContainer) {
-        if (checked) {
-            guardianBirthdayContainer.setAttribute('required', '');
-        } else {
-            guardianBirthdayContainer.removeAttribute('required');
-        }
-    }
-    
-    if(!addguardianCheckBx.isChecked()) {
-        guardianFields.forEach(field => {
-            if (!field) return;
-            field.value = '';
-            field.required = false;
-        });
-
-        if (guardianBirthdayContainer) {
-            // Prevent stale guardian birthday from being submitted after guardian is turned off.
-            guardianBirthdayContainer.dataset.birthdayValue = '';
-            guardianBirthdayContainer.classList.remove('birthday-invalid', 'birthday-valid');
-            guardianBirthdayContainer.removeAttribute('data-birthday-valid');
-            guardianBirthdayContainer.removeAttribute('required');
-
-            const monthSelect = guardianBirthdayContainer.querySelector('.birthday-month-select');
-            const daySelect = guardianBirthdayContainer.querySelector('.birthday-day-select');
-            const yearSelect = guardianBirthdayContainer.querySelector('.birthday-year-select');
-            const hiddenInput = guardianBirthdayContainer.querySelector('input[type="hidden"]');
-
-            if (monthSelect) monthSelect.value = '';
-            if (daySelect) daySelect.value = '';
-            if (yearSelect) yearSelect.value = '';
-            if (hiddenInput) hiddenInput.value = '';
-        }
-    }
-});
+const optionalguardianFields = [
+    guardianLastName,
+    guardianPhone,
+    guardianAge
+];
 
 export const editParentChkBx = new CustomCheckbox(`edit-parent-checkbox`, `edit-parent-icon`, `edit-parent-info`);
 editParentChkBx.setLabel(`Edit info`);
@@ -82,16 +50,39 @@ confirmGuardianCheckBx.setLabel(`
     This guardian is allowed to pick up my child
 `);
 
-confirmGuardianCheckBx.onChange(() => {
+export const addguardianCheckBx = new CustomCheckbox('add-guardian-checkbox', 'check-add-guardian-icon', 'check-add-guardian-info');
+addguardianCheckBx.setLabel(`
+    Add Guardian
+`);
+addguardianCheckBx.onChange(checked => {
+
+    document.getElementById('guardian-form').hidden = !checked;
+
+    document.getElementById('guardianName').required = checked;
+    
+    if(!addguardianCheckBx.isChecked()) {
+        guardianFields.forEach(field => {
+            if (!field) return;
+            field.value = '';
+            field.required = false;
+        });
+    }
+});
+
+confirmGuardianCheckBx.onChange(checked => {
     if(confirmGuardianCheckBx.isChecked()) {
         document.getElementById('guardianAuthorized-1').value = '1';
     } else {
         document.getElementById('guardianAuthorized-1').value = '0';
     }
-    updateGuardianUnderageWarning();
-});
+    optionalguardianFields.forEach(field => {
+        field.required = checked;
+            if(!confirmGuardianCheckBx.isChecked()) {
+                field.classList.remove('border-red-600');
+                field.classList.add('border-[var(--color-primary)]');
+            }
+        
+    });
 
-const guardianBirthdayContainer = document.getElementById('guardianBirthday-1');
-if (guardianBirthdayContainer) {
-    guardianBirthdayContainer.addEventListener('change', updateGuardianUnderageWarning);
-}
+    underageWarning(document.getElementById('guardianAge'), document.getElementById('guardian-underage-warning'), checked);
+});
