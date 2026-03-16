@@ -34,7 +34,8 @@ App.inputFieldControl = App.inputFieldControl || {}
 /**
  * Form control modules/functions
  * @type {{
- * showSteps: (step:, direction:'next'|'prev', override:) => void
+ * showSteps: (step:, direction:'next'|'prev', override:) => void,
+ * removeFirstChild: (index: number) => void
  * }}
  */
 App.formControl = App.formControl || {}

@@ -37,16 +37,16 @@ export function enableEditInfo (enable = true) {
 }
 
 /**
- * Toggles the `readonly` attribute for a set of input fields.
+ * Toggle the `readonly` attribute for a group of form fields.
  *
  * @param {HTMLElement[]} fields - Array of input or textarea elements to update.
- * @param {boolean} readOnly - If true, sets the fields to readonly. 
- *                             If false, removes readonly for required fields.
- * @returns {void} - Modifies the DOM by updating the `readonly` attribute on each field.
+ * @param {boolean} readOnly - If true, all fields will be set to readonly.
+ * @param {boolean} allowNorequired - If true, non-required fields can also be made editable.
+ * @returns {void}
  */
-export function enableReadonly(fields, readOnly) {
+export function enableReadonly(fields, readOnly, allowNoreqiured = false) {
     fields.forEach(field => {
-        if(!readOnly && field.hasAttribute('required')) {
+        if(!readOnly && (field.hasAttribute('required')) || allowNoreqiured) {
             field.removeAttribute('readonly');
         } else {
             field.setAttribute('readonly', true);

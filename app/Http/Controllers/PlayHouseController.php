@@ -110,9 +110,9 @@ class PlayHouseController extends Controller
                         $childM->save();
                     }
 
-                    if($child['guardianName'] && $child['guardianLastName'])
+                    if($child['guardianName'] || $child['guardianLastName'])
                     {
-                        $guardianFullname = $child['guardianName'] . ' ' . $child['guardianLastName'];
+                        $guardianFullname = $child['guardianName'] . ' ' . $child['guardianLastName'] ?? null;
                 
                         M06Guardian::updateOrCreate(
                             [
@@ -124,9 +124,9 @@ class PlayHouseController extends Controller
                                 'd_code_c' => $childM->d_code_c,
                                 'd_name' => $guardianFullname,
                                 'firstname' => $child['guardianName'],
-                                'lastname' => $child['guardianLastName'],
-                                'birthday' => $child['guardianBirthday'] ?? null,
-                                'mobileno' => $child['guardianPhone'],
+                                'lastname' => $child['guardianLastName'] ?? null,
+                                'age' => $child['guardianAge'] ?? null,
+                                'mobileno' => $child['guardianPhone'] ?? null,
                                 'isparent' => false,
                                 'isguardian' => true,
                                 'guardianauthorized' => $child['guardianAuthorized'],

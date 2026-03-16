@@ -1,10 +1,14 @@
 import '../config/global.js'
-import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
 import { attachCameraCapture } from '../utilities/cameraCapture.js';
 import { selectedSocksExistChild } from '../services/autoFill.js';
 import { validateSelectedChild } from '../components/existingChild.js';
 import { CustomCheckbox } from '../components/customCheckbox.js';
 import { showConsole } from '../config/debug.js';
+
+import { 
+    attachBirthdayDropdown,
+    underageWarning 
+} from '../utilities/birthdayInput.js';
 
 export let addedChildEntries = 0;
 
@@ -28,47 +32,47 @@ document.addEventListener('DOMContentLoaded', function() {
         const index = childEntries;
 
         const entry = document.createElement('div');
-        entry.className = 'child-entry pt-3 border border-teal-600 rounded-lg mt-4 align-content-start';
+        entry.className = 'child-entry pt-3 border-2 border-gray-50 rounded-xl backdrop-blur mt-4 align-content-start';
         entry.innerHTML = `
             <div class="px-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-6 align-content-start">
                 <div class="md:order-1 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-${childEntries}-photo" data-camera-input data-name="child[${childEntries}][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>
                     <div class="mt-3 p-2 rounded-lg border border-cyan-300 bg-cyan-50/60">
-                        <button type="button" class="add-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
+                        <button type="button" id="add-guardian-checkbox-local-${childEntries}" class="add-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                             <span class="flex items-center">
-                                <i class="check-add-guardian-icon-local fa-regular fa-square text-red-500 text-xl"></i>
-                                <p class="check-add-guardian-info-local ml-2">Add Guardian</p>
+                                <i id="check-add-guardian-icon-local-${childEntries}" class="check-add-guardian-icon-local fa-regular fa-square text-red-500 text-xl"></i>
+                                <p id="check-add-guardian-info-local-${childEntries}" class="check-add-guardian-info-local ml-2"></p>
                             </span>
                         </button>
-                        <div class="guardian-form-local grid grid-cols-1 gap-3 mt-3 hidden">
+                        <div class="guardian-form-local grid grid-cols-1 gap-3 mt-3" hidden>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" name="child[${childEntries}][guardianName]" class="guardian-name-local bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" name="child[${childEntries}][guardianName]" class="guardian-name-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name</label>
-                                <input type="text" name="child[${childEntries}][guardianLastName]" class="guardian-last-name-local bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" name="child[${childEntries}][guardianLastName]" class="guardian-last-name-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
-                                <input type="tel" name="child[${childEntries}][guardianPhone]" class="guardian-phone-local bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
+                                <input type="tel" name="child[${childEntries}][guardianPhone]" class="guardian-phone-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="09XXXXXXXXX" inputmode="tel"/>
                             </div>
                             <div>
                                 <label for="guardianAge" class="block text-base font-semibold text-gray-900 mb-2">Guardian Age</label>
-                                <input type="tel" name="child[0][guardianAge]" class="guardian-age-local bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
+                                <input type="tel" name="child[${childEntries}][guardianAge]" class="guardian-age-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
                             </div>
-                            <button type="button" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
+                            <button type="button" id="confirm-guardian-checkbox-local-${childEntries}" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
-                                    <i class="confirm-guardian-icon-local fa-regular fa-square text-red-500 text-xl"></i>
-                                    <p class="ml-2">This guardian is allowed to pick up my child</p>
+                                    <i id="confirm-guardian-icon-local-${childEntries}" class="confirm-guardian-icon-local fa-regular fa-square text-red-500 text-xl"></i>
+                                    <p id="confirm-guardian-info-local-${childEntries}" class="ml-2"></p>
                                 </span>
                             </button>
                             <p class="guardian-underage-warning-local text-sm font-semibold text-red-600 hidden">
                                 Are you sure do you want to proceed this guardian below 18 yrs old?
                             </p>
 
-                            <input type="hidden" name="child[${childEntries}][guardianAuthorized]" id="guardianAuthorized-${childEntries}" value="0" />
+                            <input type="hidden" name="child[${childEntries}][guardianAuthorized]" class="guardianAuthorized-local" value="0" />
                         </div>
                     </div>
                 </div>
@@ -76,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="md:order-2 grid grid-cols-1 gap-4 self-start">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="child[${childEntries}][name]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
+                        <input type="text" name="child[${childEntries}][name]" class="bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
                     </div>
 
                     <div>
@@ -87,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Playtime Duration <span class="text-red-600">*</span></label>
                         <div class="relative">
-                            <select name="child[${childEntries}][playDuration]" class="child-duration bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
+                            <select name="child[${childEntries}][playDuration]" class="child-duration bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none" required>
                                 ${Object.entries(window.masterfile.durationMap).map(([key, duration]) => 
                                     `<option value="${key}">${duration}</option>`
                                 ).join('')}
@@ -100,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (&#8369;100)</label>
                         <div class="relative">
-                            <select name="child[${childEntries}][addSocks]" class="child-duration bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                            <select name="child[${childEntries}][addSocks]" class="child-duration bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                             </select>
@@ -118,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
             </div>
         `;
-        attachEntryListeners(entry, childEntries);
+        attachEntryListeners(entry);
 
         const birthdayContainers = entry.querySelectorAll('[data-birthday-dropdown]');
         birthdayContainers.forEach((birthdayContainer) => attachBirthdayDropdown(birthdayContainer));
@@ -129,15 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return { entry, index };
     }
 
-    /**
-     * Attaches event listeners and guardian logic to a child entry form.
-     *
-     * @function attachEntryListeners
-     * @param {HTMLDivElement} entry - The child entry DOM element where listeners will be attached.
-     * @param {number} index - The index of the child entry used for unique element references.
-     * @returns {void}
-     */
-    function attachEntryListeners(entry, index) {
+    
+    function attachEntryListeners(entry) {
         const removeBtn = entry.querySelector('.remove-child');
         if (removeBtn) {
             removeBtn.addEventListener('click', () => {
@@ -146,51 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        const localGuardianToggle = entry.querySelector('.add-guardian-checkbox-local');
-        const localGuardianForm = entry.querySelector('.guardian-form-local');
-        const localGuardianIcon = entry.querySelector('.check-add-guardian-icon-local');
-        const localConfirmGuardianToggle = entry.querySelector('.confirm-guardian-checkbox-local');
-        const localConfirmGuardianIcon = entry.querySelector('.confirm-guardian-icon-local');
-        
-        let confirmed = false;
-        let checked = false;
-        localGuardianToggle.addEventListener('click', () => {
-            checked = !checked;
-            localGuardianForm.classList.toggle('hidden', !checked);
-            localGuardianIcon.classList.toggle('fa-square', !checked);
-            localGuardianIcon.classList.toggle('fa-square-check', checked);
-            localGuardianIcon.classList.toggle('text-red-500', !checked);
-            localGuardianIcon.classList.toggle('text-green-500', checked);
-            if (!checked) {
-                if (localConfirmGuardianIcon) {
-                    localConfirmGuardianIcon.classList.remove('fa-solid', 'fa-square-check', 'text-green-500');
-                    localConfirmGuardianIcon.classList.add('fa-regular', 'fa-square', 'text-red-500');
-                }
-                updateLocalUnderageWarning();
-            }
-        });
-        
-        localConfirmGuardianToggle.addEventListener('click', () => {
-            confirmed = !confirmed;
-            localConfirmGuardianIcon.classList.toggle('fa-regular', !confirmed);
-            localConfirmGuardianIcon.classList.toggle('fa-square', !confirmed);
-            localConfirmGuardianIcon.classList.toggle('text-red-500', !confirmed);
-            localConfirmGuardianIcon.classList.toggle('fa-solid', confirmed);
-            localConfirmGuardianIcon.classList.toggle('fa-square-check', confirmed);
-            localConfirmGuardianIcon.classList.toggle('text-green-500', confirmed);
-
-            const hiddenValueT = document.getElementById(`guardianAuthorized-${index}`);
-
-            if(confirmed) {
-                hiddenValueT.value = '1';
-            } else {
-                hiddenValueT.value = '0';
-            }
-            updateLocalUnderageWarning();
-        });
-        
-        
-        
         addedChildEntries++;
         validateSelectedChild(true);
     }
@@ -228,10 +180,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const newEntry = createChildEntry();
         container.appendChild(newEntry.entry);
         newEntry.entry.querySelector('.child-first');
+
+        newEntryEventListeners(newEntry.entry, newEntry.index);
                 
-        // Update button with child name when child name input is filled
         const childNameInput = newEntry.entry.querySelector('input[name^="child["]');
-        
+
         childNameInput.addEventListener('input', (e) => {
             const childName = e.target.value.trim();
             if (childName) {
@@ -242,5 +195,64 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
     });
+
+    function newEntryEventListeners(entry, index) {
+        const localGuardianForm = entry.querySelector('.guardian-form-local');
+        const localGuardianName = entry.querySelector('.guardian-name-local');
+        const localGuardianLastName = entry.querySelector('.guardian-last-name-local');
+        const localGuardianPhone = entry.querySelector('.guardian-phone-local');
+        const localGuardianAge = entry.querySelector('.guardian-age-local');
+        const localGuardianAuthorized = entry.querySelector('.guardianAuthorized-local');
+
+        const localGuardianFields = [
+            localGuardianName,
+            localGuardianLastName,
+            localGuardianAge,
+            localGuardianPhone
+        ];
+
+        const optionalLocalGuardianFields = [
+            localGuardianLastName,
+            localGuardianAge,
+            localGuardianPhone
+        ];
+
+        const addLocalGuardianChckBx = new CustomCheckbox(`add-guardian-checkbox-local-${index}`, `check-add-guardian-icon-local-${index}`, `check-add-guardian-info-local-${index}`);
+        addLocalGuardianChckBx.setLabel('Add Guardian');
+
+        const confirmLocalGurdianChckBx = new CustomCheckbox(`confirm-guardian-checkbox-local-${index}`, `confirm-guardian-icon-local-${index}`, `confirm-guardian-info-local-${index}`);
+        confirmLocalGurdianChckBx.setLabel('This guardian is allowed to pick up my child');
+
+        addLocalGuardianChckBx.onChange(checked => {
+            localGuardianForm.hidden = !checked;
+
+            localGuardianName.required = checked;
+
+            if(!addLocalGuardianChckBx.isChecked()) {
+                localGuardianFields.forEach(field => {
+                    if (!field) return;
+                    field.value = '';
+                    field.required = false;
+                });
+            }
+        });
+
+        confirmLocalGurdianChckBx.onChange(checked => {
+            if(confirmLocalGurdianChckBx.isChecked()) {
+                localGuardianAuthorized.value = '1';
+            } else {
+                localGuardianAuthorized.value = '0';
+            }
+            optionalLocalGuardianFields.forEach(field => {
+                field.required = checked;
+                if(!confirmLocalGurdianChckBx.isChecked()) {
+                    field.classList.remove('border-red-600');
+                    field.classList.add('border-[var(--color-primary)]');
+                }
+            });
+
+            underageWarning(localGuardianAge, entry.querySelector('.guardian-underage-warning-local'), checked);
+        });
+    }
 });
 

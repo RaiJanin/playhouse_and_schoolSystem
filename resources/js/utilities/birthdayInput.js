@@ -270,13 +270,13 @@ export function createBirthdayDropdownHtml(name, existingValue = '') {
 
     return `
         <div class="birthday-dropdown-wrapper flex gap-2">
-            <select class="birthday-month-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[month]">
+            <select class="birthday-month-select flex-1 bg-white/50 border-2 backdrop-blur-2xl border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[month]">
                 ${monthOptions}
             </select>
-            <select class="birthday-day-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[day]">
+            <select class="birthday-day-select flex-1 bg-white/50 backdrop-blur-2xl border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[day]">
                 ${dayOptions}
             </select>
-            <select class="birthday-year-select flex-1 bg-white border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[year]">
+            <select class="birthday-year-select flex-1 bg-white/50 backdrop-blur-2xl border-2 border-gray-200 rounded-lg px-2 py-2.5 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200" data-name="${name}[year]">
                 ${yearOptions}
             </select>
         </div>

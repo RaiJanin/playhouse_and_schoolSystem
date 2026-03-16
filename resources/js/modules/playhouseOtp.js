@@ -36,8 +36,7 @@ let otpAttempt = 0;
  * @returns {void}
  */
 function generateOtpChoices(correctOtp, otpId) {
-    showConsole('log', 'generateOtpChoices called with:', `${correctOtp}, ${otpId}`);
-    
+
     if (!container) {
         showConsole('error', 'OTP container not found!')
         return;

@@ -19,7 +19,6 @@ export function attachFields(data, index) {
             <i class="fa-solid fa-user text-3xl text-gray-400"></i>
           </div>`;
 
-    const guardianBirthdayIso = dateToString('iso', data.guardians[0]?.birthday || '');
     const guardianAuthorizedChecked = data.guardians[0]?.guardianauthorized
         ? 'fa-solid fa-square-check text-green-500'
         : 'fa-regular fa-square text-red-500';
@@ -27,33 +26,33 @@ export function attachFields(data, index) {
 
     const guardianSection = data.guardians.length >= 1 ? `
             <div class="mt-3 p-3 rounded-lg border border-gray-200 shadow-md bg-teal-50/60">
-                <button type="button" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
+                <button type="button" id="edit-existing-guardian-checkbox-${index}" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
-                        <i class="edit-guardian-icon fa-regular fa-square text-red-500 text-xl"></i>
-                        <p class="ml-2 font-semibold">Edit</p>
+                        <i id="edit-existing-guardian-icon-${index}" class="edit-guardian-icon fa-regular fa-square text-red-500 text-xl"></i>
+                        <p id="edit-existing-guardian-info-${index}" class="ml-2 font-semibold"></p>
                     </span>
                 </button>
                 <div class="guardian-existing-form grid grid-cols-1 gap-3 mt-3">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="child[${index}][guardianName]" class="guardian-existing-input guardian-existing-name backdrop-blur bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.firstname || ''}" readonly required />
+                        <input type="text" name="child[${index}][guardianName]" class="guardian-existing-input guardian-existing-name backdrop-blur bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.firstname || ''}" readonly required/>
                     </div>
-                    <div>
-                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="child[${index}][guardianLastName]" class="guardian-existing-input guardian-existing-last-name backdrop-blur bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.lastname || ''}" readonly required />
+                    <div class="optional-fields">
+                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name</label>
+                        <input type="text" name="child[${index}][guardianLastName]" class="guardian-existing-input guardian-existing-last-name backdrop-blur bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.lastname || ''}" readonly/>
                     </div>
-                    <div>
+                    <div class="optional-fields">
                         <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
-                        <input type="tel" name="child[${index}][guardianPhone]" class="guardian-existing-input guardian-existing-phone backdrop-blur bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.mobileno || ''}" inputmode="tel" readonly required />
+                        <input type="tel" name="child[${index}][guardianPhone]" class="guardian-existing-input guardian-existing-phone backdrop-blur bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow-md rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.mobileno || ''}" inputmode="tel" readonly/>
                     </div>
-                    <div>
-                        <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                        <div class="guardian-existing-birthday shadow-md backdrop-blur rounded-xl" data-birthday-dropdown data-name="child[${index}][guardianBirthday]" data-birthday-value="${guardianBirthdayIso}"></div>
+                    <div class="optional-fields">
+                        <label for="guardianAge" class="block text-base font-semibold text-gray-900 mb-2">Guardian Age</label>
+                        <input type="tel" name="child[${index}][guardianAge]" class="guardian-existing-input guardian-existing-age bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" value="${data.guardians[0]?.age || ''}" readonly/>
                     </div>
-                    <button type="button" class="confirm-guardian-existing cursor-pointer p-2 text-sm hover:text-gray-500">
+                    <button type="button" id="confirm-guardian-existing-checkbox-${index}" class="confirm-guardian-existing cursor-pointer p-2 text-sm hover:text-gray-500">
                         <span class="flex flex-row">
-                            <i class="confirm-guardian-existing-icon ${guardianAuthorizedChecked} text-xl"></i>
-                            <p class="ml-2">This guardian is allowed to pick up my child</p>
+                            <i id="confirm-guardian-existing-icon-${index}" class="confirm-guardian-existing-icon ${guardianAuthorizedChecked} text-xl"></i>
+                            <p id="confirm-guardian-existing-info-${index}" class="ml-2"></p>
                         </span>
                     </button>
                     <input type="hidden" name="child[${index}][guardianAuthorized]" class="guardian-existing-authorized" value="${guardianAuthorizedValue}" />
@@ -75,24 +74,24 @@ export function attachFields(data, index) {
                     <div class="guardian-existing-form grid grid-cols-1 gap-3 mt-3">
                         <div>
                             <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                            <input type="text" name="child[${index}][guardianName]" class="guardian-existing-input guardian-existing-name bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
+                            <input type="text" name="child[${index}][guardianName]" class="guardian-existing-input guardian-existing-name bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
                         </div>
                         <div>
-                            <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name <span class="text-red-600">*</span></label>
-                            <input type="text" name="child[${index}][guardianLastName]" class="guardian-existing-input guardian-existing-last-name bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
+                            <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name</label>
+                            <input type="text" name="child[${index}][guardianLastName]" class="guardian-existing-input guardian-existing-last-name bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300"/>
                         </div>
                         <div>
                             <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
-                            <input type="tel" name="child[${index}][guardianPhone]" class="guardian-existing-input guardian-existing-phone bg-gray-50 w-full px-4 py-2 border border-teal-500 shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" inputmode="tel"/>
+                            <input type="tel" name="child[${index}][guardianPhone]" class="guardian-existing-input guardian-existing-phone bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-cyan-400 focus:shadow-none transition-all duration-300" inputmode="tel"/>
                         </div>
                         <div>
-                            <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Birthday <span class="text-red-600">*</span></label>
-                            <div class="guardian-existing-birthday rounded-lg" data-birthday-dropdown data-name="child[${index}][guardianBirthday]" data-birthday-value=""></div>
+                        <label for="guardianAge" class="block text-base font-semibold text-gray-900 mb-2">Guardian Age</label>
+                            <input type="tel" name="child[${index}][guardianAge]" class="guardian-existing-input guardian-existing-age bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
                         </div>
-                        <button type="button" class="confirm-guardian-existing cursor-pointer p-2 text-sm hover:text-gray-500">
+                        <button type="button" id="confirm-guardian-existing-checkbox-${index}" class="confirm-guardian-existing cursor-pointer p-2 text-sm hover:text-gray-500">
                             <span class="flex flex-row">
-                                <i class="confirm-guardian-existing-icon fa-regular fa-square text-red-500 text-xl"></i>
-                                <p class="ml-2">This guardian is allowed to pick up my child</p>
+                                <i id="confirm-guardian-existing-icon-${index}" class="confirm-guardian-existing-icon ${guardianAuthorizedChecked} text-xl"></i>
+                                <p id="confirm-guardian-existing-info-${index}" class="ml-2"></p>
                             </span>
                         </button>
                         <input type="hidden" name="child[${index}][guardianAuthorized]" class="guardian-existing-authorized" value="0" />

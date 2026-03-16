@@ -20,7 +20,7 @@ class M06Guardian extends Model
         'lastname',
         'firstname',
         'mi',
-        'birthday',
+        'age',
         'mobileno',
         'email',
         'isparent',

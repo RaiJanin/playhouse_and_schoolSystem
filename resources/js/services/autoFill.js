@@ -108,88 +108,67 @@ export function autoFillChildren(data, parent) {
                 wrapper.insertAdjacentHTML('beforeend', attachFields(child, index));
 
                 const attachedFields = wrapper.querySelector('.attached-fields');
+
+                const guardianInputs = [...attachedFields.querySelectorAll('.guardian-existing-input')];
+                const optionalExistingGuardianInputs = [
+                    attachedFields.querySelector('.guardian-existing-last-name'),
+                    attachedFields.querySelector('.guardian-existing-phone'),
+                    attachedFields.querySelector('.guardian-existing-age'),
+                ];
+                const optionalExistingGuardianEl = attachedFields.querySelectorAll('.optional-fields');
+                const changeGuardianBtn = attachedFields.querySelector('.change-guardian-btn');
+                const authorizedHidden = attachedFields.querySelector('.guardian-existing-authorized');
+
                 if (attachedFields) {
-                    const birthdayContainer = attachedFields.querySelector('[data-birthday-dropdown]');
-                    if (birthdayContainer) {
-                        attachBirthdayDropdown(birthdayContainer);
-                        const birthdayHidden = birthdayContainer.querySelector('input[type="hidden"]');
-                        const monthSelect = birthdayContainer.querySelector('.birthday-month-select');
-                        const daySelect = birthdayContainer.querySelector('.birthday-day-select');
-                        const yearSelect = birthdayContainer.querySelector('.birthday-year-select');
 
-                        const updateReadonly = (readonly) => {
-                            if (monthSelect) monthSelect.disabled = readonly;
-                            if (daySelect) daySelect.disabled = readonly;
-                            if (yearSelect) yearSelect.disabled = readonly;
-                        };
+                    let confirmed = authorizedHidden.value === '1' ? true : false;
 
-                        if(child.guardians.length === 0) {
-                            updateReadonly(false);
+                    const confirmExistingGuardianCheckBx = new CustomCheckbox(`confirm-guardian-existing-checkbox-${index}`, `confirm-guardian-existing-icon-${index}`, `confirm-guardian-existing-info-${index}`);
+                    confirmExistingGuardianCheckBx.setLabel('This guardian is allowed to pick up my child');
 
-                            const addGuardianLocalChcBx = new CustomCheckbox(`add-guardian-checkbox-local-${index}`, `check-add-guardian-icon-local-${index}`, `check-add-guardian-info-local-${index}`);
-                            addGuardianLocalChcBx.setLabel(`Add Guardian `);
-                            addGuardianLocalChcBx.onChange(() => {
-                                attachedFields.querySelector('.new-guardian-form').classList.toggle('hidden');
-                            });
-                        } else {
-                            updateReadonly(true);
-                        }
+                    confirmExistingGuardianCheckBx.onChange(checked => {
+                        confirmed = checked;
+                        authorizedHidden.value = confirmed ? '1' : '0';
                         
-                        const editGuardianBtn = attachedFields.querySelector('.edit-guardian-toggle');
-                        const editGuardianIcon = attachedFields.querySelector('.edit-guardian-icon');
-                        const guardianInputs = attachedFields.querySelectorAll('.guardian-existing-input');
-                        const changeGuardianBtn = attachedFields.querySelector('.change-guardian-btn');
+                        optionalExistingGuardianInputs.forEach(input => {
+                            input.required = checked;
+                        });
+                        optionalExistingGuardianEl.forEach(el => {
+                            el.classList.toggle('hidden', !checked);
+                        });
+                        
+                    });
+                    
+                    if(child.guardians.length === 0) {
+                        const addGuardianLocalChcBx = new CustomCheckbox(`add-guardian-checkbox-local-${index}`, `check-add-guardian-icon-local-${index}`, `check-add-guardian-info-local-${index}`);
+                        addGuardianLocalChcBx.setLabel(`Add Guardian `);
+                        addGuardianLocalChcBx.onChange(() => {
+                            attachedFields.querySelector('.new-guardian-form').classList.toggle('hidden');
+                        });
+                    } else {
+                        const editExistingGuardianCHchBxEl = document.getElementById(`edit-existing-guardian-checkbox-${index}`);
+                        const editExistingGuardianCHchBx = new CustomCheckbox(`edit-existing-guardian-checkbox-${index}`, `edit-existing-guardian-icon-${index}`, `edit-existing-guardian-info-${index}`);
+                        editExistingGuardianCHchBx.setLabel('Edit');
 
-                        let editingGuardian = false;
-                        if (editGuardianBtn && editGuardianIcon) {
-                            editGuardianBtn.addEventListener('click', () => {
-                                editingGuardian = !editingGuardian;
-
-                                editGuardianIcon.classList.toggle('fa-regular', !editingGuardian);
-                                editGuardianIcon.classList.toggle('fa-square', !editingGuardian);
-                                editGuardianIcon.classList.toggle('text-red-500', !editingGuardian);
-                                editGuardianIcon.classList.toggle('fa-solid', editingGuardian);
-                                editGuardianIcon.classList.toggle('fa-square-check', editingGuardian);
-                                editGuardianIcon.classList.toggle('text-green-500', editingGuardian);
-
-                                guardianInputs.forEach(input => {
-                                    input.readOnly = !editingGuardian;
-                                });
-                                updateReadonly(!editingGuardian);
-                            });
-                        }
+                        editExistingGuardianCHchBx.onChange(checked => {
+                            enableReadonly(guardianInputs, !checked, true);
+                        });           
 
                         guardianInputs.forEach(input => {
                             if(input.value) {
                                 changeGuardianBtn.addEventListener('click', () => {
                                     input.value = '';
-                                    input.readOnly = false;
-                                    updateReadonly(false);
-                                    editGuardianBtn.classList.add('hidden');
-                                    monthSelect.value = '';
-                                    daySelect.value = '';
-                                    yearSelect.value = '';
-                                })
+                                    input.removeAttribute('readonly');
+                                    editExistingGuardianCHchBxEl.classList.add('hidden');
+                                });
                             }
                         });
 
-                        
-                        const confirmBtn = attachedFields.querySelector('.confirm-guardian-existing');
-                        const confirmIcon = attachedFields.querySelector('.confirm-guardian-existing-icon');
-                        const authorizedHidden = attachedFields.querySelector('.guardian-existing-authorized');
-                        let confirmed = authorizedHidden ? authorizedHidden.value === '1' : false;
-
-                        if (confirmBtn && confirmIcon && authorizedHidden) {
-                            confirmBtn.addEventListener('click', () => {
-                                confirmed = !confirmed;
-                                authorizedHidden.value = confirmed ? '1' : '0';
-                                confirmIcon.classList.toggle('fa-regular', !confirmed);
-                                confirmIcon.classList.toggle('fa-square', !confirmed);
-                                confirmIcon.classList.toggle('text-red-500', !confirmed);
-                                confirmIcon.classList.toggle('fa-solid', confirmed);
-                                confirmIcon.classList.toggle('fa-square-check', confirmed);
-                                confirmIcon.classList.toggle('text-green-500', confirmed);
-                            
+                        if(authorizedHidden.value === '0') {
+                            enableReadonly(guardianInputs, false, true);
+                            editExistingGuardianCHchBxEl.classList.add('hidden');
+                            optionalExistingGuardianEl.forEach(el => {
+                                el.classList.add('hidden');
                             });
                         }
                     }
