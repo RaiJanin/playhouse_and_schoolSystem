@@ -283,6 +283,16 @@ export function createBirthdayDropdownHtml(name, existingValue = '') {
     `;
 }
 
+/**
+ * Toggles an underage warning message based on the age input value.
+ * Shows the warning scope when the age is under 18 (if toggled is true),
+ * or hides it otherwise.
+ *
+ * @param {HTMLInputElement} ageInput - The input element containing the age value.
+ * @param {HTMLElement} warnMessageScope - The container element for the warning message to show/hide.
+ * @param {boolean} toggled - Whether the warning toggle is enabled. When true, checks age; when false, always hides.
+ * @returns {void}
+ */
 export function underageWarning(ageInput, warnMessageScope, toggled) {
     if(toggled) {
         const flag = ageInput.value < 18;

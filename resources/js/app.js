@@ -391,25 +391,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const socksTotalCost = App.dynamicState.countSelectedSocks();
             const overallTotal = childrenTotalCost + socksTotalCost;
-
-            if(addguardianCheckBx.isChecked()) {
-                // Show guardian birthday in step 5 summary when guardian is enabled.
-                guardianInfo = `
-                    <div class="flex items-center border-b border-[var(--color-primary)] py-2 max-w-full overflow-auto">
-                        <span class="font-semibold text-cyan-800 w-fit">Guardian:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${data.get('guardianName')} ${data.get('guardianLastName')} ${guardianPhone}</span>
-                    </div>
-                    <div class="flex items-center border-b border-[var(--color-primary)] py-2">
-                        <span class="font-semibold text-cyan-800 w-fit">Guardian Birthdate:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${guardianBirthday ? dateToString('shortDate', guardianBirthday) : '-'}</span>
-                    </div>
-                `;
-            }
             
             const parentName = data.get('parentName') || '';
             const parentLastName = data.get('parentLastName') || '';
             const parentFullName = [parentName, parentLastName].filter(n => n).join(' ') || '-';
-            const existingFbUrl = data.get('fb_pp_url') || '';
             
             summary.innerHTML = `
                     <div class="flex items-center border-b border-[var(--color-primary)] py-2 max-w-full overflow-auto">
@@ -424,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
                         <span class="text-gray-900 font-medium">${data.get('parentBirthday') ? dateToString('shortDate', data.get('parentBirthday')) : hiPVal}</span>
                     </div>
-                    ${guardianInfo}
                     <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
                         <div id="summary-children-list" class="space-y-3 ml-2">
@@ -441,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                         </div>
                         <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
-                            <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 30% off</p>
+                            <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 10% off</p>
                             <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg shadow">
                                 <i class="fa-brands fa-facebook-f"></i>
                             </div>
@@ -461,14 +445,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </div>
                             </div>
                             <p class="text-xs text-gray-600 mb-3">Already following? Paste your Facebook profile link below to claim your discount.</p>
-                            <input type="url" id="fb-pp-url-input" name="fb_pp_url" value="${existingFbUrl}" placeholder="https://facebook.com/your-profile" class="w-full min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
+                            <input type="text" id="fb-pp-url-input" name="fb_pp_url" placeholder="facebook.com/your-profile" class="w-full min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
                         </div>
                         <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>
                             <p class="text-xs text-gray-600 mt-2">Children: ₱${childrenTotalCost} | Item: ₱${socksTotalCost}</p>
                         </div>
                     </div>
-                    <div class="mt-4 flex justify-end">
+                    <div class="mt-4 flex justify-end" hidden>
                         <button type="button" id="edit-review-btn" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
                             <i class="fa-solid fa-pen-to-square mr-2"></i>Edit Review
                         </button>

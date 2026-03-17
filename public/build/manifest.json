@@ -4,7 +4,7 @@
     "name": "requestApi"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CpL4RJ-T.css",
+    "file": "assets/app-7ABBG2FD.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -12,7 +12,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-4qWhEYxE.js",
+    "file": "assets/app-Cx_KS7Vz.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

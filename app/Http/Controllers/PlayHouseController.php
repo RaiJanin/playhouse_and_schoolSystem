@@ -63,13 +63,15 @@ class PlayHouseController extends Controller
                 }
             }
 
-            $parent = M06::updateOrCreate(['mobileno' => $data['phone']],[
+            $parsedPhone = $this->formatPhone09($data['phone']);
+
+            $parent = M06::updateOrCreate(['mobileno' => $parsedPhone],[
                 'd_name' => $data['parentName'] . ' ' . $data['parentLastName'],
                 'mkt_code' => $data['mkt_code'] ?? null,
                 'firstname' => $data['parentName'],
                 'lastname' => $data['parentLastName'],
                 'birthday' => $data['parentBirthday'],
-                'mobileno' => $data['phone'],
+                'mobileno' => $parsedPhone,
                 'email' => $data['parentEmail'],
                 'isparent' => true,
                 'isguardian' => $parentAsGuardian,
@@ -208,7 +210,7 @@ class PlayHouseController extends Controller
             $phone = $request->phone;
 
             $phoneRecord = PhoneNumber::create([
-                'phone_number' => $phone,
+                'phone_number' => $this->formatPhone09($request->phone),
                 'email' => $request->email ?? null,
                 'otp_code' => $OTP,
                 'otp_expires_at' => Carbon::now()->addMinutes(5)
@@ -254,10 +256,11 @@ class PlayHouseController extends Controller
     
     public function verifyOTP(Request $request, $phoneNum)
     {
+        $parsedPhone = $this->formatPhone09($phoneNum);
         try {
             $request->validate(['otp' => 'required|string|size:3']);
 
-            $phoneVerified = PhoneNumber::where('phone_number', $phoneNum)
+            $phoneVerified = PhoneNumber::where('phone_number', $parsedPhone)
                                     ->where('otp_code', $request->otp)
                                     ->whereNull('otp_verified_at')
                                     ->where('otp_expires_at', '>', Carbon::now())
@@ -275,21 +278,21 @@ class PlayHouseController extends Controller
                 'otp_verified_at' => Carbon::now()
             ]);
             
-            $oldUserData = M06::where('mobileno', $phoneNum)->first();
+            $oldUserData = M06::where('mobileno', $parsedPhone)->first();
 
             if(!$oldUserData)
             {
                 return response()->json([
                     'isCorrectOtp' => true,
                     'isOldUser' => false,
-                    'phoneNum' => $phoneNum,
+                    'phoneNum' => $parsedPhone,
                 ]);
             }
 
             return response()->json([
                 'isCorrectOtp' => true,
                 'isOldUser' => true,
-                'phoneNum' => $phoneNum,
+                'phoneNum' => $parsedPhone,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -319,8 +322,10 @@ class PlayHouseController extends Controller
 
     public function searchReturnee($phoneNumber)
     {
+        $parsedPhone = $this->formatPhone09($phoneNumber);
+
         $oldUserData = M06::with(['children.guardians'])
-                        ->where('mobileno', $phoneNumber)
+                        ->where('mobileno', $parsedPhone)
                         ->where('isparent', true)
                         ->first();
 
@@ -356,9 +361,10 @@ class PlayHouseController extends Controller
 
         if($phoneNum)
         {
-            $getRecordUsingMobile = M06::where('mobileno', $phoneNum)->first();
+            $parsedPhone = $this->formatPhone09($phoneNum);
+            $getRecordUsingMobile = M06::where('mobileno', $parsedPhone)->first();
 
-            if (!$getRecordUsingMobile) 
+            if (!$getRecordUsingMobile)
             {
                 return response()->json([
                     'orders' => [],
@@ -487,5 +493,24 @@ class PlayHouseController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+
+    
+
+    private function formatPhone09($phonenum)
+    {
+        $phoneInput = preg_replace('/[^0-9]/', '', $phonenum);
+        $finalNum = $phoneInput;
+        if(substr($phoneInput, 0, 2) === '63')
+        {
+            $finalNum = '0' . substr($phoneInput, 2);
+        }
+        if (strlen($phoneInput) === 10 && substr($phoneInput, 0, 1) === '9') 
+        {
+            $finalNum = '0' . $phoneInput;
+        }
+
+        return $finalNum;
     }
 }
