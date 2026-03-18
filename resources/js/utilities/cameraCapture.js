@@ -2,7 +2,52 @@
 // Usage: Add data-camera-input attribute to a container element
 // The container should have a data-name attribute for the hidden input name
 
-import { showConsole } from "../config/debug";
+/**
+ * Compresses an image file or base64 string to reduce payload size.
+ * Resizes to max width and applies JPEG compression.
+ *
+ * @param {string|File} source - Base64 data URL or File object to compress.
+ * @param {number} maxWidth - Maximum width (default: 640).
+ * @param {number} quality - JPEG quality 0-1 (default: 0.7).
+ * @returns {Promise<string>} - Promise resolving to compressed base64 data URL.
+ */
+const compressImage = (source, maxWidth = 320, quality = 0.5) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            // Calculate new dimensions maintaining aspect ratio
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
+            }
+            
+            // Use a square canvas for consistent aspect ratio
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Get compressed base64
+            const compressed = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressed);
+        };
+        img.onerror = reject;
+        
+        if (source instanceof File) {
+            const reader = new FileReader();
+            reader.onload = (e) => { img.src = e.target.result; };
+            reader.onerror = reject;
+            reader.readAsDataURL(source);
+        } else {
+            img.src = source;
+        }
+    });
+};
 
 /**
  * Attaches a camera capture UI to a given container element.
@@ -187,20 +232,21 @@ export function attachCameraCapture(container) {
     };
 
     // Capture photo
-    const capturePhoto = () => {
+    const capturePhoto = async () => {
         modalCanvas.width = modalVideo.videoWidth || 320;
         modalCanvas.height = modalVideo.videoHeight || 240;
         const ctx = modalCanvas.getContext('2d');
         ctx.drawImage(modalVideo, 0, 0, modalCanvas.width, modalCanvas.height);
         
-        // Get base64 data
-        const dataUrl = modalCanvas.toDataURL('image/jpeg', 0.8);
+        // Get base64 data and compress
+        const rawDataUrl = modalCanvas.toDataURL('image/jpeg', 0.8);
+        const compressedDataUrl = await compressImage(rawDataUrl, 320, 0.5);
         
         // Store in hidden input
-        hiddenInput.value = dataUrl;
+        hiddenInput.value = compressedDataUrl;
         
         // Show as profile picture
-        preview.src = dataUrl;
+        preview.src = compressedDataUrl;
         preview.style.display = 'block';
         placeholder.style.display = 'none';
         
@@ -250,14 +296,15 @@ export function attachCameraCapture(container) {
     cancelCameraBtn.addEventListener('click', closeCamera);
 
     // File input change handler
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const dataUrl = event.target.result;
-                hiddenInput.value = dataUrl;
-                preview.src = dataUrl;
+            try {
+                // Compress the uploaded image
+                const compressedDataUrl = await compressImage(file, 320, 0.5);
+                
+                hiddenInput.value = compressedDataUrl;
+                preview.src = compressedDataUrl;
                 preview.style.display = 'block';
                 placeholder.style.display = 'none';
                 
@@ -272,8 +319,10 @@ export function attachCameraCapture(container) {
                 retakeBtn.classList.add('flex-1');
                 removeBtn.classList.remove('hidden');
                 removeBtn.classList.add('flex-1');
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+                showConsole('error', 'Error compressing image:', err);
+                alert('Failed to process image. Please try again.');
+            }
         }
     });
 
