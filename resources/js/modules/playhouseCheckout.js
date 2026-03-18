@@ -2,6 +2,8 @@ import '../config/global.js';
 import { API_ROUTES } from "../config/api.js";
 import { showConsole } from "../config/debug.js";
 
+import '../components/alertBlade.js';
+
 import { dateToString } from '../utilities/dateString.js';
 import { computeExtraChargeDetails } from '../services/calculations.js';
 
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showError('Please enter either a phone number, order number or guardian/parent name.');
             return;
         }
-
+    
         getOrders(phone, guardian, orderCode);
         
     });
@@ -165,15 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('checkout-details').innerHTML = detailsHtml;
                 successModal.classList.remove('hidden');
             } else {
-                showError(response.message || 'Checkout failed. Please try again.');
+                App.component.showAlert('Checkout failed. Please try again.', 'error');
                 searchResults.classList.remove('hidden');
             }
         } catch (error) {
             loading.classList.add('hidden');
-            showError('Error during checkout: ' + error.message);
+            App.component.showAlert('Error during checkout. Server Error', 'error');
             console.error(error);
-            showConsole('error', 'Error during checkout: ', error.message)
+            showConsole('error', 'Error during checkout')
             searchResults.classList.remove('hidden');
+            App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
         }
     };
 
@@ -199,23 +202,37 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function getOrders(phone = '', guardian = '', orderCode = '') {
         loading.classList.remove('hidden');
+        const btn = searchForm.querySelector('button');
+        btn.disabled = true;
+        btn.classList.remove('bg-gradient-to-t', 'from-[var(--color-primary)]', 'to-[var(--color-primary-light)]');
+        btn.classList.add('bg-[var(--color-primary-light)]');
+        try
+        {
+            const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}&ord_code=${orderCode}`);
         
-        const data = await getOrDelete('GET', `${API_ROUTES.getOrdersURL}?ph_num=${phone}&grdian_name=${guardian}&ord_code=${orderCode}`);
-        
-        showConsole('log', 'Orders: ', data);
+            showConsole('log', 'Orders: ', data);
+                
+            loading.classList.add('hidden');
             
-        loading.classList.add('hidden');
-        
-        if (data.not_found) {
-            showError(data.message);
-            return;
+            if (data.not_found) {
+                showError(data.message);
+                return;
+            }
+            
+            if (data.orders && data.orders.length >= 1) {
+                displayOrders(data.orders);
+            } else {
+                noResults.classList.remove('hidden');
+            }
+        } catch (error) {
+            App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
+        } finally {
+            loading.classList.add('hidden');
+            btn.classList.remove('bg-[var(--color-primary-light)]');
+            btn.classList.add('bg-gradient-to-t', 'from-[var(--color-primary)]', 'to-[var(--color-primary-light)]');
+            searchForm.querySelector('button').disabled = false;
         }
         
-        if (data.orders && data.orders.length >= 1) {
-            displayOrders(data.orders);
-        } else {
-            noResults.classList.remove('hidden');
-        }
     }
 
     /**
@@ -294,7 +311,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const orderItemId = e.currentTarget.dataset.checkOutId;
                 showConsole('log', 'Check out ID: ', orderItemId);
                 orderModal.classList.add('hidden');
+                btn.disabled = true;
                 App.utilites.handleCheckout(orderItemId);
+                btn.disabled = false;
             });
         });
     }

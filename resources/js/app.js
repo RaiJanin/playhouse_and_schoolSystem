@@ -247,29 +247,41 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
-            const replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
+            try
+            {
+                const replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
 
-            submitBtn.classList.remove('bg-[var(--color-third-light)]');
-            submitBtn.classList.add('bg-[var(--color-third)]');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit';
+                submitBtn.classList.remove('bg-[var(--color-third-light)]');
+                submitBtn.classList.add('bg-[var(--color-third)]');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
 
-            showConsole('log', "Reply from Backend", replyFromBackend, true);
+                showConsole('log', "Reply from Backend", replyFromBackend, true);
 
-            if(replyFromBackend.isFormSubmitted && !replyFromBackend.error && !replyFromBackend.exception) {
-                form.classList.add('hidden');
-                stepTexts.forEach(text => {
-                    text.classList.remove('text-gray-700');
-                    text.classList.add('text-teal-500');
-                });
-                generateQR(replyFromBackend.orderNum);
-            } else {
-                App.component.showAlert('Server Error', 'error');
+                if(replyFromBackend.isFormSubmitted && !replyFromBackend.error && !replyFromBackend.exception) {
+                    form.classList.add('hidden');
+                    stepTexts.forEach(text => {
+                        text.classList.remove('text-gray-700');
+                        text.classList.add('text-teal-500');
+                    });
+                    generateQR(replyFromBackend.orderNum);
+                } else {
+                    App.component.showAlert('Server Error', 'error');
 
-                const errorMsg = replyFromBackend.exception ? `${replyFromBackend.exception}: ${replyFromBackend.message}` : replyFromBackend.message || 'Unknown error';
-                App.component.criticalAlert(errorMsg);
+                    const errorMsg = replyFromBackend.exception ? `${replyFromBackend.exception}: ${replyFromBackend.message}` : replyFromBackend.message || 'Unknown error';
+                    App.component.criticalAlert(errorMsg);
+                }
+            } catch (error) {
+                showConsole('error', 'Error submitting data', error);
+                App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
+                return;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-[var(--color-third-light)]');
+                submitBtn.classList.add('bg-[var(--color-third)]');
+                submitBtn.textContent = 'Submit';
             }
-
+            
         });
         
         // Extra safeguard: prevent submit button click if disabled

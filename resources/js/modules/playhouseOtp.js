@@ -196,26 +196,38 @@ App.utilites.generateOtp = async function (phoneNumber, email = null, resend = f
     showConsole('log', 'Sending data:', phoneIntoJson);
     container.innerHTML = '';
     otpLoading.classList.remove('hidden');
+    messageDiv.textContent = '';
 
-    const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
-    showConsole('log', 'OTP response:', otp, true);
-    otpLoading.classList.add('hidden');
-    
-    if (otp.code && !otp.error) {
-        generateOtpChoices(otp.code, otp.id, phoneNumber);
+    try
+    {
+        const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
+        showConsole('log', 'OTP response:', otp, true);
+        otpLoading.classList.add('hidden');
+        
+        if (otp.code && !otp.error) {
+            generateOtpChoices(otp.code, otp.id, phoneNumber);
+            resendBtnContainer.classList.remove('hidden');
+            resendBtn.disabled = true;
+            makeButtonReEnableCountdown(resendBtn, 'Resend');
+        } else {
+            showConsole('error', 'No OTP code returned or error:', otp);
+            messageDiv.textContent = 'Error generating OTP. Please try again.';
+            messageDiv.className = 'text-center text-red-600 font-medium';
+            resendBtnContainer.classList.remove('hidden');
+            App.component.criticalAlert(`Error: ${otp?.error}\nMessage: ${otp?.message}`);
+        }
+    } catch (error) {
+        showConsole('error', 'No OTP code returned or error:', error);
+        App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
+        return;
+    } finally {
+        otpLoading.classList.add('hidden');
         resendBtnContainer.classList.remove('hidden');
-        resendBtn.disabled = true;
-        makeButtonReEnableCountdown(resendBtn, 'Resend', 60);
-    } else {
-        showConsole('error', 'No OTP code returned or error:', otp);
-        messageDiv.textContent = 'Error generating OTP. Please try again.';
-        messageDiv.className = 'text-center text-red-600 font-medium';
-        resendBtnContainer.classList.remove('hidden');
-        App.component.criticalAlert(`Error: ${otp?.error}\nMessage: ${otp?.message}`);
+        resendBtn.disabled = false;
     }
 }
 
-resendBtn.addEventListener('click', () => { 
+resendBtn.addEventListener('click', () => {
     App.utilites.generateOtp(App.staticState.storePhone, storeEmail, true); 
 });
 
@@ -272,7 +284,7 @@ function handleOldUser(flag, apiParam) {
 
         } catch (error) {
             App.component.showAlert('Error finding returnee user, continuing as new user', 'error');
-            console.error(error);
+            showConsole('error', 'Error fetching old user data', error);
             App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
         }
 

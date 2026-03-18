@@ -53,7 +53,7 @@
                         
                         <button 
                             type="submit"
-                            class="w-full bg-gradient-to-t from-[var(--color-primary)] to-[var(--color-primary-light)] text-white font-bold py-3 px-6 rounded-xl shadow-md hover:bg-[#0a7a6a] transition-colors"
+                            class="w-full bg-gradient-to-t from-[var(--color-primary)] to-[var(--color-primary-light)] text-white font-bold py-3 px-6 rounded-xl shadow-md hover:bg-[var(--color-primary-light)] transition-colors disabled:bg-[var(--color-primary-light)] disabled:cursor-not-allowed"
                         >
                             Search
                         </button>
