@@ -15,11 +15,14 @@ import {
 } from "../services/requestApi.js";
 import { editParentChkBx } from "./playhouseParent.js";
 import { enableEditInfo } from "../utilities/formControl.js";
+import { makeButtonReEnableCountdown } from '../utilities/buttonElControl.js';
 
 
 const container = document.getElementById('otp-choices');
 const messageDiv = document.getElementById('otp-message');
 const otpLoading = document.getElementById('otpLoading');
+const resendBtn = document.getElementById('resend-btn');
+const resendBtnContainer = document.getElementById('resend-btn-container');
 
 let storeEmail = null;
 let otpAttempt = 0;
@@ -70,77 +73,44 @@ function generateOtpChoices(correctOtp, otpId) {
                 btn.classList.add('border-gray-300', 'opacity-70');
             });
             
-            const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", App.staticState.storePhone);
+            try
+            {
+                const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", App.staticState.storePhone);
 
-            if(sendOtpAttempt.isCorrectOtp) {
-                button.classList.remove('border-gray-300', 'opacity-70');
-                button.classList.add('border-green-500', 'bg-green-50');
-                messageDiv.textContent = '✓ Correct!';
-                messageDiv.className = 'text-center text-green-600 font-medium';
-                
-                App.staticState.correctCode = true;
-                App.inputFieldControl.phoneReadOnly(true);
-                
-                if(sendOtpAttempt.isOldUser) {
-                    oldUser.isOldUser = sendOtpAttempt.isOldUser;
-                    oldUser.phoneNumber = sendOtpAttempt.phoneNum;
-                }
+                if(sendOtpAttempt.isCorrectOtp) {
+                    button.classList.remove('border-gray-300', 'opacity-70');
+                    button.classList.add('border-green-500', 'bg-green-50');
+                    messageDiv.textContent = '✓ Correct!';
+                    messageDiv.className = 'text-center text-green-600 font-medium';
+                    
+                    App.staticState.correctCode = true;
+                    App.inputFieldControl.phoneReadOnly(true);
+                    resendBtn.disabled = true;
 
-                if(!oldUser.oldUserLoaded) {
-                    setTimeout(async () => {
-                        if (sendOtpAttempt.isOldUser) {
-                            let returneeData = null;
-                            
-                            if (sendOtpAttempt.returneeData && (sendOtpAttempt.returneeData.data || sendOtpAttempt.returneeData.parent)) {
-                                returneeData = sendOtpAttempt.returneeData;
-                            } else if (sendOtpAttempt.phoneNum) {
-                                returneeData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
-                                oldUser.returneeData = returneeData;
-                                showConsole('log', 'Returnee data: ', returneeData);
-                            }
-                        
-                            if (App.formControl.showSteps) {
-                                
-                                // Check if returnee data is valid before auto-filling
-                                if (returneeData && returneeData.userLoaded && returneeData.oldUserData) {
-                                    autoFillFields(returneeData);
-                                    enableEditInfo();
-                                }
-                                App.formControl.showSteps(2, 'next');
-                                
-                                await new Promise(resolve => setTimeout(resolve, 300));
-                                
-                                App.formControl.showSteps(3, 'next');
-                                
-                                await new Promise(resolve => setTimeout(resolve, 300));
-                                
-                                // Check if returnee data has children before auto-filling
-                                if (returneeData.oldUserData.children.length >= 1) {
-                                    autoFillChildren(returneeData.oldUserData.children, returneeData.oldUserData.d_name);
-                                }
-                            }
-                        } else {
-                            if (App.formControl.showSteps) {
-                                const currentStep = App.dynamicState.getCurrentStep ? App.dynamicState.getCurrentStep() : 0;
-                                App.formControl.showSteps(currentStep + 1, 'next');
-                            }
-                        }
-                        
+                    if(!oldUser.oldUserLoaded && sendOtpAttempt.isOldUser) {
+                        handleOldUser(sendOtpAttempt.isOldUser, sendOtpAttempt.phoneNum);
+                    } else {
+                        const currentStep = App.dynamicState.getCurrentStep ? App.dynamicState.getCurrentStep() : 0;
+                        App.formControl.showSteps(currentStep + 1, 'next');
+                    }
+                } else {
+                    button.classList.remove('border-gray-300', 'opacity-70');
+                    button.classList.add('border-red-500', 'bg-red-50');
+                    messageDiv.textContent = '✗ Incorrect code. Please try again.';
+                    messageDiv.className = 'text-center text-red-500 font-medium';
+                    
+                    setTimeout(() => {
+                        document.querySelectorAll('.otp-choice').forEach(btn => {
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-70');
+                        });
                     }, 500);
+                    readAttempts(otpId);
                 }
-            } else {
-                button.classList.remove('border-gray-300', 'opacity-70');
-                button.classList.add('border-red-500', 'bg-red-50');
-                messageDiv.textContent = '✗ Incorrect code. Please try again.';
+            } catch (error) {
                 messageDiv.className = 'text-center text-red-500 font-medium';
-                
-                setTimeout(() => {
-                    document.querySelectorAll('.otp-choice').forEach(btn => {
-                        btn.disabled = false;
-                        btn.classList.remove('opacity-70');
-                    });
-                }, 500);
-                readAttempts(otpId);
+                messageDiv.textContent = 'Cannot verify OTP';
+                App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
             }
             
         });
@@ -203,12 +173,12 @@ function shuffleArray(array) {
  * @param {string|null} email - Optional email address.
  * @returns {Promise<void>}
  */
-App.utilites.generateOtp = async function (phoneNumber, email = null) {
+App.utilites.generateOtp = async function (phoneNumber, email = null, resend = false) {
     showConsole('log', 'generateOtp called with:', phoneNumber);
     showConsole('log', 'and email:', email);
     showConsole('log', 'Current storePhone:', App.staticState.storePhone);
     
-    if((App.staticState.storePhone !== 0 && App.staticState.storePhone === phoneNumber) && (email === storeEmail)) {
+    if((App.staticState.storePhone !== 0 && App.staticState.storePhone === phoneNumber) && email === storeEmail && !resend) {
         showConsole('log', 'Same phone number or email, skipping OTP generation');
         return;
     }
@@ -216,36 +186,38 @@ App.utilites.generateOtp = async function (phoneNumber, email = null) {
     App.staticState.storePhone = phoneNumber;
     storeEmail = email;
     otpAttempt = 0;
-    
-    showConsole('log', 'Calling makeOtp API with URL:', API_ROUTES.makeOtpURL);
-    try {
-        const phoneIntoJson = { 
-            phone: phoneNumber,
-            email: email ?? null
-        };
-        showConsole('log', 'Sending data:', phoneIntoJson);
-        container.innerHTML = '';
-        otpLoading.classList.remove('hidden');
 
-        const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
-        showConsole('log', 'OTP response:', otp);
-        showConsole('log', 'OTP: ', otp.code, true);
-        otpLoading.classList.add('hidden');
-        
-        if (otp.code) {
-            generateOtpChoices(otp.code, otp.id, phoneNumber);
-        } else {
-            showConsole('error', 'No OTP code returned or error:', otp);
-            messageDiv.textContent = 'Error generating OTP. Please try again.';
-            messageDiv.className = 'text-center text-red-600 font-medium';
-        }
-    } catch (error) {
-        showConsole('error', 'Error calling makeOtp API:', error);
-        showConsole('error', 'Error message:', error.message);
+    resendBtnContainer.classList.add('hidden');
+    
+    const phoneIntoJson = { 
+        phone: phoneNumber,
+        email: email ?? null
+    };
+    showConsole('log', 'Sending data:', phoneIntoJson);
+    container.innerHTML = '';
+    otpLoading.classList.remove('hidden');
+
+    const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
+    showConsole('log', 'OTP response:', otp, true);
+    otpLoading.classList.add('hidden');
+    
+    if (otp.code && !otp.error) {
+        generateOtpChoices(otp.code, otp.id, phoneNumber);
+        resendBtnContainer.classList.remove('hidden');
+        resendBtn.disabled = true;
+        makeButtonReEnableCountdown(resendBtn, 'Resend', 60);
+    } else {
+        showConsole('error', 'No OTP code returned or error:', otp);
         messageDiv.textContent = 'Error generating OTP. Please try again.';
         messageDiv.className = 'text-center text-red-600 font-medium';
+        resendBtnContainer.classList.remove('hidden');
+        App.component.criticalAlert(`Error: ${otp?.error}\nMessage: ${otp?.message}`);
     }
 }
+
+resendBtn.addEventListener('click', () => { 
+    App.utilites.generateOtp(App.staticState.storePhone, storeEmail, true); 
+});
 
 /**
  * Track OTP verification attempts and terminate the form after multiple failures.
@@ -271,8 +243,47 @@ function readAttempts(otpId) {
             await getOrDelete('DELETE', API_ROUTES.deleteOtpURL, otpId);
             location.reload();
         }, 1000);
-        
     }
 }
 
+function handleOldUser(flag, apiParam) {
+    oldUser.isOldUser = flag;
+    oldUser.phoneNumber = apiParam;
+
+    let foundSuccessfully = false;
+
+    setTimeout(async () => {
+        let returneeData = null;
+        try
+        {
+            returneeData = await getOrDelete('GET', API_ROUTES.searchReturneeURL, oldUser.phoneNumber);
+            oldUser.returneeData = returneeData;
+
+            if (returneeData && returneeData.userLoaded && returneeData.oldUserData) {
+                foundSuccessfully = true;
+                autoFillFields(returneeData);
+                enableEditInfo();
+            }
+
+            if (returneeData.oldUserData.children.length >= 1) {
+                autoFillChildren(returneeData.oldUserData.children, returneeData.oldUserData.d_name);
+            }
+            showConsole('log', 'Returnee data: ', oldUser.returneeData, true);
+
+        } catch (error) {
+            App.component.showAlert('Error finding returnee user, continuing as new user', 'error');
+            console.error(error);
+            App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
+        }
+
+        App.formControl.showSteps(2, 'next');
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        if(foundSuccessfully) {
+            App.formControl.showSteps(3, 'next');
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+        
+    }, 500);
+}
 

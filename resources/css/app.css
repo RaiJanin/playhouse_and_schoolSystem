@@ -11,116 +11,156 @@
 }
 
 :root {
-  --color-primary: #179ea2;
-  --color-primary-transparent: rgba(19, 166, 171, 0.3);
-  --color-primary-foggy: #a1fcff;
-  --color-primary-light: #16c1c7;
-  --color-primary-lighter: #1ae1e8;
-  --color-primary-mid-dark: #108b8f;
-  --color-primary-full-dark: #0d6f73;
-  --color-accent: #fff2d9;
-  --color-accent-mid-dark: #fce3b3;
-  --color-accent-secondary: #a2fcd5;
-  --color-accent-secondary-light: rgba(162, 252, 213, 0.5);
-  --color-accent-secondary-mid-dark: #62bd95;
-  --color-secondary: #d6991e;
-  --color-secondary-light: #eda921;
-  --color-secondary-lighter: #fcc658;
-  --color-third: #19d1b5;
-  --color-third-light: #2cf2d4;
-  --color-third-mid-dark: #16b59d;
-  --color-third-full-dark: #108f7c;
+    --color-primary: #179ea2;
+    --color-primary-transparent: rgba(19, 166, 171, 0.3);
+    --color-primary-foggy: #a1fcff;
+    --color-primary-light: #16c1c7;
+    --color-primary-lighter: #1ae1e8;
+    --color-primary-mid-dark: #108b8f;
+    --color-primary-full-dark: #0d6f73;
+    --color-accent: #fff2d9;
+    --color-accent-mid-dark: #fce3b3;
+    --color-accent-secondary: #a2fcd5;
+    --color-accent-secondary-light: rgba(162, 252, 213, 0.5);
+    --color-accent-secondary-mid-dark: #62bd95;
+    --color-secondary: #d6991e;
+    --color-secondary-light: #eda921;
+    --color-secondary-lighter: #fcc658;
+    --color-third: #19d1b5;
+    --color-third-light: #2cf2d4;
+    --color-third-mid-dark: #16b59d;
+    --color-third-full-dark: #108f7c;
 }
 
 @layer utilities {
-  .text-shadow-sm {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-  }
+    .text-shadow-sm {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+    }
 
-  .text-shadow {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  }
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
 
-  .text-shadow-lg {
-    text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4);
-  }
+    .text-shadow-lg {
+        text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4);
+    }
 
-  .text-glow-cyan {
-    text-shadow: 0 0 5px #22d3ee, 0 0 10px #22d3ee, 0 0 20px #22d3ee;
-  }
+    .text-glow-cyan {
+        text-shadow: 0 0 5px #22d3ee, 0 0 10px #22d3ee, 0 0 20px #22d3ee;
+    }
 
-  .text-glow-red {
-    text-shadow: 0 0 5px #ee3022, 0 0 10px #ee3022, 0 0 20px #ee3022;
-  }
+    .text-glow-red {
+        text-shadow: 0 0 5px #ee3022, 0 0 10px #ee3022, 0 0 20px #ee3022;
+    }
 
-  .text-shadow-none {
-    text-shadow: none;
-  }
+    .text-shadow-none {
+        text-shadow: none;
+    }
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 .animate-fadeIn {
-  animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 .animate-fadeOut {
-  animation: fadeOut 0.3s ease;
+    animation: fadeOut 0.3s ease;
 }
 
 .birthday-input {
-  -webkit-appearance: none;
-  appearance: none;
-  box-sizing: border-box;
-
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
 }
 .birthday-input-wrapper {
-  position: relative;
+    position: relative;
 }
 .birthday-input-wrapper .birthday-input {
-  padding-right: 2.75rem;
+    padding-right: 2.75rem;
 }
 .birthday-dropdown-button {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 0.75rem;
-  background: transparent;
-  border: none;
-  color: var(--color-primary-full-dark);
-  cursor: pointer;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--color-primary-full-dark);
+    cursor: pointer;
 }
 .birthday-dropdown-button:focus-visible {
-  outline: 2px solid #06b6d4;
-  outline-offset: 2px;
+    outline: 2px solid #06b6d4;
+    outline-offset: 2px;
 }
 .birthday-input.birthday-active,
 .birthday-input:focus {
-  outline: none !important;
-  box-shadow: 0 6px 18px rgba(2,132,137,0.08), 0 0 0 4px rgba(6,182,212,0.06);
-  border-color: #06b6d4;
+    outline: none !important;
+    box-shadow: 0 6px 18px rgba(2,132,137,0.08), 0 0 0 4px rgba(6,182,212,0.06);
+    border-color: #06b6d4;
 }
 .birthday-input.birthday-valid {
-  border-color: #10b981;
+    border-color: #10b981;
 }
 input[data-validation-triggered="true"].birthday-input.birthday-invalid:not(:focus) {
-  border-color: #ef4444;
+    border-color: #ef4444;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+@keyframes shrink {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+.animate-slideIn {
+    animation: slideIn 0.3s ease-out forwards;
+}
+.animate-slideOut {
+    animation: slideOut 0.3s ease-in forwards;
+}
+.progress-bar-fill {
+    animation: shrink 4s linear forwards;
 }

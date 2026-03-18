@@ -15,8 +15,7 @@
     </div>
     
     <div id="otp-message" class="text-center min-h-[24px] font-medium"></div>
+    <div id="resend-btn-container" class="flex flex-col mt-2 hidden">
+        <button type="button" id="resend-btn" class="bg-[var(--color-third-mid-dark)] text-white px-4 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[var(--color-third)] focus:ring-2 focus:ring-offset-2 ring-[var(--color-third)] disabled:cursor-not-allowed disabled:[var(--color-third-light)] disabled:shadow-none transition-all duration-300">Resend</button>
+    </div>
 </div>
-
-<script>
-    
-</script>

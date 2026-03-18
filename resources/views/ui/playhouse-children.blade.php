@@ -32,7 +32,7 @@
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
-            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border backdrop-blur bg-white/60 border-gray-50 rounded-xl align-content-start">
+            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border backdrop-blur bg-white/40 border-gray-50 rounded-xl align-content-start">
                 <div class="md:order-1 px-3 mb-3 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-cyan-50 rounded-lg p-2 overflow-visible"></div>

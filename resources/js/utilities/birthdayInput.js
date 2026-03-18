@@ -196,6 +196,11 @@ export function validateDateInputs(scope = document) {
         const year = checkInput(yearEl);
 
         if (!(month && day && year)) {
+            const missingMonth = monthEl.dataset.name || monthEl.getAttribute('aria-label');
+            const missingYear = yearEl.dataset.name || yearEl.getAttribute('aria-label');
+            const missingDay = dayEl.dataset.name || dayEl.getAttribute('aria-label');
+            App.component.showAlert(`Fields ${missingMonth},  ${missingYear},  ${missingDay} must filled in`, 'caution');
+            hostContainer.scrollIntoView({behavior: 'smooth', block: 'center'});
             allValid = false;
         }
     });

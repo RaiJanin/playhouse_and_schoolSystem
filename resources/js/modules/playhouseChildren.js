@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const index = childEntries;
 
         const entry = document.createElement('div');
-        entry.className = 'child-entry pt-3 border-2 border-gray-50 rounded-xl backdrop-blur mt-4 align-content-start';
+        entry.className = 'child-entry pt-3 border-2 border-gray-50 rounded-xl backdrop-blur bg-white/40 mt-4 align-content-start';
         entry.innerHTML = `
             <div class="px-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-6 align-content-start">
                 <div class="md:order-1 self-start">

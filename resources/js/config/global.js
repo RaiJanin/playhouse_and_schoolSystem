@@ -43,7 +43,7 @@ App.formControl = App.formControl || {}
 /**
  * Utility modules/functions
  * @type {{
- * generateOtp: (phoneNumber: number, email: string) => void,
+ * generateOtp: (phoneNumber: number, email: string, resend: boolean) => void,
  * handleCheckout: (orderNumber: ) => Promise<void>
  * }}
  */
@@ -63,7 +63,10 @@ App.dynamicState = App.dynamicState || {}
 /**
  * Component modules/functions
  * @type {{
- * populateSummary: () => void
+ * populateSummary: () => void,
+ * showAlert: (message: string, type:'success'|'caution'|'error', duration: number) => void,
+ * dismissAlert: (id: string) => void,
+ * criticalAlert: (err: string) => void,
  * }}
  */
 App.component = App.component || {}

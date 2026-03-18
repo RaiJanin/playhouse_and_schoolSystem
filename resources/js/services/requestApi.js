@@ -23,6 +23,15 @@ export async function submitData(apiLink, dataObject, method = 'POST', routePara
             body: JSON.stringify(dataObject)
         });
 
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw {
+                status: response.status,
+                statusText: response.statusText,
+                data: errorData
+            };
+        }
+
         return await response.json();
 
     } catch (error) {
@@ -56,6 +65,15 @@ export async function getOrDelete(method, apiLink, routeParam = null) {
         }
         
         const response = await fetch(reqURl, options);
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw {
+                status: response.status,
+                statusText: response.statusText,
+                data: errorData
+            };
+        }
+        
         return await response.json();
 
     } catch (error) {

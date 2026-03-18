@@ -22,6 +22,7 @@ import { disableBirthdayonSubmit } from './utilities/formControl.js';
 
 import { generateQR } from './components/qrCode.js';
 import { validateSelectedChild } from './components/existingChild.js';
+import './components/alertBlade.js';
 
 import { 
     requestBirthdayDropdownValidation,
@@ -119,6 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
             let parentsValid = true;
             let childrenValid = true;
 
+            let missingFields = [];
+            let firstInvalid = null;
+
             inputs.forEach(input => {
                 const isInHiddenContainer = input.closest('[hidden], .hidden');
                 if (isInHiddenContainer) {
@@ -128,13 +132,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!input.checkValidity()) {
                     input.classList.remove('border-[var(--color-primary)]');
                     input.classList.add('border-red-600');
+
+                    const label = document.querySelector(`label[for="${input.id}"]`);
+                    const fieldName = input.dataset.label || (label ? label.innerText : input.name || 'Field') || input.dataset.name;
+                    missingFields.push(fieldName);
+
+                    if(!firstInvalid) firstInvalid = input;
+
                     generalValid = false;
                 } else {
                     input.classList.remove('border-red-600');
                     input.classList.add('border-[var(--color-primary)]');
                 }
-                
             });
+
+            if (missingFields.length > 0 || !generalValid) {
+                const preview = missingFields.slice(0, 3).join(', ');
+                const message =
+                    missingFields.length > 3
+                        ? `Please fill in: ${preview}...`
+                        : `Please fill in: ${preview}`;
+
+                App.component.showAlert(message, 'caution');
+
+                firstInvalid.scrollIntoView({behavoir: 'smooth', block: 'center'});
+                return;
+            }
 
             requestBirthdayDropdownValidation(currentForm);
 
@@ -162,11 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(!App.staticState.correctCode) {
                     valid = false;
                 }
-            
-                showConsole('log', 'OTP step - oldUser.isOldUser:', oldUser.isOldUser);
-                showConsole('log', 'OTP step - oldUser.oldUserLoaded:', oldUser.oldUserLoaded);
-                showConsole('log', 'OTP step - oldUser.phoneNumber:', oldUser.phoneNumber);
-                
+
                 if(oldUser.isOldUser && !oldUser.oldUserLoaded) {
                     //Return to avoid conflicts with the auto scroll
                     return;
@@ -175,7 +194,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if(App.dynamicState.getCurrentStepName() === 'parent') {
                 parentsValid = validateDateInputs(currentForm);
-                if(!parentsValid || !generalValid) valid = false;
+                if(!parentsValid || !generalValid) {
+                    valid = false;
+                }
                 prevBtn.disabled = false;
             }
 
@@ -201,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 disableBirthdayonSubmit(false);
                 prevBtn.disabled = true;
             }
+            if(App.dynamicState.getCurrentStepName() === 'parent') return;
             App.formControl.showSteps(currentStep - 1,'prev');
         });
         
@@ -218,18 +240,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData(form);
             const jsonData = parseBracketedFormData(Object.fromEntries(formData.entries()));
-            showConsole('log', 'Before submit: ', jsonData);
+            showConsole('log', 'Before submit: ', jsonData, true);
+
+            submitBtn.classList.remove('bg-[var(--color-third)]');
+            submitBtn.classList.add('bg-[var(--color-third-light)]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
 
             const replyFromBackend = await submitData(API_ROUTES.submitURL, jsonData);
-            showConsole('log', "Reply from Backend", replyFromBackend);
 
-            if(replyFromBackend.isFormSubmitted) {
+            submitBtn.classList.remove('bg-[var(--color-third-light)]');
+            submitBtn.classList.add('bg-[var(--color-third)]');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit';
+
+            showConsole('log', "Reply from Backend", replyFromBackend, true);
+
+            if(replyFromBackend.isFormSubmitted && !replyFromBackend.error && !replyFromBackend.exception) {
                 form.classList.add('hidden');
                 stepTexts.forEach(text => {
                     text.classList.remove('text-gray-700');
                     text.classList.add('text-teal-500');
                 });
                 generateQR(replyFromBackend.orderNum);
+            } else {
+                App.component.showAlert('Server Error', 'error');
+
+                const errorMsg = replyFromBackend.exception ? `${replyFromBackend.exception}: ${replyFromBackend.message}` : replyFromBackend.message || 'Unknown error';
+                App.component.criticalAlert(errorMsg);
             }
 
         });

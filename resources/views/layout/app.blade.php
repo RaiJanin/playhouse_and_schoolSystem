@@ -19,6 +19,7 @@
     <div class="flex h-screen overflow-hidden">
         <div class="flex-1 flex flex-col overflow-hidden">
             @include('components.modal')
+            @include('components.alert')
             <main class="flex-1 overflow-y-auto bg-[var(--color-accent)] p-3 sm:p-6">
                 @yield('main-content')
             </main>
