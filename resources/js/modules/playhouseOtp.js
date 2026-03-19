@@ -223,7 +223,6 @@ App.utilites.generateOtp = async function (phoneNumber, email = null, resend = f
     } finally {
         otpLoading.classList.add('hidden');
         resendBtnContainer.classList.remove('hidden');
-        resendBtn.disabled = false;
     }
 }
 
