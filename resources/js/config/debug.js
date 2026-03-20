@@ -1,5 +1,5 @@
 const debugMode = false; //change this to view console.logs
-const allowOverride = true;
+const allowOverride = false;
 
 
 
