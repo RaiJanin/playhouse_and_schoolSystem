@@ -390,6 +390,15 @@ class PlayHouseController extends Controller
                 $d_code_query = $getparent->d_code;
             }
 
+            if(!$d_code_query)
+            {
+                return response()->json([
+                    'orders' => [],
+                    'message' => 'No parent or guardian found on our records.',
+                    'not_found' => true
+                ]);
+            }
+
         }
 
         if($orderCode)
