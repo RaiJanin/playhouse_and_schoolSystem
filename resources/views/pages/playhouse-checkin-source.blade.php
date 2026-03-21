@@ -10,7 +10,7 @@
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
             <div class="bg-gradient-to-r from-[var(--color-accent-secondary-light)] to-[var(--color-accent-secondary)] border backdrop-blur-xl border-gray-50 rounded-2xl shadow-md p-6 sm:p-8">
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-primary-mid-dark)]">
-                    How do you know about us?
+                    How did you know about us?
                 </h1>
 
                 <div class="mt-4">
