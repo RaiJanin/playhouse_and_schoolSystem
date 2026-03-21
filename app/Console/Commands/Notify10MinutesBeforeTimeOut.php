@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\OrderItems;
 use Carbon\Carbon;
+use App\Services\SendSmsService;
 
 class Notify10MinutesBeforeTimeOut extends Command
 {
