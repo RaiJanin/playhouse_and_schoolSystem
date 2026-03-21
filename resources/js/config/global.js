@@ -67,6 +67,7 @@ App.dynamicState = App.dynamicState || {}
  * showAlert: (message: string, type:'success'|'caution'|'error', duration: number) => void,
  * dismissAlert: (id: string) => void,
  * criticalAlert: (err: string) => void,
+ * promptDisabledFeature: () => void,
  * }}
  */
 App.component = App.component || {}

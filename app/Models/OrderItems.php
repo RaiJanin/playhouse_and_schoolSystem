@@ -18,7 +18,8 @@ class OrderItems extends Model
         'subtotal',
         'disc_code',
         'checked_out',
-        'lne_xtra_chrg'
+        'lne_xtra_chrg',
+        'notified_timeout'
     ];
 
     public function order()

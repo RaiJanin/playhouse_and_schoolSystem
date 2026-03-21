@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('otp:clean-expired')->everyMinute();
+        $schedule->command('otp:clean-expired')->everyTenSeconds();
+        $schedule->command('app:check-timeouts')->everyTenSeconds();
     }
 
     /**

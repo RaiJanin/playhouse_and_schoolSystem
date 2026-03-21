@@ -1,5 +1,6 @@
 import "../config/global.js";
 import { createBirthdayDropdownHtml } from "../utilities/birthdayInput.js";
+import '../components/placeholderFire.js';
 
 /**
  * Opens the edit modal and populates it with review data.
@@ -10,6 +11,8 @@ import { createBirthdayDropdownHtml } from "../utilities/birthdayInput.js";
  * @returns {void}
  */
 export function openEditModal(reviewData = null) {
+    if(App.component.promptDisabledFeature()) return;
+    
     const modal = document.getElementById('modal-container');
     const modalTitle = document.getElementById('modal-title');
     const itemsContainer = document.getElementById('items-subcat-container');
