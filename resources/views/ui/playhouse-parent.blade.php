@@ -1,31 +1,3 @@
-<style>
-    input::placeholder {
-        color: #6b7280 !important;
-        opacity: 1;
-    }
-    input::-webkit-input-placeholder {
-        color: #6b7280 !important;
-    }
-    input:-moz-placeholder {
-        color: #6b7280 !important;
-    }
-    input::-moz-placeholder {
-        color: #6b7280 !important;
-    }
-
-    .ph-edit-name-btn {
-        min-height: 44px;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid rgb(20 184 166);
-        border-radius: 0.5rem;
-        background: transparent;
-        color: rgb(17 94 89);
-        font-weight: 600;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-    }
-</style>
-
 <div class="p-0 sm:p-4">
     <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center">Parent Information</h2>
     <p class="text-center text-gray-600 mb-5 font-semibold">

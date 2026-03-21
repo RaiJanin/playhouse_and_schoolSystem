@@ -5,6 +5,8 @@ import { validateSelectedChild } from '../components/existingChild.js';
 import { CustomCheckbox } from '../components/customCheckbox.js';
 import { showConsole } from '../config/debug.js';
 
+import { cleanDeletedElement } from '../components/cleanDelEl.js';
+
 import { 
     attachBirthdayDropdown,
     underageWarning 
@@ -17,6 +19,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('addChildBtn');
 
     let childEntries = container.querySelectorAll('.child-entry').length - 1;
+
+    addBtn.addEventListener('click', () => {
+        const newEntry = createChildEntry();
+        container.appendChild(newEntry.entry);
+        newEntry.entry.querySelector('.child-first');
+
+        newEntryEventListeners(newEntry.entry, newEntry.index);
+                
+        const childNameInput = newEntry.entry.querySelector('input[name^="child["]');
+
+        childNameInput.addEventListener('input', (e) => {
+            const childName = e.target.value.trim();
+            if (childName) {
+                addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add`;
+            } else {
+                addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add another child`;
+            }
+        });
+        
+    });
 
     /**
      * Creates a new child entry form block and initializes its UI components.
@@ -133,7 +155,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return { entry, index };
     }
 
-    
+    /**
+     * Attaches event listeners to a child entry element, enabling removal and triggering validation.
+     *
+     * @function attachEntryListeners
+     * @param {HTMLElement} entry - The DOM element representing a child entry.
+     * @returns {void}
+     */
     function attachEntryListeners(entry) {
         const removeBtn = entry.querySelector('.remove-child');
         if (removeBtn) {
@@ -176,26 +204,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return (count + selectedSocksExistChild()) * window.masterfile.socksPrice;
     }
 
-    addBtn.addEventListener('click', () => {
-        const newEntry = createChildEntry();
-        container.appendChild(newEntry.entry);
-        newEntry.entry.querySelector('.child-first');
-
-        newEntryEventListeners(newEntry.entry, newEntry.index);
-                
-        const childNameInput = newEntry.entry.querySelector('input[name^="child["]');
-
-        childNameInput.addEventListener('input', (e) => {
-            const childName = e.target.value.trim();
-            if (childName) {
-                addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add`;
-            } else {
-                addBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> Add another child`;
-            }
-        });
-        
-    });
-
+    /**
+     * Initializes event listeners and checkbox behaviors for a newly added child entry,
+     * including guardian form toggling, validation handling, and authorization state updates.
+     *
+     * @function newEntryEventListeners
+     * @param {HTMLElement} entry - The DOM element representing the child entry container.
+     * @param {number} index - The index used to uniquely identify related form elements and checkboxes.
+     * @returns {void}
+     */
     function newEntryEventListeners(entry, index) {
         const localGuardianForm = entry.querySelector('.guardian-form-local');
         const localGuardianName = entry.querySelector('.guardian-name-local');

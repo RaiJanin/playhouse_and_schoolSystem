@@ -402,13 +402,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const summary = document.getElementById('summaryContainer');
             const data = new FormData(document.getElementById('playhouse-registration-form'));
             let parentEmail = data.get('parentEmail') ? `(${data.get('parentEmail')})` : '';
-            let guardianPhone = data.get('guardianPhone') ? `(${data.get('guardianPhone')})` : '';
-            // Read guardian birthday from the dropdown hidden input for summary/review payloads.
-            const guardianBirthday = data.get('guardianBirthday');
             const hiddenParentBirthday = document.getElementById('parentBirthday-hidden');
             const hiPVal = hiddenParentBirthday.value ? dateToString('shortDate', hiddenParentBirthday.value) : '-';
             let childrenItems = '';
-            let guardianInfo = '';
             let childrenTotalCost = 0;
             let parentBirthdayIsFilled = false;
 

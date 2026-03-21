@@ -171,6 +171,7 @@ function shuffleArray(array) {
  * @async
  * @param {string} phoneNumber - The phone number to receive OTP.
  * @param {string|null} email - Optional email address.
+ * @param {boolean} resens - Resend otp (default = false), set true if you want to resend
  * @returns {Promise<void>}
  */
 App.utilites.generateOtp = async function (phoneNumber, email = null, resend = false) {
@@ -257,6 +258,14 @@ function readAttempts(otpId) {
     }
 }
 
+/**
+ * Handles returning (old) user lookup, auto-fills form data, and controls step navigation.
+ *
+ * @function handleOldUser
+ * @param {boolean} flag - Indicates whether the user is marked as an old/returnee user.
+ * @param {string|number} apiParam - The phone number or identifier used to fetch returnee data.
+ * @returns {void}
+ */
 function handleOldUser(flag, apiParam) {
     oldUser.isOldUser = flag;
     oldUser.phoneNumber = apiParam;

@@ -1,4 +1,3 @@
-// Don't select phoneInput here - it might not be available yet when script loads
 import { CustomCheckbox } from '../components/customCheckbox.js';
 import { API_ROUTES } from '../config/api.js';
 import { showConsole } from '../config/debug.js';

@@ -49,6 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
     });
 
+    orderModal.querySelector('.close-modal').addEventListener('click', () => {
+        orderModal.classList.add('hidden');
+    });
+
+    successModal.querySelector('.close-success-modal').addEventListener('click', (e) => {
+        e.preventDefault();
+        successModal.classList.add('hidden');
+        ordersList.innerHTML = '';
+        getOrders(phone, guardian, orderCode);
+    });
+
     /**
      * Handles the checkout process for a specific order.
      * Prompts the user for confirmation, sends a PATCH request to the checkout API,
@@ -179,17 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
             App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
         }
     };
-
-    orderModal.querySelector('.close-modal').addEventListener('click', () => {
-        orderModal.classList.add('hidden');
-    });
-
-    successModal.querySelector('.close-success-modal').addEventListener('click', (e) => {
-        e.preventDefault();
-        successModal.classList.add('hidden');
-        ordersList.innerHTML = '';
-        getOrders(phone, guardian, orderCode);
-    });
 
     /**
      * Fetches orders based on optional filters: phone number, guardian name, or order code.

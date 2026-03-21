@@ -61,6 +61,14 @@ App.component.showAlert = function(message, type, duration = 4000) {
     notification.timeout = timeout;
 }
 
+/**
+ * Dismisses and removes a notification element with an exit animation.
+ *
+ * @function App.component.dismissAlert
+ * @memberof App.component
+ * @param {string} id - The ID of the notification element to dismiss.
+ * @returns {void}
+ */
 App.component.dismissAlert = function (id) {
     const notification = document.getElementById(id);
     if (notification) {
@@ -74,6 +82,14 @@ App.component.dismissAlert = function (id) {
     }
 }
 
+/**
+ * Displays a critical error alert modal with the provided message and attaches a close handler.
+ *
+ * @function App.component.criticalAlert
+ * @memberof App.component
+ * @param {string} err - The error message to display in the alert modal.
+ * @returns {void}
+ */
 App.component.criticalAlert = function (err) {
     const criticalAlertMesssageContainer = document.getElementById('alert-modal');
     criticalAlertMesssageContainer.classList.remove('animate-fadeOut');

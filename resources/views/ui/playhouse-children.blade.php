@@ -1,14 +1,3 @@
-<style>
-    #childrenForm {
-        background: linear-gradient(140deg, rgba(255, 255, 255, 0.5), rgba(219, 241, 255, 0.38));
-        border: 1px solid rgba(255, 255, 255, 0.58);
-        border-radius: 18px;
-        padding: 0.75rem;
-        box-shadow: 0 12px 34px rgba(74, 104, 139, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
-    }
-</style>
-
 <div class="p-1 sm:p-4">
     <div id="new-customer-header">
         <h2 class="font-bold text-2xl text-gray-800 mb-2 text-center">Children Information</h2>
@@ -26,7 +15,7 @@
         </p>
         <p id="add-child-prompt" class="text-center text-sm text-red-600 mb-5 font-semibold" hidden></p>
     </div>
-    <div id="childrenForm" class="space-y-5">
+    <div id="childrenForm" class="space-y-5 bg-gradient-to-br from-white/50 to-blue-100/40 border border-white/60 rounded-[18px] p-3 shadow-[0_12px_34px_rgba(74,104,139,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-md">
         <div id="exist-children" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-1 sm:p-3" hidden></div>
         <p id="existing-children-add-m" class="text-start text-gray-600 mt-5 font-semibold" hidden>
             Do you have a child to add?
