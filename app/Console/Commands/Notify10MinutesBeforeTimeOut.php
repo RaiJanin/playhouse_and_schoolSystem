@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\OrderItems;
+use App\Models\M06;
 use Carbon\Carbon;
 use App\Services\SendSmsService;
 
@@ -32,15 +33,11 @@ class Notify10MinutesBeforeTimeOut extends Command
 
         $items = OrderItems::with(['child.guardians' => function($query) {
                 $query->orderBy('created_at', 'desc');
-            }])
+            }, 'child.parent'])
             ->where(function ($query) use ($now) {
                 $query->whereRaw(
                     "created_at + (durationhours * interval '1 hour') BETWEEN ? AND ?",
                     [$now->copy()->addMinutes(9), $now->copy()->addMinutes(10)]
-                )
-                ->orWhereRaw(
-                    "created_at + (durationhours * interval '1 hour') < ?",
-                    [$now]
                 );
             })
             ->where('checked_out', false)
@@ -66,6 +63,7 @@ class Notify10MinutesBeforeTimeOut extends Command
         {
             $childrenNames = [];
             $guardianMap = [];
+            $phonenum = M06::where('d_name', $parent)->pluck('mobileno')->first();
 
             foreach ($children as $child) 
             {
@@ -95,15 +93,17 @@ class Notify10MinutesBeforeTimeOut extends Command
                 $message .= "\n\n{$guardianString}";
             }
 
-            //OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
-            $this->sendNotification($message);
+            $message = mb_convert_encoding($message, 'ASCII', 'UTF-8');
+            OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
+            $this->sendNotification($message, $phonenum);
         }
-
         return 0;
     }
 
-    private function sendNotification($msg)
+    private function sendNotification($msg, $recepientNum)
     {
         $this->info($msg);
+        $response = SendSmsService::sendnowsms($recepientNum, $msg);
+        $this->info("SMS response: {$response['response']}");
     }
 }
