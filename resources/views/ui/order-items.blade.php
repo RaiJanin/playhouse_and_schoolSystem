@@ -83,7 +83,6 @@
                             $value = $item->{$column};
                             $isBoolean = in_array($column, ['checked_out', 'notified_timeout',]);
                             $isCurrency = in_array($column, ['durationsubtotal', 'socksprice', 'subtotal', 'lne_xtra_chrg']);
-                            $unlimitedOrNot = $item->durationhours === '5' ? 'Unlimited' : $item->durationhours
                         @endphp
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
