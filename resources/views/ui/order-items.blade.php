@@ -52,6 +52,8 @@
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Child Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent Name</th>
                 @foreach($columns as $column)
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {{ $labels[$column] ?? ucfirst($column) }}
@@ -62,10 +64,24 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @forelse($orderItems as $item)
                 <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        @if($item->child)
+                            {{ $item->child->firstname }} {{ $item->child->lastname }}
+                        @else
+                            N/A
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        @if($item->order && $item->order->parentPl)
+                            {{ $item->order->parentPl->d_name ?? $item->order->parentPl->firstname . ' ' . $item->order->parentPl->lastname }}
+                        @else
+                            {{ $item->guardian ?? 'N/A' }}
+                        @endif
+                    </td>
                     @foreach($columns as $column)
                         @php
                             $value = $item->{$column};
-                            $isBoolean = in_array($column, ['checked_out', 'notified_timeout', 'ckin', 'ckout']);
+                            $isBoolean = in_array($column, ['checked_out', 'notified_timeout',]);
                             $isCurrency = in_array($column, ['durationsubtotal', 'socksprice', 'subtotal', 'lne_xtra_chrg']);
                         @endphp
                         
@@ -88,7 +104,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="{{ count($columns) }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                    <td colspan="{{ count($columns) + 2 }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                         No order items found.
                     </td>
                 </tr>
