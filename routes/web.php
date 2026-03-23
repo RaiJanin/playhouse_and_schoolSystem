@@ -15,6 +15,7 @@ Route::get('/check-in-source', [PlayHouseController::class, 'checkInSource'])->n
 Route::get('/registration', [PlayHOuseController::class, 'registration'])->name('playhouse.registration');
 Route::get('/order-info/{order_no}', [PlayHouseController::class, 'orderInfo'])->name('order.info');
 Route::get('/checkout', [PlayHouseController::class, 'checkoutPage'])->name('playhouse.checkout');
+Route::get('/admin', [PlayHouseController::class, 'viewBookings'])->name('playhouse.bookings');
 
 
 //--------------TESTING

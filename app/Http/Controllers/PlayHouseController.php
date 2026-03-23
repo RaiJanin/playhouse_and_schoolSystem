@@ -505,6 +505,58 @@ class PlayHouseController extends Controller
         }
     }
 
+    public function viewBookings(Request $request)
+    {
+        $query = OrderItems::query();
+        
+        // Filter by status: active check-ins, check-outs, or reservations
+        $status = $request->get('status');
+
+        switch($status)
+        {
+            case 'ckin':
+                $query->whereNotNull('ckin')->whereNull('ckout');
+                break;
+            case 'ckout':
+                $query->whereNotNull('ckout');
+                break;
+            case 'reservation':
+                $query->whereNull('ckin')->whereNull('ckout');
+                break;
+        }
+        
+        $query->when($request->filled(['start_date', 'end_date']), function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+            ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+        });
+        
+        $orderItems = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        
+        $columns = \DB::getSchemaBuilder()->getColumnListing('ordlne_ph');
+        
+        $labels = [
+            'id' => 'ID',
+            'ord_code_ph' => 'Order Code',
+            'd_code_child' => 'Child Code',
+            'guardian' => 'Guardian',
+            'durationhours' => 'Duration (Hours)',
+            'durationsubtotal' => 'Duration Subtotal',
+            'socksqty' => 'Socks Qty',
+            'socksprice' => 'Socks Price',
+            'subtotal' => 'Subtotal',
+            'disc_code' => 'Discount Code',
+            'checked_out' => 'Checked Out',
+            'lne_xtra_chrg' => 'Extra Charge',
+            'notified_timeout' => 'Notified Timeout',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'ckin' => 'Checked In',
+            'ckout' => 'Checked Out',
+        ];
+        
+        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels'));
+    }
+
 
     
 
