@@ -52,8 +52,8 @@
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Child Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10">Child Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10" style="left: 120px;">Parent Name</th>
                 @foreach($columns as $column)
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {{ $labels[$column] ?? ucfirst($column) }}
@@ -64,14 +64,14 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @forelse($orderItems as $item)
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-white z-10">
                         @if($item->child)
                             {{ $item->child->firstname }} {{ $item->child->lastname }}
                         @else
                             N/A
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-white z-10" style="left: 120px;">
                         @if($item->order && $item->order->parentPl)
                             {{ $item->order->parentPl->d_name ?? $item->order->parentPl->firstname . ' ' . $item->order->parentPl->lastname }}
                         @else
