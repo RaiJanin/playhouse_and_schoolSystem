@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                     <div class="mt-6 pt-4 border-t-2 border-[var(--color-primary)] space-y-4">
-                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4" hidden>
                             <p class="text-lg font-bold text-teal-800 mb-2">DISCOUNT CODE</p>
                             <p class="text-xs text-gray-600 mb-3">Got a discount? Enter it below — and come back soon for more offers!</p>
                             <div class="flex flex-col sm:flex-row gap-3">

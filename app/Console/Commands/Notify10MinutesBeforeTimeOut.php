@@ -94,8 +94,11 @@ class Notify10MinutesBeforeTimeOut extends Command
             }
 
             $message = mb_convert_encoding($message, 'ASCII', 'UTF-8');
-            OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
+            $sendNotifications = OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
+            
             $this->sendNotification($message, $phonenum);
+            $this->info("Sent notifications: {$sendNotifications}");
+            
         }
         return 0;
     }
@@ -105,5 +108,6 @@ class Notify10MinutesBeforeTimeOut extends Command
         $this->info($msg);
         $response = SendSmsService::sendnowsms($recepientNum, $msg);
         $this->info("SMS response: {$response['response']}");
+        return true;
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\PlayHouseController;
 
 //WEB routes for page viewing only
@@ -29,3 +30,4 @@ Route::get('/test-mail', function () {
 });
 
 require 'files.php';
+require 'scheduler_http.php';
