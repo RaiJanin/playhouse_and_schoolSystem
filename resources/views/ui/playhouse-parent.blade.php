@@ -30,7 +30,7 @@
             <input type="hidden" id="parentBirthday-hidden" name="parentBirthday">
         </div>
     </div>
-    <div class="mt-4 w-full">
+    <div class="mt-4 w-full" hidden>
         <div class="relative overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-white to-blue-50 shadow-md p-5">
             <div class="flex items-start gap-3">
                 <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg shadow">

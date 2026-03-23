@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <button type="button" id="apply-discount-btn" class="min-h-[44px] px-5 py-3 text-base font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition-colors touch-manipulation">Apply</button>
                             </div>
                         </div>
-                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4" hidden>
                             <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 10% off</p>
                             <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg shadow">
                                 <i class="fa-brands fa-facebook-f"></i>
