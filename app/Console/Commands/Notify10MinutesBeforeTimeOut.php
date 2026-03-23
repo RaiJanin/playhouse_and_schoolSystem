@@ -38,10 +38,14 @@ class Notify10MinutesBeforeTimeOut extends Command
                 $query->whereRaw(
                     "created_at + (durationhours * interval '1 hour') BETWEEN ? AND ?",
                     [$now->copy()->addMinutes(9), $now->copy()->addMinutes(10)]
-                );
+                )/**->orWhereRaw(
+                    "created_at + (durationhours * interval '1 hour') < ?",
+                    [$now]
+                )*/;
             })
             ->where('checked_out', false)
             ->where('notified_timeout', false)
+            ->whereNot('durationhours', 5)
             ->get();
 
         $notifications = [];
@@ -63,11 +67,11 @@ class Notify10MinutesBeforeTimeOut extends Command
         {
             $childrenNames = [];
             $guardianMap = [];
-            $phonenum = M06::where('d_name', $parent)->pluck('mobileno')->first();
+            $parentData = M06::where('d_name', $parent)->select('mobileno', 'lastname')->first();
 
             foreach ($children as $child) 
             {
-                $childrenNames[] = $child->firstname;
+                $childrenNames[] = $child->firstname . ' ' . $parentData->lastname;
 
                 $latestGuardian = $child->guardians->first();
                 if ($latestGuardian && $latestGuardian->guardianauthorized) 
@@ -76,28 +80,31 @@ class Notify10MinutesBeforeTimeOut extends Command
                 }
             }
 
-            $childrenString = implode(', ', $childrenNames);
+            $childrenString = implode("\n\t", $childrenNames);
 
             $guardianMessages = [];
             foreach ($guardianMap as $guardianName => $childNames) 
             {
-                $childList = implode(', ', $childNames);
+                $childList = implode("\n\t", $childNames);
                 $guardianMessages[] = "{$guardianName} can pick up {$childList}";
             }
 
             $guardianString = implode("\n", $guardianMessages);
 
-            $message = "NOTICE FROM MIMO PLAY CAFE\n\n{$parent}, your children: {$childrenString} are about to timeout.";
-            if (!empty($guardianString)) 
-            {
-                $message .= "\n\n{$guardianString}";
-            }
+            $message = "FRIENDLY REMINDER FROM MIMO PLAY CAFE\n\n";
+            $message .= "{$parent}, your children:\n";
+            $message .= "\t{$childrenString} \n\n";
+            $message .= "They will be ready for pick up.";
+            // if (!empty($guardianString)) 
+            // {
+            //     $message .= "\n\n{$guardianString}";
+            // }
 
             $message = mb_convert_encoding($message, 'ASCII', 'UTF-8');
             $sendNotifications = OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
             
-            $this->sendNotification($message, $phonenum);
-            $this->info("Sent notifications: {$sendNotifications}");
+            $this->sendNotification($message, $parentData->mobileno);
+            $this->info("Sent notifications: {$sendNotifications}\n\n\n");
             
         }
         return 0;
@@ -107,7 +114,7 @@ class Notify10MinutesBeforeTimeOut extends Command
     {
         $this->info($msg);
         $response = SendSmsService::sendnowsms($recepientNum, $msg);
-        $this->info("SMS response: {$response['response']}");
+        $this->info("\nSMS response: {$response['response']}\n");
         return true;
     }
 }
