@@ -413,7 +413,7 @@ class PlayHouseController extends Controller
 
         $orderToCheckout = $query->whereHas('orderItems', function($qu) {
                 $qu->where('checked_out', false)
-                   ->whereNot('ckin', '00:00');
+                   ->whereNot('ckin', null);
             })->with(['orderItems' => function($item) {
                 $item->with('child')->where('checked_out', false);
             }])->get();

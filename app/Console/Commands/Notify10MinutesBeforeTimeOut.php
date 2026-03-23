@@ -35,16 +35,17 @@ class Notify10MinutesBeforeTimeOut extends Command
                 $query->orderBy('created_at', 'desc');
             }, 'child.parent'])
             ->where(function ($query) use ($now) {
-                $query->whereRaw(
-                    "created_at + (durationhours * interval '1 hour') BETWEEN ? AND ?",
-                    [$now->copy()->addMinutes(9), $now->copy()->addMinutes(10)]
-                )/**->orWhereRaw(
+                $query->whereBetween('ckout', [
+                    $now->copy()->addMinutes(8),
+                    $now->copy()->addMinutes(10)
+                ])/**->orWhereRaw(
                     "created_at + (durationhours * interval '1 hour') < ?",
                     [$now]
                 )*/;
             })
             ->where('checked_out', false)
             ->where('notified_timeout', false)
+            ->whereNot('isfreeze', true)
             ->whereNot('durationhours', 5)
             ->get();
 
