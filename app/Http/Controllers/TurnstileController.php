@@ -62,124 +62,6 @@ class TurnstileController extends Controller
        return response("<pre>Updated successfully.</pre>");
     }
 
-    public function turnstileSrch(Request $request)
-    {
-        $status = $request->query('status');
-        $qrCode = $request->query('qr');
-        $time = $request->query('time') ? Carbon::parse($request->query('time')) : now();
-
-        try
-        {
-            DB::beginTransaction();
-            $response = [];
-
-            if(!$status)
-            {
-                return reponse()->json([
-                    'message' => "Status is required with values 'in' or 'out'"
-                ]);
-            }
-            if(!$qrCode)
-            {
-                return reponse()->json([
-                    'message' => 'QRCode is required'
-                ]);
-            }
-
-            $orderItems = OrderItems::where(function ($query) use ($qrCode) {
-                $query->where('qr_child', $qrCode)
-                    ->orWhere('qr_guardian', $qrCode);
-                })->where('checked_out', false)->get();
-
-            if(!$orderItems)
-            {
-                return reponse()->json([
-                    'message' => 'No reservations found or invalid qr code'
-                ]);
-            }
-
-            foreach($orderItems as $orderItem)
-            {
-                $action = 'none';
-
-                switch($status)
-                {
-                    case 'in':
-                        if(!$orderItem->ckin && !$orderItem->bkout && !$orderItem->bkin)
-                        {
-                            $orderItem->ckin = $time;
-                            $orderItem->isfreeze = false;
-                            $action = "<pre>Checked-in</pre>";
-                        } 
-                        else
-                        if($orderItem->ckin && $orderItem->bkout && !$orderItem->bkin)
-                        {
-                            $orderItem->bkin = $time;
-                            $orderItem->isfreeze = false;
-                            $action = "<pre>Resume from freeze</pre>";
-                        }
-                        else
-                        {
-                            $action = "<pre>Ignored(already active)</pre>";
-                        }
-                        break;
-                    case 'out':
-                        if($orderItem->ckin && !$orderItem->bkout)
-                        {
-                            $orderItem->bkout = $time;
-                            $orderItem->isfreeze = true;
-                            $action = "<pre>Frozen</pre>";
-                        }
-                        else
-                        {
-                            $action = "<pre>Ignored(cannot freeze)</pre>";
-                        }
-                        break;
-                    default:
-                        return reponse()->json([
-                            'message' => 'Status value is incorrect'
-                        ]);
-                }
-
-                $orderItem->save();
-
-                $response[] = [
-                    'order_item_id' => $orderItem->id,
-                    'qr_child' => $orderItem->qr_child,
-                    'qr_guardian' => $orderItem->qr_guardian,
-                    'action' => $action,
-                    'timestamp' => $time->toDateTimeString(),
-                ];
-
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Processed Successfully',
-                'processedDatas' => array_map(function ($item) {
-                    return [
-                        'order_item_id' => $item['order_item_id'],
-                        'child' => $item['qr_child'],
-                        'guardian' => $item['qr_guardian'],
-                        'action' => $item['action'],
-                        'timestamp' => $item['timestamp'],
-                    ];
-                }, $response),
-                'data' => $orderItems
-            ]);
-
-        } catch(\Exception $e) {
-            DB::rollback();
-
-            return response()->json([
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-        }
-        
-    }
-
     public function turnstileSrchPOST(Request $request)
     {
         $request->validate([
@@ -199,13 +81,13 @@ class TurnstileController extends Controller
 
             if(!$status)
             {
-                return reponse()->json([
+                return response()->json([
                     'message' => "Status is required with values 'in' or 'out'"
                 ]);
             }
             if(!$qrCode)
             {
-                return reponse()->json([
+                return response()->json([
                     'message' => 'QRCode is required'
                 ]);
             }
@@ -217,7 +99,7 @@ class TurnstileController extends Controller
 
             if(!$orderItems)
             {
-                return reponse()->json([
+                return response()->json([
                     'message' => 'No reservations found or invalid qr code'
                 ]);
             }
@@ -260,7 +142,7 @@ class TurnstileController extends Controller
                         }
                         break;
                     default:
-                        return reponse()->json([
+                        return response()->json([
                             'message' => 'Status value is incorrect'
                         ]);
                 }
@@ -301,12 +183,5 @@ class TurnstileController extends Controller
             ]);
         }
         
-    }
-
-    public function turnstileSrchCurl(Request $request)
-    {
-        $status = $request->query('status');
-        $qrCode = $request->query('qr');
-        $time = $request->query('time') ? Carbon::parse($request->query('time')) : now();
     }
 }

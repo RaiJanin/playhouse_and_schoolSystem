@@ -6,4 +6,3 @@ use App\Http\Controllers\RunCommandsViaController;
 
 Route::get('/run-scheduler', [RunCommandsViaController::class, 'index']);
 Route::get('/turnstile-flag', [TurnstileController::class, 'turnstileFlag']);
-Route::post('/turnstile-srch', [TurnstileController::class, 'turnstileSrchPOST']);
