@@ -20,7 +20,21 @@ class OrderItems extends Model
         'checked_out',
         'lne_xtra_chrg',
         'notified_timeout',
-        'durations_id'
+        'durations_id',
+        'ckin',
+        'ckout',
+        'bkout',
+        'bkin',
+        'isfreeze',
+        'qr_child',
+        'qr_guardian'
+    ];
+
+    protected $casts = [
+        'ckin' => 'datetime',
+        'bkout' => 'datetime',
+        'bkin' => 'datetime',
+        'isfreeze' => 'boolean'
     ];
 
     public function order()
