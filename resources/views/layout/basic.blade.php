@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     @yield('styles')
 </head>
-<body class="min-h-screen px-5 py-10" style="background: linear-gradient(135deg, #7FFFD4 0%, #F5DEB3 50%, #E8D5B7 100%);">
-    <main class="max-w-full mx-auto overflow-auto">
+<body class="min-h-screen px-5 py-10 bg-gradient-to-r from-[var(--color-accent-secondary-light)] to-[var(--color-accent-secondary)]">
+    @include('components.backdrop')
+    <main class="max-w-full mx-auto overflow-auto backdrop-blur-sm">
         @yield('contents')
     </main>
     @yield('scripts')
