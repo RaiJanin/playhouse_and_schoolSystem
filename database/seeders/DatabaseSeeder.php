@@ -17,9 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // Parent table FIRST
         $this->call([
-            M06TableSeeder::class,      // ← Parent table
-            M06ChildTableSeeder::class, // ← Child table (after parent)
-            ItemsPricesSeeder::class
+            // M06TableSeeder::class,      // ← Parent table
+            // M06ChildTableSeeder::class, // ← Child table (after parent)
+            // ItemsPricesSeeder::class
+            UserSeeder::class
         ]);
     }
 }
