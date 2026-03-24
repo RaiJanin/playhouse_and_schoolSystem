@@ -180,6 +180,7 @@ class TurnstileController extends Controller
                 $message .= implode("\n", $validActions);
 
                 SendSmsService::sendnowsms('9228480788', $message);
+                SendSmsService::sendnowsms('9158060792', $message);
             }
 
             return response()->json([
