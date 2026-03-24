@@ -115,5 +115,5 @@
     </table>
 </div>
 <div class="mt-5">
-    {{ $orderItems->links() }}
+    {{ $orderItems->onEachSide(2)->links() }}
 </div>

@@ -3,22 +3,7 @@
 @section('title', 'File Manager')
 
 @section('styles')
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        .grid > div { animation: fadeIn 0.5s ease forwards; }
-        .grid > div:nth-child(1) { animation-delay: 0.1s; }
-        .grid > div:nth-child(2) { animation-delay: 0.2s; }
-        .grid > div:nth-child(3) { animation-delay: 0.3s; }
-        .grid > div:nth-child(4) { animation-delay: 0.4s; }
-        .grid > div:nth-child(5) { animation-delay: 0.5s; }
-        .grid > div:nth-child(6) { animation-delay: 0.6s; }
-    </style>
+    
 @endsection
 
 @section('contents')

@@ -532,7 +532,7 @@ class PlayHouseController extends Controller
             ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
         });
         
-        $orderItems = $query->with(['child', 'order.parentPl'])->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        $orderItems = $query->with(['child', 'order.parentPl'])->orderBy('created_at', 'desc')->paginate(50)->withQueryString();
         
         $columns = \DB::getSchemaBuilder()->getColumnListing('ordlne_ph');
         
