@@ -12,7 +12,7 @@ class FileManagementController extends Controller
     {
         $files = Storage::disk('public')->allFiles('uploads');
 
-        return view('file-manager.index', compact('files'));
+        return view('pages.file-manager', compact('files'));
     }
 
     public function delete($file)

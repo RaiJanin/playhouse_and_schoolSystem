@@ -1,19 +1,27 @@
 import '../config/global.js';
 import { showConsole } from '../config/debug.js';
+
 import { parentFields } from '../modules/playhouseParent.js';
+
 import { CustomCheckbox } from '../components/customCheckbox.js';
+
 import { dateToString } from '../utilities/dateString.js';
 import { attachBirthdayDropdown } from '../utilities/birthdayInput.js';
+import { incrementOnlyOnesViaScope } from '../utilities/counter.js';
+
 import { oldUser } from './olduserState.js';
+
 import { 
     attachFields,
     selectedChildState,
     validateSelectedChild
 } from '../components/existingChild.js';
+
 import { 
     disableDateInputs, 
     enableReadonly 
 } from '../utilities/formControl.js';
+
 
 const existedChild = document.getElementById('exist-children');
 
@@ -201,11 +209,9 @@ export function autoFillChildren(data, parent) {
  */
 export function selectedSocksExistChild() {
     const selectedSocks = existedChild.querySelectorAll('.edit-child-socks');
+    const guardianSocksSelsExistChild = existedChild.querySelectorAll('select[name$="[guardianSocks]"]');
 
-    let count = 0;
-    selectedSocks.forEach(socksSel => {
-        if(socksSel && socksSel.value === '1') count++;
-    });
+    let count = incrementOnlyOnesViaScope(selectedSocks) + incrementOnlyOnesViaScope(guardianSocksSelsExistChild);
 
     return count;
 }

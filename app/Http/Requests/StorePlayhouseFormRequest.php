@@ -39,6 +39,7 @@ class StorePlayhouseFormRequest extends FormRequest
             'child.*.guardianLastName' => 'nullable|string|max:255',
             'child.*.guardianPhone' => 'nullable|string|max:20',
             'child.*.guardianAge' => 'nullable|integer',
+            'child.*.guardianSocks' => 'nullable|boolean',
             'child.*.guardianAuthorized' => 'nullable|boolean',
             'discountCode' => 'nullable|string|max:50',
             'fb_pp_url' => 'nullable|url|max:255',

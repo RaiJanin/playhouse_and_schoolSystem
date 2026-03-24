@@ -161,7 +161,7 @@ class PlayHouseController extends Controller
                                     ->first();
 
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
-
+                    $totalSocks = $child['addSocks'] + $child['guardianSocks'];
                     $grdFullName = trim(($child['guardianName'] ?? '') . ' ' . ($child['guardianLastName'] ?? ''));
 
                     OrderItems::create([
@@ -170,9 +170,9 @@ class PlayHouseController extends Controller
                         'guardian' => $grdFullName ?: null,
                         'durationhours' => $duration,
                         'durationsubtotal' => $durationPrices[$child['playDuration']] ?? 0,
-                        'socksqty' => $child['addSocks'],
-                        'socksprice' => $child['addSocks'] * $socksPrice->price,
-                        'subtotal' => ($durationPrices[$child['playDuration']] ?? 0) + ($child['addSocks'] * $socksPrice->price),
+                        'socksqty' => $totalSocks,
+                        'socksprice' => $totalSocks * $socksPrice->price,
+                        'subtotal' => ($durationPrices[$child['playDuration']] ?? 0) + ($totalSocks * $socksPrice->price),
                         'disc_code' => $data['discountCode']
                     ]);
                 }

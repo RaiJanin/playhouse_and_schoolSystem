@@ -35,11 +35,11 @@
                         <div id="guardian-form" class="grid grid-cols-1 gap-3 mt-3" hidden>
                             <div>
                                 <label for="guardianName" class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="guardianName" name="child[0][guardianName]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" id="guardianName" name="child[0][guardianName]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
                             </div>
                             <div>
                                 <label for="guardianLastName" class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name</label>
-                                <input type="text" id="guardianLastName" name="child[0][guardianLastName]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" id="guardianLastName" name="child[0][guardianLastName]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
                             </div>
                             <div>
                                 <label for="guardianPhone" class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
@@ -48,6 +48,18 @@
                             <div>
                                 <label for="guardianAge" class="block text-base font-semibold text-gray-900 mb-2">Guardian Age</label>
                                 <input type="tel" id="guardianAge" name="child[0][guardianAge]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
+                            </div>
+                            <div>
+                                <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (&#8369;100)</label>
+                                <div class="relative">
+                                    <select name="child[0][guardianSocks]" class="child-duration bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--color-primary)]">
+                                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                                    </div>
+                                </div>
                             </div>
                             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
@@ -67,7 +79,7 @@
                 <div class="md:order-2 grid grid-cols-1 gap-4 self-start">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="child[0][name]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
+                        <input type="text" name="child[0][name]" class="bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" required/>
                     </div>
 
                     <div>

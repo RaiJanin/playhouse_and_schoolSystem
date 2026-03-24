@@ -60,6 +60,10 @@
                                     </div>
                                     @if($item->socksqty)
                                         <div class="flex justify-between">
+                                            <span>Socks Quantity</span>
+                                            <span>{{ $item->socksqty }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
                                             <span>Socks</span>
                                             <span>₱{{ number_format($item->socksprice, 2) }}</span>
                                         </div>

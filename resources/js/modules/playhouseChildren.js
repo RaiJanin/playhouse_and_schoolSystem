@@ -1,10 +1,13 @@
 import '../config/global.js'
-import { attachCameraCapture } from '../utilities/cameraCapture.js';
-import { selectedSocksExistChild } from '../services/autoFill.js';
-import { validateSelectedChild } from '../components/existingChild.js';
-import { CustomCheckbox } from '../components/customCheckbox.js';
 import { showConsole } from '../config/debug.js';
 
+import { attachCameraCapture } from '../utilities/cameraCapture.js';
+import { incrementOnlyOnesViaScope } from '../utilities/counter.js';
+
+import { selectedSocksExistChild } from '../services/autoFill.js';
+
+import { validateSelectedChild } from '../components/existingChild.js';
+import { CustomCheckbox } from '../components/customCheckbox.js';
 import { cleanDeletedElement } from '../components/cleanDelEl.js';
 
 import { 
@@ -70,11 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="guardian-form-local grid grid-cols-1 gap-3 mt-3" hidden>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian First Name <span class="text-red-600">*</span></label>
-                                <input type="text" name="child[${childEntries}][guardianName]" class="guardian-name-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Will"/>
+                                <input type="text" name="child[${childEntries}][guardianName]" class="guardian-name-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Last Name</label>
-                                <input type="text" name="child[${childEntries}][guardianLastName]" class="guardian-last-name-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Smith"/>
+                                <input type="text" name="child[${childEntries}][guardianLastName]" class="guardian-last-name-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
                             </div>
                             <div>
                                 <label class="block text-base font-semibold text-gray-900 mb-2">Guardian Phone Number</label>
@@ -83,6 +86,18 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div>
                                 <label for="guardianAge" class="block text-base font-semibold text-gray-900 mb-2">Guardian Age</label>
                                 <input type="tel" name="child[${childEntries}][guardianAge]" class="guardian-age-local bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"/>
+                            </div>
+                            <div>
+                                <label class="block text-base font-semibold text-gray-900 mb-2">Add Socks (&#8369;100)</label>
+                                <div class="relative">
+                                    <select name="child[${childEntries}][guardianSocks]" class="child-duration bg-white/70 w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300 cursor-pointer appearance-none">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--color-primary)]">
+                                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                                    </div>
+                                </div>
                             </div>
                             <button type="button" id="confirm-guardian-checkbox-local-${childEntries}" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
@@ -102,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="md:order-2 grid grid-cols-1 gap-4 self-start">
                     <div>
                         <label class="block text-base font-semibold text-gray-900 mb-2">Child Name <span class="text-red-600">*</span></label>
-                        <input type="text" name="child[${childEntries}][name]" class="bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" placeholder="Jane" required/>
+                        <input type="text" name="child[${childEntries}][name]" class="bg-white/20 backdrop-blur-2xl w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300" required/>
                     </div>
 
                     <div>
@@ -195,13 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     App.dynamicState.countSelectedSocks = function() {
         const socksSelects = container.querySelectorAll('select[name$="[addSocks]"]');
+        const guardianSocksSelects = container.querySelectorAll('select[name$="[guardianSocks]"]');
 
-        let count = 0;
-        socksSelects.forEach(sel => {
-            if (sel && sel.value === '1') count++;
-        });
+        let childSocksCount = incrementOnlyOnesViaScope(socksSelects);
+        let guardianSocksCount = incrementOnlyOnesViaScope(guardianSocksSelects);
 
-        return (count + selectedSocksExistChild()) * window.masterfile.socksPrice;
+        return ((childSocksCount + guardianSocksCount) + selectedSocksExistChild()) * window.masterfile.socksPrice;
     }
 
     /**

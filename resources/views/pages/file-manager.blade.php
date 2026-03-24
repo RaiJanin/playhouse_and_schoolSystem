@@ -1,5 +1,7 @@
 @extends('layout.basic')
 
+@section('title', 'File Manager')
+
 @section('styles')
     <style>
         @keyframes fadeIn {
