@@ -19,7 +19,8 @@ class OrderItems extends Model
         'disc_code',
         'checked_out',
         'lne_xtra_chrg',
-        'notified_timeout'
+        'notified_timeout',
+        'durations_id'
     ];
 
     public function order()
@@ -30,6 +31,11 @@ class OrderItems extends Model
     public function child()
     {
         return $this->belongsTo(M06Child::class, 'd_code_child', 'd_code_c');
+    }
+
+    public function durationhoursprices()
+    {
+        return $this->belongsTo(DurationPrices::class, 'durations_id', 'id');
     }
 
 }

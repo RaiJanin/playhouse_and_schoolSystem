@@ -81,7 +81,7 @@
                     @foreach($columns as $column)
                         @php
                             $value = $item->{$column};
-                            $isBoolean = in_array($column, ['checked_out', 'notified_timeout',]);
+                            $isBoolean = in_array($column, ['checked_out', 'notified_timeout', 'isfreeze']);
                             $isCurrency = in_array($column, ['durationsubtotal', 'socksprice', 'subtotal', 'lne_xtra_chrg']);
                         @endphp
                         

@@ -163,6 +163,7 @@ class PlayHouseController extends Controller
                     $duration = $child['playDuration'] === 'unlimited' ? '5' : $child['playDuration'];
                     $totalSocks = $child['addSocks'] + $child['guardianSocks'];
                     $grdFullName = trim(($child['guardianName'] ?? '') . ' ' . ($child['guardianLastName'] ?? ''));
+                    $durationsId = DurationPrices::where('duration_hour', $child['playDuration'])->value('id');
 
                     OrderItems::create([
                         'ord_code_ph' => $order->ord_code_ph,
@@ -173,7 +174,8 @@ class PlayHouseController extends Controller
                         'socksqty' => $totalSocks,
                         'socksprice' => $totalSocks * $socksPrice->price,
                         'subtotal' => ($durationPrices[$child['playDuration']] ?? 0) + ($totalSocks * $socksPrice->price),
-                        'disc_code' => $data['discountCode']
+                        'disc_code' => $data['discountCode'],
+                        'durations_id' => $durationsId
                     ]);
                 }
             }

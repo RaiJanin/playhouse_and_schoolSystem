@@ -13,4 +13,9 @@ class DurationPrices extends Model
         'label', 
         'price'
     ];
+
+    public function orderlines()
+    {
+        return $this->hasMany(OrderItems::class, 'durations_id', 'id');
+    }
 }
