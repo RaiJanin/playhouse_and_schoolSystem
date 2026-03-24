@@ -75,11 +75,15 @@ class TurnstileController extends Controller
 
             if(!$status)
             {
-                return response("<pre>Status is required with values 'in' or 'out'</pre>");
+                return reponse()->json([
+                    'message' => "Status is required with values 'in' or 'out'"
+                ]);
             }
             if(!$qrCode)
             {
-                return response("<pre>QRCode is required</pre>");
+                return reponse()->json([
+                    'message' => 'QRCode is required'
+                ]);
             }
 
             $orderItems = OrderItems::where(function ($query) use ($qrCode) {
@@ -89,7 +93,9 @@ class TurnstileController extends Controller
 
             if(!$orderItems)
             {
-                return response("<pre>No reservations found or invalid qr code</pre>");
+                return reponse()->json([
+                    'message' => 'No reservations found or invalid qr code'
+                ]);
             }
 
             foreach($orderItems as $orderItem)
@@ -130,7 +136,9 @@ class TurnstileController extends Controller
                         }
                         break;
                     default:
-                        return response("<pre> Status value is incorrect </pre>");
+                        return reponse()->json([
+                            'message' => 'Status value is incorrect'
+                        ]);
                 }
 
                 $orderItem->save();
@@ -147,15 +155,159 @@ class TurnstileController extends Controller
 
             DB::commit();
 
-            return response("<pre>Processed Successfully\n" . implode("\n", array_map(function ($item) {
-                return "OrderItem #{$item['order_item_id']} | Child: {$item['qr_child']} | Guardian: {$item['qr_guardian']} | Action: {$item['action']} | Time: {$item['timestamp']}";
-            }, $response)) . "</pre>");
+            return response()->json([
+                'message' => 'Processed Successfully',
+                'processedDatas' => array_map(function ($item) {
+                    return [
+                        'order_item_id' => $item['order_item_id'],
+                        'child' => $item['qr_child'],
+                        'guardian' => $item['qr_guardian'],
+                        'action' => $item['action'],
+                        'timestamp' => $item['timestamp'],
+                    ];
+                }, $response),
+                'data' => $orderItems
+            ]);
 
         } catch(\Exception $e) {
             DB::rollback();
 
-            return response("<pre>". $e->getMessage() ."</pre>");
+            return response()->json([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
         
+    }
+
+    public function turnstileSrchPOST(Request $request)
+    {
+        $request->validate([
+            'qr' => 'required|string|max:20',
+            'status' => 'required|string|max:10',
+            'time' => 'nullable|date'
+        ]);
+
+        $qrCode = $request->qr;
+        $status = $request->status;
+        $time = $request->time ? Carbon::parse($request->time) : now();
+
+        try
+        {
+            DB::beginTransaction();
+            $response = [];
+
+            if(!$status)
+            {
+                return reponse()->json([
+                    'message' => "Status is required with values 'in' or 'out'"
+                ]);
+            }
+            if(!$qrCode)
+            {
+                return reponse()->json([
+                    'message' => 'QRCode is required'
+                ]);
+            }
+
+            $orderItems = OrderItems::where(function ($query) use ($qrCode) {
+                $query->where('qr_child', $qrCode)
+                    ->orWhere('qr_guardian', $qrCode);
+                })->where('checked_out', false)->get();
+
+            if(!$orderItems)
+            {
+                return reponse()->json([
+                    'message' => 'No reservations found or invalid qr code'
+                ]);
+            }
+
+            foreach($orderItems as $orderItem)
+            {
+                $action = 'none';
+
+                switch($status)
+                {
+                    case 'in':
+                        if(!$orderItem->ckin && !$orderItem->bkout && !$orderItem->bkin)
+                        {
+                            $orderItem->ckin = $time;
+                            $orderItem->isfreeze = false;
+                            $action = "<pre>Checked-in</pre>";
+                        } 
+                        else
+                        if($orderItem->ckin && $orderItem->bkout && !$orderItem->bkin)
+                        {
+                            $orderItem->bkin = $time;
+                            $orderItem->isfreeze = false;
+                            $action = "<pre>Resume from freeze</pre>";
+                        }
+                        else
+                        {
+                            $action = "<pre>Ignored(already active)</pre>";
+                        }
+                        break;
+                    case 'out':
+                        if($orderItem->ckin && !$orderItem->bkout)
+                        {
+                            $orderItem->bkout = $time;
+                            $orderItem->isfreeze = true;
+                            $action = "<pre>Frozen</pre>";
+                        }
+                        else
+                        {
+                            $action = "<pre>Ignored(cannot freeze)</pre>";
+                        }
+                        break;
+                    default:
+                        return reponse()->json([
+                            'message' => 'Status value is incorrect'
+                        ]);
+                }
+
+                $orderItem->save();
+
+                $response[] = [
+                    'order_item_id' => $orderItem->id,
+                    'qr_child' => $orderItem->qr_child,
+                    'qr_guardian' => $orderItem->qr_guardian,
+                    'action' => $action,
+                    'timestamp' => $time->toDateTimeString(),
+                ];
+
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Processed Successfully',
+                'processedDatas' => array_map(function ($item) {
+                    return [
+                        'order_item_id' => $item['order_item_id'],
+                        'child' => $item['qr_child'],
+                        'guardian' => $item['qr_guardian'],
+                        'action' => $item['action'],
+                        'timestamp' => $item['timestamp'],
+                    ];
+                }, $response),
+                'data' => $orderItems
+            ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+        
+    }
+
+    public function turnstileSrchCurl(Request $request)
+    {
+        $status = $request->query('status');
+        $qrCode = $request->query('qr');
+        $time = $request->query('time') ? Carbon::parse($request->query('time')) : now();
     }
 }

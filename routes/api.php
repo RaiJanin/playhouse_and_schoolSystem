@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PlayHouseController;
+use App\Http\Controllers\TurnstileController;
 //use App\Http\Controllers\FamilyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,3 +20,4 @@ Route::delete('/delete-otp/{otpId}', [PlayHouseController::class, 'deleteOtp']);
 Route::get('/search-returnee/{phoneNumber}', [PlayHouseController::class, 'searchReturnee'])->name('returnee.search');
 Route::get('/get-orders', [PlayHouseController::class, 'getOrders']);
 Route::patch('/check-out/{orderNum}', [PlayHouseController::class, 'checkOut']);
+Route::post('/turnstile-srch', [TurnstileController::class, 'turnstileSrchPOST']);
