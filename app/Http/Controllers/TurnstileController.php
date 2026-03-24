@@ -87,6 +87,11 @@ class TurnstileController extends Controller
                     ->orWhere('qr_guardian', $qrCode);
                 })->where('checked_out', false)->get();
 
+            if(!$orderItems)
+            {
+                return response("<pre>No reservations found or invalid qr code</pre>");
+            }
+
             foreach($orderItems as $orderItem)
             {
                 $action = 'none';
