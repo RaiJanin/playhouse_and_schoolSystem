@@ -289,8 +289,7 @@ class TurnstileController extends Controller
                         'action' => $item['action'],
                         'timestamp' => $item['timestamp'],
                     ];
-                }, $response),
-                'data' => $orderItems
+                }, $response)
             ]);
 
         } catch(\Exception $e) {
