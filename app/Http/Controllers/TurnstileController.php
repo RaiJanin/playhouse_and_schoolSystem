@@ -265,7 +265,7 @@ class TurnstileController extends Controller
                         ]);
                 }
 
-                $orderItem->save();
+                //$orderItem->save();
 
                 $response[] = [
                     'order_item_id' => $orderItem->id,
