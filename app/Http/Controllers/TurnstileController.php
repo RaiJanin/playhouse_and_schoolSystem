@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderItems;
+use App\Services\SendSmsService;
 use Carbon\Carbon;
 
 class TurnstileController extends Controller
@@ -78,6 +79,8 @@ class TurnstileController extends Controller
         {
             DB::beginTransaction();
             $response = [];
+            $hasSuccess = false;
+            $validActions = [];
 
             if(!$status)
             {
@@ -92,7 +95,7 @@ class TurnstileController extends Controller
                 ]);
             }
 
-            $orderItems = OrderItems::where(function ($query) use ($qrCode) {
+            $orderItems = OrderItems::with('child')->where(function ($query) use ($qrCode) {
                 $query->where('qr_child', $qrCode)
                     ->orWhere('qr_guardian', $qrCode);
                 })->where('checked_out', false)->get();
@@ -157,9 +160,27 @@ class TurnstileController extends Controller
                     'timestamp' => $time->toDateTimeString(),
                 ];
 
+                $cleanAction = strip_tags($action);
+
+                if ($cleanAction !== "Ignored(already active)" && $cleanAction !== "Ignored(cannot freeze)") {
+                    $hasSuccess = true;
+
+                    $childName = $orderItem->child->firstname ?? 'Child';
+
+                    $validActions[] = "{$childName} - {$cleanAction} (" . $time->format('h:i A') . ")";
+                }
+
             }
 
             DB::commit();
+
+            $message = "Notice from Mimo Web\n\n";
+            if (!$hasSuccess && count($validActions) > 0) {
+                $message .= "Here are the latest updates:\n\n";
+                $message .= implode("\n", $validActions);
+
+                SendSmsService::sendnowsms('9228480788', $message);
+            }
 
             return response()->json([
                 'message' => 'Processed Successfully',
@@ -171,7 +192,7 @@ class TurnstileController extends Controller
                         'action' => $item['action'],
                         'timestamp' => $item['timestamp'],
                     ];
-                }, $response)
+                }, $response),
             ]);
 
         } catch(\Exception $e) {
