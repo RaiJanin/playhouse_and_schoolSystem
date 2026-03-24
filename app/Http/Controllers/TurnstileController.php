@@ -175,7 +175,7 @@ class TurnstileController extends Controller
             DB::commit();
 
             $message = "Notice from Mimo Web\n\n";
-            if (!$hasSuccess && count($validActions) > 0) {
+            if ($hasSuccess && count($validActions) > 0) {
                 $message .= "Here are the latest updates:\n\n";
                 $message .= implode("\n", $validActions);
 
