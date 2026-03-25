@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use App\Models\OrderItems;
 use App\Services\SendSmsService;
 use Carbon\Carbon;
@@ -102,8 +103,7 @@ class TurnstileController extends Controller
 
                 $response[] = [
                     'order_item_id' => $orderItem->id,
-                    'qr_child' => $orderItem->qr_child,
-                    'qr_guardian' => $orderItem->qr_guardian,
+                    'qr_child' => $orderItem->qr_child . ': ' . $orderItem->child->firstname.' '.$orderItem->child->lastname,
                     'action' => $action,
                     'timestamp' => $time->toDateTimeString(),
                 ];
@@ -113,7 +113,7 @@ class TurnstileController extends Controller
                 if ($cleanAction !== "Ignored(already active)" && $cleanAction !== "Ignored(cannot freeze)") {
                     $hasSuccess = true;
 
-                    $childName = $orderItem->child->firstname ?? 'Child';
+                    $childName = $orderItem->child->firstname.' '.$orderItem->child->lastname ?? '';
 
                     $validActions[] = "{$childName} - {$cleanAction} (" . $time->format('h:i A') . ")";
                 }
@@ -122,7 +122,7 @@ class TurnstileController extends Controller
 
             DB::commit();
 
-            $message = "Notice from Mimo Web\n\n";
+            $message = "NOTICE FROM CLOUD MIMO\n\n";
             if ($hasSuccess && count($validActions) > 0) {
                 $message .= "Here are the latest updates:\n\n";
                 $message .= implode("\n", $validActions);
@@ -137,7 +137,6 @@ class TurnstileController extends Controller
                     return [
                         'order_item_id' => $item['order_item_id'],
                         'child' => $item['qr_child'],
-                        'guardian' => $item['qr_guardian'],
                         'action' => $item['action'],
                         'timestamp' => $item['timestamp'],
                     ];
@@ -174,7 +173,7 @@ class TurnstileController extends Controller
 
         $jsonData = json_encode($data);
 
-        $url = "https://cloud.mimoplaycafe.com/api/turnstile-srch"; 
+        $url = env('APP_URL') . "api/turnstile-srch"; 
 
         $ch = curl_init($url);
 
@@ -183,6 +182,7 @@ class TurnstileController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
+            'Accept: application/json',
             'Content-Length: ' . strlen($jsonData)
         ]);
 
