@@ -172,7 +172,7 @@ class TurnstileController extends Controller
 
         $jsonData = json_encode($data);
 
-        $url = "https://cloud.mimoplaycafe.com/turnstile-srch"; 
+        $url = "https://cloud.mimoplaycafe.com/api/turnstile-srch"; 
 
         $ch = curl_init($url);
 
