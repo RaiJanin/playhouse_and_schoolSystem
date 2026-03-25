@@ -43,23 +43,25 @@ class Orders extends Model
     private static function generateMonthlyOrderNo()
     {
         $now = Carbon::now();
+        $year = substr($now->year, -2);
         $monthLetter = self::getMonthLetter($now->month);
 
         $startOfMonth = $now->copy()->startOfMonth();
 
         $lastOrder = self::where('created_at', '>=', $startOfMonth)
-            ->where('ord_code_ph', 'like', $monthLetter . '%')
+            ->where('ord_code_ph', 'like', $year . $monthLetter . '%')
+            ->lockForUpdate()
             ->orderByDesc('ord_code_ph')
             ->first();
 
         if (!$lastOrder) {
             $sequence = 1;
         } else {
-            $lastNumber = (int) substr($lastOrder->ord_code_ph, 1);
+            $lastNumber = (int) substr($lastOrder->ord_code_ph, 3);
             $sequence = $lastNumber + 1;
         }
 
-        return $monthLetter . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        return $year . $monthLetter . str_pad($sequence, 4, '0', STR_PAD_LEFT);
     }
 
     private static function getMonthLetter($month)

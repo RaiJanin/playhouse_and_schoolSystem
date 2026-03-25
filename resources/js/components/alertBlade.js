@@ -98,6 +98,10 @@ App.component.criticalAlert = function (err) {
     criticalAlertMesssageContainer.querySelector('.error-msg').textContent = err;
 
     criticalAlertMesssageContainer.querySelector('.close-err-msg').addEventListener('click', () => { closeCriticalError(criticalAlertMesssageContainer) });
+
+    setTimeout(() => {
+        closeCriticalError(criticalAlertMesssageContainer);
+    }, 10000);
 }
 
 function closeCriticalError(scope) {
