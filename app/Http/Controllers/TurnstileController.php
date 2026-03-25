@@ -158,7 +158,7 @@ class TurnstileController extends Controller
     public function curlRequest(Request $request)
     {
         $status = $request->query('status');
-        $qrCode = $reques->query('qr');
+        $qrCode = $request->query('qr');
 
         if(!$status && !$qrCode)
         {
