@@ -10,58 +10,6 @@ use Carbon\Carbon;
 
 class TurnstileController extends Controller
 {
-    public function turnstileFlag(Request $request)
-    {
-        $orderLineID = $request->query('ordlne_id');
-        $orderCode = $request->query('ord_code');
-        $playhouseCheckType = $request->query('plchk_type');
-        $isFreeze = $request->query('freeze');
-        $qrChild = $request->query('qrc');
-        $qrGuardian = $request->query('qrg');
-        $timeStamp = $request->query('time') ? Carbon::parse($request->query('time')) : now();
-
-        $orderItem = OrderItems::where('id', $orderLineID)->where('ord_code_ph', $orderCode)->first();
-
-        if(!$orderItem)
-        {
-            return response("<pre>No Order Item Found </pre>");
-        }
-
-        if(!$qrChild || !$qrGuardian)
-        {
-            return response("<pre>QR Codes must be filled </pre>");
-        }
-
-        switch($playhouseCheckType)
-        {
-            case 'ckin':
-                $orderItem->ckin = $timeStamp;
-                break;
-            case 'bkout':
-                if(!$isFreeze)
-                {
-                    return response("<pre>Freeze option must be enabled</pre>");
-                }
-                $orderItem->bkout = $timeStamp;
-                break;
-            case 'bkin':
-                if($isFreeze)
-                {
-                    return response("<pre>Freeze option must be disabled</pre>");
-                }
-                $orderItem->bkin = $timeStamp;
-                break;
-            default:
-                return response("<pre> Type is incorrect </pre>");
-        }
-
-        $orderItem->isfreeze = $isFreeze;
-        $orderItem->qr_child = $qrChild;
-        $orderItem->qr_guardian = $qrGuardian;
-        $orderItem->save();
-
-       return response("<pre>Updated successfully.</pre>");
-    }
 
     public function turnstileSrchPOST(Request $request)
     {
@@ -205,5 +153,45 @@ class TurnstileController extends Controller
             ]);
         }
         
+    }
+
+    public function curlRequest(Request $request)
+    {
+        $status = $request->query('status');
+        $qrCode = $reques->query('qr');
+
+        if(!$status && !$qrCode)
+        {
+            return response("<pre>Invalid fields</pre>");
+        }
+
+        $data = [
+            'status' => $status,
+            'qr' => $qrCode
+        ];
+
+        $jsonData = json_encode($data);
+
+        $url = "https://cloud.mimoplaycafe.com/turnstile-srch"; 
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($jsonData)
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo "cURL Error: " . curl_error($ch);
+        } else {
+            echo "Response: " . $response;
+        }
+
+        curl_close($ch);
     }
 }
