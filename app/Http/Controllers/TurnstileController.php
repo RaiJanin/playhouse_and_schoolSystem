@@ -159,6 +159,7 @@ class TurnstileController extends Controller
     {
         $status = $request->query('status');
         $qrCode = $request->query('qr');
+        $time = $request->query('time');
 
         if(!$status && !$qrCode)
         {
@@ -167,7 +168,8 @@ class TurnstileController extends Controller
 
         $data = [
             'status' => $status,
-            'qr' => $qrCode
+            'qr' => $qrCode,
+            'time' => $time ?? null
         ];
 
         $jsonData = json_encode($data);
