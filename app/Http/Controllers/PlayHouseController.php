@@ -528,7 +528,7 @@ class PlayHouseController extends Controller
         }
         
         $query->when($request->filled(['start_date', 'end_date']), function ($q) use ($request) {
-            $q->whereDate('created_at', '>=', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+            $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
             ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
         });
         
