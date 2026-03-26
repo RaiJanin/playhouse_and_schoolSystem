@@ -65,7 +65,7 @@ class TurnstileController extends Controller
 
                 switch($status)
                 {
-                    case 'in' || 'entrance':
+                    case 'entrance':
                         if(!$orderItem->ckin && !$orderItem->bkout && !$orderItem->bkin)
                         {
                             $orderItem->ckin = $time;
@@ -84,7 +84,7 @@ class TurnstileController extends Controller
                             $action = "<pre>Ignored(already active)</pre>";
                         }
                         break;
-                    case 'out' || 'exit':
+                    case 'exit':
                         if($orderItem->ckin && !$orderItem->bkout)
                         {
                             $orderItem->bkout = $time;
@@ -102,6 +102,7 @@ class TurnstileController extends Controller
                         ]);
                 }
 
+                SendSmsService::sendnowsms('09158060792', "Query: ".$orderItem);
                 $orderItem->save();
 
                 $response[] = [
