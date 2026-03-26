@@ -66,35 +66,75 @@ class TurnstileController extends Controller
                 switch($status)
                 {
                     case 'entrance':
-                        if(!$orderItem->ckout && !$orderItem->bkout && !$orderItem->bkin && $orderItem->isfreeze)
+                        //check in
+                        if(!$orderItem->ckout && !$orderItem->bkout && !$orderItem->bkin && !$orderItem->isfreeze)
                         {
                             $orderItem->ckin = $time;
-                            $orderItem->isfreeze = false;
                             $action = "<pre>Checked-in</pre>";
                         } 
                         else
-                        if($orderItem->ckin && $orderItem->bkout && !$orderItem->bkin && $orderItem->isfreeze)
+                            // break out, time in from break
+                        if($orderItem->ckin && $orderItem->bkin && !$orderItem->bkout && $orderItem->isfreeze)
                         {
-                            $orderItem->bkin = $time;
-                            $orderItem->isfreeze = false;
+                            $orderItem->bkout = $time;
                             $action = "<pre>Resume from freeze</pre>";
+                        }
+                        else if($orderItem->bkin && $orderItem->bkin1 && !$orderItem->bkout1 && $orderItem->isfreeze)
+                        {
+                            $orderItem->bkout1 = $time;
+                            $action = "<pre>Resume from freeze (2nd time)</pre>";
+                        }
+                        else if($orderItem->bkin1 && $orderItem->bkin2 && !$orderItem->bkout2 && $orderItem->isfreeze)
+                        {
+                            $orderItem->bkout2 = $time;
+                            $action = "<pre>Resume from freeze (3rd time)</pre>";
+                        }
+                        else if($orderItem->bkin2 && $orderItem->bkin2 && !$orderItem->bkout3 && $orderItem->isfreeze)
+                        {
+                            $orderItem->bkout3 = $time;
+                            $action = "<pre>Resume from freeze (4th time)</pre>";
+                        }else if($orderItem->bkin3 && $orderItem->bkin3 && !$orderItem->bkout4 && $orderItem->isfreeze)
+                        {
+                            $orderItem->bkout4 = $time;
+                            $action = "<pre>Resume from freeze (5th time)</pre>";
                         }
                         else
                         {
                             $action = "<pre>Ignored(already active)</pre>";
                         }
+                        $orderItem->isfreeze = false;
                         break;
                     case 'exit':
                         if($orderItem->ckin && !$orderItem->bkout && !$orderItem->isfreeze)
                         {
-                            $orderItem->bkout = $time;
-                            $orderItem->isfreeze = true;
+                            $orderItem->bkin = $time;
                             $action = "<pre>Frozen</pre>";
+                        } 
+                        else if($orderItem->bkin && !$orderItem->bkout1 && !$orderItem->isfreeze)
+                        {
+                            $orderItem->bkin1 = $time;
+                            $action = "<pre>Frozen (2nd time)</pre>";
+                        }
+                        else if($orderItem->bkin1 && !$orderItem->bkout2 && !$orderItem->isfreeze)
+                        {
+                            $orderItem->bkin2 = $time;
+                            $action = "<pre>Frozen (3rd time)</pre>";
+                        }
+                        else if($orderItem->bkin2 && !$orderItem->bkout3 && !$orderItem->isfreeze)
+                        {
+                            $orderItem->bkin3 = $time;
+                            $action = "<pre>Frozen (4th time)</pre>";
+                        }
+                        else if($orderItem->bkin3 && !$orderItem->bkout4 && !$orderItem->isfreeze)
+                        {
+                            $orderItem->bkin4 = $time;
+                            $action = "<pre>Frozen (5th time)</pre>";
                         }
                         else
                         {
                             $action = "<pre>Ignored(cannot freeze)</pre>";
                         }
+                        $orderItem->isfreeze = true;
                         break;
                     default:
                         return response()->json([
