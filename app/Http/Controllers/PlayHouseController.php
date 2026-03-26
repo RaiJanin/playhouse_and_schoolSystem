@@ -509,6 +509,14 @@ class PlayHouseController extends Controller
 
     public function viewBookings(Request $request)
     {
+        $request->merge([
+            'start_date' => $request->input('start_date', now()->format('Y-m-d')),
+            'end_date'   => $request->input('end_date', now()->format('Y-m-d')),
+        ]);
+
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
         $query = OrderItems::query();
         
         // Filter by status: active check-ins, check-outs, or reservations
@@ -556,7 +564,7 @@ class PlayHouseController extends Controller
             'ckout' => 'Checked Out',
         ];
         
-        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels'));
+        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels', 'startDate', 'endDate'));
     }
 
 
