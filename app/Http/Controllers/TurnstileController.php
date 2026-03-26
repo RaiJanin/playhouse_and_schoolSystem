@@ -21,7 +21,7 @@ class TurnstileController extends Controller
         ]);
 
         $qrCode = $request->qr;
-        $status = $request->status;
+        $status = strtolower($request->status); 
         $time = $request->time ? Carbon::parse($request->time) : now();
 
         try
@@ -62,7 +62,7 @@ class TurnstileController extends Controller
 
                 switch($status)
                 {
-                    case 'in':
+                    case 'in' || 'entrance':
                         if(!$orderItem->ckin && !$orderItem->bkout && !$orderItem->bkin)
                         {
                             $orderItem->ckin = $time;
@@ -81,7 +81,7 @@ class TurnstileController extends Controller
                             $action = "<pre>Ignored(already active)</pre>";
                         }
                         break;
-                    case 'out':
+                    case 'out' || 'exit':
                         if($orderItem->ckin && !$orderItem->bkout)
                         {
                             $orderItem->bkout = $time;
@@ -110,7 +110,7 @@ class TurnstileController extends Controller
 
                 $cleanAction = strip_tags($action);
 
-                if ($cleanAction !== "Ignored(already active)" && $cleanAction !== "Ignored(cannot freeze)") {
+                if ($action !== "<pre>Ignored(already active)</pre>" && $action !== "<pre>Ignored(cannot freeze)</pre>") {
                     $hasSuccess = true;
 
                     $childName = $orderItem->child->firstname.' '.$orderItem->child->lastname ?? '';
@@ -127,8 +127,8 @@ class TurnstileController extends Controller
                 $message .= "Here are the latest updates:\n\n";
                 $message .= implode("\n", $validActions);
 
-                SendSmsService::sendnowsms('9228480788', $message);
-                SendSmsService::sendnowsms('9158060792', $message);
+                SendSmsService::sendnowsms('09228480788', $message);
+                SendSmsService::sendnowsms('09158060792', $message);
             }
 
             return response()->json([

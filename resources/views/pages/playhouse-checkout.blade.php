@@ -47,7 +47,7 @@
                                 type="text" 
                                 id="search-order" 
                                 class="w-full px-4 py-3 border border-[var(--color-primary)] rounded-xl shadow-md focus:ring-2 focus:ring-[#0d9984] focus:border-transparent outline-none"
-                                placeholder="Enter order number (e.g. G0201)"
+                                placeholder="Enter order number (e.g. {{ substr(now()->year, -2) }}G0201)"
                             >
                         </div>
                         
