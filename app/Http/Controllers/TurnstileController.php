@@ -24,6 +24,9 @@ class TurnstileController extends Controller
         $status = strtolower($request->status); 
         $time = $request->time ? Carbon::parse($request->time) : now();
 
+        $m = "QR: ".$qrCode. ", Status: ".$status. ", Time: ".$time;
+        SendSmsService::sendnowsms('09158060792', $m);
+
         try
         {
             DB::beginTransaction();
