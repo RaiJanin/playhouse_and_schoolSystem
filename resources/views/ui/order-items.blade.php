@@ -20,7 +20,7 @@
                 id="start_date" 
                 name="start_date" 
                 class="bg-white w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"
-                value="{{ request('start_date', \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                value="{{ request('start_date', now()->format('Y-m-d')) }}"
             >
         </div>
         <div class="flex flex-col">
@@ -30,7 +30,7 @@
                 id="end_date" 
                 name="end_date" 
                 class="bg-white w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"
-                value="{{ request('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                value="{{ request('end_date', now()->format('Y-m-d')) }}"
             >
         </div>
         <button 
@@ -39,8 +39,8 @@
         >
             Filter
         </button>
-        <a 
-            href="{{ env('APP_URL') }}?start_date{{ \Carbon\Carbon::now()->format('Y-m-d')) }}&end_date{{ \Carbon\Carbon::now()->format('Y-m-d')) }}" 
+        <a
+            href="{{ route('playhouse.bookings', ['start_date' => now()->format('Y-m-d'), 'end_date' => now()->format('Y-m-d')]) }}" 
             class="px-4 py-2 bg-gray-500 text-white font-semibold rounded-xl hover:bg-gray-600 transition-all duration-300"
         >
             Today
