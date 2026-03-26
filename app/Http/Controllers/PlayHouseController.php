@@ -341,13 +341,8 @@ class PlayHouseController extends Controller
         ]);
     }
 
-    public function orderInfo(Request $request, $orderNo)
+    public function orderInfo($orderNo)
     {
-        $request->merge([
-            'start_date' => request('start_date', now()->format('Y-m-d')),
-            'end_date'   => request('end_date', now()->format('Y-m-d')),
-        ]);
-
         $order = Orders::with(['parentPl', 'orderItems'])->where('ord_code_ph', $orderNo)->first();
 
         $order->orderItems->each(function ($item) {
