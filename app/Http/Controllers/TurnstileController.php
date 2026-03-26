@@ -127,8 +127,8 @@ class TurnstileController extends Controller
                 $message .= "Here are the latest updates:\n\n";
                 $message .= implode("\n", $validActions);
 
-                SendSmsService::sendnowsms('09228480788', $message);
-                SendSmsService::sendnowsms('09158060792', $message);
+                SendSmsService::sendnowsms('09228480788', $message); //Sir noei's
+                SendSmsService::sendnowsms('09158060792', $message); //sir paul's
             }
 
             return response()->json([
