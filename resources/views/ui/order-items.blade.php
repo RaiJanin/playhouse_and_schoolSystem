@@ -40,7 +40,7 @@
             Filter
         </button>
         <a 
-            href="{{ env('APP_URL') }}?start_date{{  }}" 
+            href="{{ env('APP_URL') }}?start_date{{ \Carbon\Carbon::now()->format('Y-m-d')) }}&end_date{{ \Carbon\Carbon::now()->format('Y-m-d')) }}" 
             class="px-4 py-2 bg-gray-500 text-white font-semibold rounded-xl hover:bg-gray-600 transition-all duration-300"
         >
             Today
