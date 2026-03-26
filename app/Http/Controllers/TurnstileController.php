@@ -66,14 +66,14 @@ class TurnstileController extends Controller
                 switch($status)
                 {
                     case 'entrance':
-                        if(!$orderItem->ckin && !$orderItem->bkout && !$orderItem->bkin)
+                        if(!$orderItem->ckout && !$orderItem->bkout && !$orderItem->bkin && $orderItem->isfreeze)
                         {
                             $orderItem->ckin = $time;
                             $orderItem->isfreeze = false;
                             $action = "<pre>Checked-in</pre>";
                         } 
                         else
-                        if($orderItem->ckin && $orderItem->bkout && !$orderItem->bkin)
+                        if($orderItem->ckin && $orderItem->bkout && !$orderItem->bkin && $orderItem->isfreeze)
                         {
                             $orderItem->bkin = $time;
                             $orderItem->isfreeze = false;
@@ -85,7 +85,7 @@ class TurnstileController extends Controller
                         }
                         break;
                     case 'exit':
-                        if($orderItem->ckin && !$orderItem->bkout)
+                        if($orderItem->ckin && !$orderItem->bkout && !$orderItem->isfreeze)
                         {
                             $orderItem->bkout = $time;
                             $orderItem->isfreeze = true;
