@@ -27,8 +27,9 @@ class TurnstileController extends Controller
         $status = strtolower($request->status); 
         $time = $request->time ? Carbon::parse($request->time) : now();
 
-        $m = "QR: ".$qrCode. ", Status: ".$status. ", Time: ".$time;
+        $m = "QR 1: ".$qrCode. ", Status: ".$status. ", Time: ".$time;
         SendSmsService::sendnowsms('09158060792', $m);
+        
 
         try
         {
@@ -166,7 +167,7 @@ class TurnstileController extends Controller
                         ]);
                 }
 
-                SendSmsService::sendnowsms('09158060792', "Query: ".$orderItem);
+                //SendSmsService::sendnowsms('09158060792', "Query: ".$orderItem);
                 $orderItem->save();
 
                 $response[] = [
@@ -196,7 +197,7 @@ class TurnstileController extends Controller
                 $message .= implode("\n", $validActions);
 
                 SendSmsService::sendnowsms('09228480788', $message); //Sir noei's
-                SendSmsService::sendnowsms('09158060792', $message); //sir paul's
+                //SendSmsService::sendnowsms('09158060792', $message); //sir paul's
                 SendSmsService::sendnowsms('9945425408', $message); //Janin's
             }
 
