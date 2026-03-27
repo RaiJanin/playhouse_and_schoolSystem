@@ -96,12 +96,12 @@ class TurnstileController extends Controller
                                 $orderItem->bkout2 = $time;
                                 $action = "<pre>Resume from freeze (3rd time)</pre>";
                             }
-                            else if(!empty($orderItem->bkin3) && !empty($orderItem->bkout) && !empty($orderItem->bkout1) && !empty($orderItem->bkout2) && empty($orderItem->bkout3))
+                            else if(!empty($orderItem->bkout) && !empty($orderItem->bkout1) && !empty($orderItem->bkout2) && empty($orderItem->bkout3))
                             {
                                 $orderItem->bkout3 = $time;
                                 $action = "<pre>Resume from freeze (4th time)</pre>";
                             }
-                            else if(!empty($orderItem->bkin4) && !empty($orderItem->bkout) && !empty($orderItem->bkout1) && !empty($orderItem->bkout2) && !empty($orderItem->bkout3) && empty($orderItem->bkout4))
+                            else if(!empty($orderItem->bkout) && !empty($orderItem->bkout1) && !empty($orderItem->bkout2) && !empty($orderItem->bkout3) && empty($orderItem->bkout4))
                             {
                                 $orderItem->bkout4 = $time;
                                 $action = "<pre>Resume from freeze (5th time)</pre>";
@@ -185,7 +185,7 @@ class TurnstileController extends Controller
                 $message .= implode("\n", $validActions);
 
                 SendSmsService::sendnowsms('09228480788', $message); //Sir noei's
-                //SendSmsService::sendnowsms('09158060792', $message); //sir paul's
+                SendSmsService::sendnowsms('09158060792', $message); //sir paul's
                 SendSmsService::sendnowsms('9945425408', $message); //Janin's
             }
 
