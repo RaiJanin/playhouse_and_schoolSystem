@@ -105,9 +105,9 @@
                         !!}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        @if(!$item->ckin && !$item->ckout)
+                        @if(empty($item->ckin) && empty($item->ckout))
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-200 text-gray-800">Not started</span>
-                        @elseif(!$item->ckin && $item->ckout)
+                        @elseif(!empty($item->ckin) && empty($item->ckout))
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-gray-800">Active</span>
                         @else
                             {{ \Carbon\Carbon::parse($item->ckout)->format('M d, Y h:i A') ?? 'N/A' }}

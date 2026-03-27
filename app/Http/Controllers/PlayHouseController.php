@@ -577,13 +577,13 @@ class PlayHouseController extends Controller
         switch($status)
         {
             case 'ckin':
-                $query->whereNotNull('ckin')->whereNull('ckout');
+                $query->whereNot('ckin', null)->where('ckout', null);
                 break;
             case 'ckout':
-                $query->whereNotNull('ckout');
+                $query->whereNot('ckout', null)->whereNot('ckin', null);
                 break;
             case 'reservation':
-                $query->whereNull('ckin')->whereNull('ckout');
+                $query->where('ckin', null)->where('ckout', null);
                 break;
         }
         
@@ -607,7 +607,7 @@ class PlayHouseController extends Controller
                     {
                         $item->remainmins = "unlimited";
                     }
-                    else if($item->ckin && !$item->ckout)
+                    else if(!empty($item->ckin) && empty($item->ckout))
                     {
                         $ckin = Carbon::parse($item->ckin);
                         $elapsedMinutes = $ckin->diffInMinutes($now);
@@ -619,7 +619,7 @@ class PlayHouseController extends Controller
                         $minutes = $remainingMinutes % 60;
                         $item->remainmins = "{$hours}hr {$minutes}min";
                     }
-                    else if($item->ckin && $item->ckout)
+                    else if(!empty($item->ckin) && !empty($item->ckout))
                     {
                         $item->remainmins = 'done';
                     }
@@ -629,7 +629,7 @@ class PlayHouseController extends Controller
                     }
                     
                     return $item;
-                })->withQueryString();
+                });
 
         return view('pages.playhouse-bookings', compact('orderItems'));
     }
