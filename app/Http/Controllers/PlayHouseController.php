@@ -514,12 +514,8 @@ class PlayHouseController extends Controller
             'end_date'   => $request->input('end_date', now()->format('Y-m-d')),
         ]);
 
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
-
         $query = OrderItems::query();
         
-        // Filter by status: active check-ins, check-outs, or reservations
         $status = $request->get('status');
 
         switch($status)
@@ -564,9 +560,75 @@ class PlayHouseController extends Controller
             'ckout' => 'Checked Out',
         ];
         
-        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels', 'startDate', 'endDate'));
+        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels'));
     }
 
+    public function viewBookingsOnlyNamesTimes(Request $request)
+    {
+        $request->merge([
+            'start_date' => $request->input('start_date', now()->format('Y-m-d')),
+            'end_date'   => $request->input('end_date', now()->format('Y-m-d')),
+        ]);
+
+        $query = OrderItems::query();
+        
+        $status = $request->get('status');
+
+        switch($status)
+        {
+            case 'ckin':
+                $query->whereNotNull('ckin')->whereNull('ckout');
+                break;
+            case 'ckout':
+                $query->whereNotNull('ckout');
+                break;
+            case 'reservation':
+                $query->whereNull('ckin')->whereNull('ckout');
+                break;
+        }
+        
+        $query->when($request->filled(['start_date', 'end_date']), function ($q) use ($request) {
+            $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+            ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+        });
+
+        $orderItems = $query->select([
+                'id', 'd_code_child', 'ord_code_ph', 'ckin', 'ckout', 'durationhours'
+            ])->with([
+                'child:d_code_c,firstname,lastname', 
+                'order:ord_code_ph,d_code',
+                'order.parentPl:d_code,d_name'
+            ])->orderBy('created_at', 'desc')
+              ->paginate(50)
+              ->through(function ($item){
+                    $now = Carbon::now();
+
+                    if($item->ckin && !$item->ckout)
+                    {
+                        $ckin = Carbon::parse($item->ckin);
+                        $elapsedMinutes = $ckin->diffInMinutes($now);
+                        $totalMinutes = $item->durationhours * 60;
+
+                        $remainingMinutes = max(0, $totalMinutes - $elapsedMinutes);
+
+                        $hours = floor($remainingMinutes / 60);
+                        $minutes = $remainingMinutes % 60;
+                        $item->remainmins = "{$hours}hr {$minutes}min";
+                    }
+                    else if($item->ckin && $item->ckout)
+                    {
+                        $item->remainmins = 'done';
+                    }
+                    else
+                    {
+                        $item->remainmins = "0hr 0min";
+                    }
+                    
+                    return $item;
+                })->withQueryString();
+
+        return view('pages.playhouse-bookings', compact('orderItems'));
+    }
 
     
 
