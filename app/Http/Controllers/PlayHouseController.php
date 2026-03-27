@@ -599,11 +599,15 @@ class PlayHouseController extends Controller
                 'order:ord_code_ph,d_code',
                 'order.parentPl:d_code,d_name'
             ])->orderBy('created_at', 'desc')
-              ->paginate(50)
+              ->paginate(20)
               ->through(function ($item){
                     $now = Carbon::now();
 
-                    if($item->ckin && !$item->ckout)
+                    if($item->durationhours === 5)
+                    {
+                        $item->remainmins = "unlimited";
+                    }
+                    else if($item->ckin && !$item->ckout)
                     {
                         $ckin = Carbon::parse($item->ckin);
                         $elapsedMinutes = $ckin->diffInMinutes($now);

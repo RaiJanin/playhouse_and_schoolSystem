@@ -65,7 +65,7 @@
                     Checked In
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Cheked Out
+                    Checked Out
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Remaining Time
@@ -90,19 +90,41 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ $item->durationhours ?? 'N/A' . 'Hr' }}
+                        @if(!$item->durationhours)
+                            {{ 'N/A' }}
+                        @elseif($item->durationhours == 5)
+                            {{ 'Unlimited' }}
+                        @else
+                            {{ $item->durationhours . 'hr' }}
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ $item->ckin ?? 'N/A' }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ $item->ckout ?? 'N/A' }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {!! $item->remainmins === 'done' ? 
-                            '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Checked out</span>' 
-                            : $item->remainmins 
+                        {!! $item->ckin ? 
+                            \Carbon\Carbon::parse($item->ckin)->format('M d, Y h:i A') 
+                            : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-200 text-gray-800">Not started</span>' 
                         !!}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        @if(!$item->ckin && !$item->ckout)
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-200 text-gray-800">Not started</span>
+                        @elseif(!$item->ckin && $item->ckout)
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-gray-800">Active</span>
+                        @else
+                            {{ \Carbon\Carbon::parse($item->ckout)->format('M d, Y h:i A') ?? 'N/A' }}
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        @if($item->remainmins === 'done')
+                            {!! 
+                                '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Checked out</span>' 
+                            !!}
+                        @elseif($item->remainmins === 'unlimited')
+                            {!! 
+                                '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-200 text-gray-800">Unlimited</span>' 
+                            !!}
+                        @else
+                            {{ $item->remainmins }}
+                        @endif
                     </td>
                 </tr>
             @empty
