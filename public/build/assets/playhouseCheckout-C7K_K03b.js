@@ -1,4 +1,4 @@
-import{a as M,A as E,s as b,g as O,d as I}from"./alertBlade-DgmP6ge0.js";function _(l){const u=Number(l?.durationsubtotal)+Number(l?.socksprice),h=new Date(l.created_at),x=new Date,d=l.durationhours*60;let c=Math.ceil((x-h)/6e4);const g=300;c>g&&(c=g);let i=0,m=0,p=0;return c>d&&l.durationhours!==5&&(i=c-d,m=Math.ceil(i/window.masterfile.minutesPerCharge),p=m*window.masterfile.chargeOfMinutes),{subtotal:u,actualMinutes:c,paidMinutes:d,extraMinutes:i,chargeUnits:m,extraCharge:p,totalWithExtra:u+p}}document.addEventListener("DOMContentLoaded",()=>{const l=document.getElementById("checkout-search-form"),u=document.getElementById("search-results"),h=document.getElementById("orders-list"),x=document.getElementById("no-results"),d=document.getElementById("loading"),c=document.getElementById("error-message"),g=document.getElementById("success-modal"),i=document.getElementById("modal-container");i.querySelector(".modal-footer").classList.add("hidden");let m=null,p=null,y=null;l.addEventListener("submit",function(n){if(n.preventDefault(),u.classList.add("hidden"),x.classList.add("hidden"),c.classList.add("hidden"),h.innerHTML="",m=document.getElementById("search-phone").value.trim(),p=document.getElementById("search-guardian").value.trim(),y=document.getElementById("search-order").value.trim(),!m&&!p&&!y){L("Please enter either a phone number, order number or guardian/parent name.");return}w(m,p,y)}),App.utilites.handleCheckout=async function(n){if(confirm("Are you sure you want to check out this order?")){d.classList.remove("hidden"),u.classList.add("hidden");try{const s=await M(E.checkOutURL,null,"PATCH",n);if(b("log","Child checked out: ",s),d.classList.add("hidden"),s.checked_out){const t=s.orderItem,r=Number(t.durationsubtotal)+Number(t.socksprice),e=Number(t.lne_xtra_chrg||0),a=r+e;let o="";const f=Math.max(0,(new Date(t.updated_at)-new Date(t.created_at))/6e4-t.durationhours*60),v=Math.ceil(f/window.masterfile.minutesPerCharge);o+=`
+import{a as M,A as L,s as E,g as O,d as _}from"./alertBlade-BlKIXRPP.js";function I(l){const u=Number(l?.durationsubtotal)+Number(l?.socksprice),h=new Date(l.created_at),b=new Date,d=l.durationhours*60;let c=Math.ceil((b-h)/6e4);const g=300;c>g&&(c=g);let i=0,m=0,p=0;return c>d&&l.durationhours!==5&&(i=c-d,m=Math.ceil(i/window.masterfile.minutesPerCharge),p=m*window.masterfile.chargeOfMinutes),{subtotal:u,actualMinutes:c,paidMinutes:d,extraMinutes:i,chargeUnits:m,extraCharge:p,totalWithExtra:u+p}}document.addEventListener("DOMContentLoaded",()=>{const l=document.getElementById("checkout-search-form"),u=document.getElementById("search-results"),h=document.getElementById("orders-list"),b=document.getElementById("no-results"),d=document.getElementById("loading"),c=document.getElementById("error-message"),g=document.getElementById("success-modal"),i=document.getElementById("modal-container");i.querySelector(".modal-footer").classList.add("hidden");let m=null,p=null,x=null;l.addEventListener("submit",function(n){if(n.preventDefault(),u.classList.add("hidden"),b.classList.add("hidden"),c.classList.add("hidden"),h.innerHTML="",m=document.getElementById("search-phone").value.trim(),p=document.getElementById("search-guardian").value.trim(),x=document.getElementById("search-order").value.trim(),!m&&!p&&!x){w("Please enter either a phone number, order number or guardian/parent name.");return}$(m,p,x)}),i.querySelector(".close-modal").addEventListener("click",()=>{i.classList.add("hidden")}),g.querySelector(".close-success-modal").addEventListener("click",n=>{n.preventDefault(),g.classList.add("hidden"),h.innerHTML="",$(m,p,x)}),App.utilites.handleCheckout=async function(n){if(confirm("Are you sure you want to check out this order?")){d.classList.remove("hidden"),u.classList.add("hidden");try{const s=await M(L.checkOutURL,null,"PATCH",n);if(E("log","Child checked out: ",s),d.classList.add("hidden"),s.checked_out){const t=s.orderItem,r=Number(t.durationsubtotal)+Number(t.socksprice),e=Number(t.lne_xtra_chrg||0),a=r+e;let o="";const y=Math.max(0,(new Date(t.updated_at)-new Date(t.created_at))/6e4-t.durationhours*60),f=Math.ceil(y/window.masterfile.minutesPerCharge);o+=`
                     <div class="mb-5 rounded-xl border border-gray-200 bg-white shadow-sm p-4">
                         <div class="flex items-center justify-between mb-2">
                             <p class="font-semibold text-gray-800">
@@ -27,9 +27,9 @@ import{a as M,A as E,s as b,g as O,d as I}from"./alertBlade-DgmP6ge0.js";functio
                                 <p class="font-semibold text-red-600 mb-1">⚠ Extra Charges</p>
                                 <div class="grid grid-cols-2 gap-y-1 text-red-600">
                                     <span>Overtime</span>
-                                    <span class="text-right">${Math.max(0,Math.round(f))} min</span>
+                                    <span class="text-right">${Math.max(0,Math.round(y))} min</span>
                                     <span>Charge Units</span>
-                                    <span class="text-right">${v}</span>
+                                    <span class="text-right">${f}</span>
                                     <span>Rate</span>
                                     <span class="text-right">
                                         ₱${window.masterfile.chargeOfMinutes} / ${window.masterfile.minutesPerCharge} min
@@ -48,7 +48,7 @@ import{a as M,A as E,s as b,g as O,d as I}from"./alertBlade-DgmP6ge0.js";functio
                             </span>
                         </div>
                     </div>
-                    `;const $=`
+                    `;const v=`
                     <div class="space-y-4">
                         <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
                             <p class="text-sm text-gray-500">Order Number</p>
@@ -73,9 +73,9 @@ import{a as M,A as E,s as b,g as O,d as I}from"./alertBlade-DgmP6ge0.js";functio
                             </div>
                         </div>
                     </div>
-                    `;document.getElementById("checkout-details").innerHTML=$,g.classList.remove("hidden")}else App.component.showAlert("Checkout failed. Please try again.","error"),u.classList.remove("hidden")}catch(s){d.classList.add("hidden"),App.component.showAlert("Error during checkout. Server Error","error"),console.error(s),b("error","Error during checkout"),u.classList.remove("hidden"),App.component.criticalAlert(`Error: ${s.status}
-Message: ${s.data?.message||s.statusText||"Unknown error"}`)}}},i.querySelector(".close-modal").addEventListener("click",()=>{i.classList.add("hidden")}),g.querySelector(".close-success-modal").addEventListener("click",n=>{n.preventDefault(),g.classList.add("hidden"),h.innerHTML="",w(m,p,y)});async function w(n="",s="",t=""){d.classList.remove("hidden");const r=l.querySelector("button");r.disabled=!0,r.classList.remove("bg-gradient-to-t","from-[var(--color-primary)]","to-[var(--color-primary-light)]"),r.classList.add("bg-[var(--color-primary-light)]");try{const e=await O("GET",`${E.getOrdersURL}?ph_num=${n}&grdian_name=${s}&ord_code=${t}`);if(b("log","Orders: ",e),d.classList.add("hidden"),e.not_found){L(e.message);return}e.orders&&e.orders.length>=1?C(e.orders):x.classList.remove("hidden")}catch(e){App.component.criticalAlert(`Error: ${e.status}
-Message: ${e.data?.message||e.statusText||"Unknown error"}`)}finally{d.classList.add("hidden"),r.classList.remove("bg-[var(--color-primary-light)]"),r.classList.add("bg-gradient-to-t","from-[var(--color-primary)]","to-[var(--color-primary-light)]"),l.querySelector("button").disabled=!1}}function k(n){const s=JSON.parse(n.dataset.items),t=n.dataset.orderNum,r=document.getElementById("items-subcat-container");r.innerHTML="",b("log","Order Items: ",s),i.classList.remove("hidden"),i.querySelector(".modal-title").textContent=t,r.innerHTML=s.map(e=>{const a=_(e);return`
+                    `;document.getElementById("checkout-details").innerHTML=v,g.classList.remove("hidden")}else App.component.showAlert("Checkout failed. Please try again.","error"),u.classList.remove("hidden")}catch(s){d.classList.add("hidden"),App.component.showAlert("Error during checkout. Server Error","error"),console.error(s),u.classList.remove("hidden"),App.component.criticalAlert(`Error: ${s.status}
+Message: ${s.data?.message||s.statusText||"Unknown error"}`)}}};async function $(n="",s="",t=""){d.classList.remove("hidden");const r=l.querySelector("button");r.disabled=!0,r.classList.remove("bg-gradient-to-t","from-[var(--color-primary)]","to-[var(--color-primary-light)]"),r.classList.add("bg-[var(--color-primary-light)]");try{const e=await O("GET",`${L.getOrdersURL}?ph_num=${n}&grdian_name=${s}&ord_code=${t}`);if(E("log","Orders: ",e),d.classList.add("hidden"),e.not_found){w(e.message);return}e.orders&&e.orders.length>=1?C(e.orders):b.classList.remove("hidden")}catch(e){App.component.criticalAlert(`Error: ${e.status}
+Message: ${e.data?.message||e.statusText||"Unknown error"}`)}finally{d.classList.add("hidden"),r.classList.remove("bg-[var(--color-primary-light)]"),r.classList.add("bg-gradient-to-t","from-[var(--color-primary)]","to-[var(--color-primary-light)]"),l.querySelector("button").disabled=!1}}function k(n){const s=JSON.parse(n.dataset.items),t=n.dataset.orderNum,r=document.getElementById("items-subcat-container");r.innerHTML="",i.classList.remove("hidden"),i.querySelector(".modal-title").textContent=t,r.innerHTML=s.map(e=>{const a=I(e);return`
                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-300 mb-3">
                     <p class="font-medium text-gray-800">
                         ${e.child.firstname} ${e.child.lastname}
@@ -94,7 +94,7 @@ Message: ${e.data?.message||e.statusText||"Unknown error"}`)}finally{d.classList
                         </div>
                         <div class="flex justify-between">
                             <span>Check-in Time</span>
-                            <span>${I("timeOnly12",e?.created_at)}</span>
+                            <span>${_("timeOnly12",e?.created_at)}</span>
                         </div>
                     </div>
                     <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-medium text-gray-800">
@@ -124,7 +124,7 @@ Message: ${e.data?.message||e.statusText||"Unknown error"}`)}finally{d.classList
                         Check out
                     </button>
                 </div>
-            `}).join(""),r.querySelectorAll(".check-out-btn").forEach(e=>{e.addEventListener("click",a=>{const o=a.currentTarget.dataset.checkOutId;b("log","Check out ID: ",o),i.classList.add("hidden"),e.disabled=!0,App.utilites.handleCheckout(o),e.disabled=!1})})}window.viewOrder=k;function C(n){u.classList.remove("hidden"),n.forEach(s=>{const t=document.createElement("div");t.className="bg-gray-50 border border-gray-50 rounded-lg shadow-md p-4";const r=s.order_items||[],e=r.length;let a="";r.forEach(o=>{const f=o.durationhours==5?"Unlimited":o.durationhours+" hours",v=o.socksqty>0?`, ${o.socksqty} pair(s) of socks`:"",$=`${o.child.firstname} ${o.child.lastname}`;a+=`<li class="text-gray-600"><span class="text-gray-800 font-medium">${$}</span> ${f}${v}</li>`}),t.innerHTML=`
+            `}).join(""),r.querySelectorAll(".check-out-btn").forEach(e=>{e.addEventListener("click",a=>{const o=a.currentTarget.dataset.checkOutId;i.classList.add("hidden"),e.disabled=!0,App.utilites.handleCheckout(o),e.disabled=!1})})}window.viewOrder=k;function C(n){u.classList.remove("hidden"),n.forEach(s=>{const t=document.createElement("div");t.className="bg-gray-50 border border-gray-50 rounded-lg shadow-md p-4";const r=s.order_items||[],e=r.length;let a="";r.forEach(o=>{const y=o.durationhours==5?"Unlimited":o.durationhours+" hours",f=o.socksqty>0?`, ${o.socksqty} pair(s) of socks`:"",v=`${o.child.firstname} ${o.child.lastname}`;a+=`<li class="text-gray-600"><span class="text-gray-800 font-medium">${v}</span> ${y}${f}</li>`}),t.innerHTML=`
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <h4 class="font-bold text-gray-800">Order #${s.ord_code_ph}</h4>
@@ -147,4 +147,4 @@ Message: ${e.data?.message||e.statusText||"Unknown error"}`)}finally{d.classList
                 >
                     View Order
                 </button>
-            `,h.appendChild(t)})}function L(n){c.textContent=n,c.classList.remove("hidden")}});
+            `,h.appendChild(t)})}function w(n){c.textContent=n,c.classList.remove("hidden")}});

@@ -515,6 +515,18 @@ class PlayHouseController extends Controller
         ]);
 
         $query = OrderItems::query();
+
+        $inHouseGuardians = OrderItems::where('ckin', Carbon::now())->where('guardian')->count();
+        $inHouseKids = OrderItems::where('ckin', Carbon::now())->where('d_code_child')->count();
+        $totalKids = M06Child::count();
+        $totalGuardians = M06Guardian::count();
+        
+        $statusMonitor = [
+            'in_house_guardians' => $inHouseGuardians,
+            'in_house_kids' => $inHouseKids,
+            'total_kids' => $totalKids,
+            'total_guardians' => $totalGuardians
+        ];
         
         $status = $request->get('status');
 
@@ -560,7 +572,7 @@ class PlayHouseController extends Controller
             'ckout' => 'Checked Out',
         ];
         
-        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels'));
+        return view('pages.playhouse-bookings', compact('orderItems', 'columns', 'labels', 'statusMonitor'));
     }
 
     public function viewBookingsOnlyNamesTimes(Request $request)
@@ -571,7 +583,19 @@ class PlayHouseController extends Controller
         ]);
 
         $query = OrderItems::query();
+
+        $inHouseGuardians = OrderItems::where('ckin', Carbon::now())->where('guardian')->count();
+        $inHouseKids = OrderItems::where('ckin', Carbon::now())->where('d_code_child')->count();
+        $totalKids = M06Child::count();
+        $totalGuardians = M06Guardian::count();
         
+        $statusMonitor = [
+            'in_house_guardians' => $inHouseGuardians,
+            'in_house_kids' => $inHouseKids,
+            'total_kids' => $totalKids,
+            'total_guardians' => $totalGuardians
+        ];
+
         $status = $request->get('status');
 
         switch($status)
@@ -631,7 +655,7 @@ class PlayHouseController extends Controller
                     return $item;
                 });
 
-        return view('pages.playhouse-bookings', compact('orderItems'));
+        return view('pages.playhouse-bookings', compact('orderItems', 'statusMonitor'));
     }
 
     
