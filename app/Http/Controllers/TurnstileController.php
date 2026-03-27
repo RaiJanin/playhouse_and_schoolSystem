@@ -86,12 +86,12 @@ class TurnstileController extends Controller
                                 $orderItem->bkout = $time;
                                 $action = "<pre>Resume from freeze</pre>";
                             } 
-                            else if(!empty($orderItem->bkin1) && !empty($orderItem->bkout) && empty($orderItem->bkout1))
+                            else if(!empty($orderItem->bkout) && empty($orderItem->bkout1))
                             {
                                 $orderItem->bkout1 = $time;
                                 $action = "<pre>Resume from freeze (2nd time)</pre>";
                             }
-                            else if(!empty($orderItem->bkin2) && !empty($orderItem->bkout) && !empty($orderItem->bkout1) && empty($orderItem->bkout2))
+                            else if(!empty($orderItem->bkout) && !empty($orderItem->bkout1) && empty($orderItem->bkout2))
                             {
                                 $orderItem->bkout2 = $time;
                                 $action = "<pre>Resume from freeze (3rd time)</pre>";
