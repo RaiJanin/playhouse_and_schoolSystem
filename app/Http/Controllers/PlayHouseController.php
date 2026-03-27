@@ -516,14 +516,16 @@ class PlayHouseController extends Controller
 
         $query = OrderItems::query();
 
-        $inHouseGuardians = OrderItems::where('ckin', now()->format('Y-m-d'))
+        $today = now()->format('Y-m-d');
+
+        $inHouseGuardians = OrderItems::where('ckin', 'like', now()->format('Y-m-d') . '%')
                             ->where('guardian')
                             ->count();
-        $inHouseKids = OrderItems::where('ckin', now()->format('Y-m-d'))
+        $inHouseKids = OrderItems::where('ckin', 'like', now()->format('Y-m-d') . '%')
                             ->where('d_code_child')
                             ->count();
         $todayReservations = OrderItems::whereNull('ckin')
-                            ->where('created_at', now()->format('Y-m-d'))
+                            ->where('created_at', 'like',  now()->format('Y-m-d') . '%')
                             ->count();
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
