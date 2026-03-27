@@ -516,14 +516,22 @@ class PlayHouseController extends Controller
 
         $query = OrderItems::query();
 
-        $inHouseGuardians = OrderItems::where('ckin', Carbon::now())->where('guardian')->count();
-        $inHouseKids = OrderItems::where('ckin', Carbon::now())->where('d_code_child')->count();
+        $inHouseGuardians = OrderItems::where('ckin', now()->format('Y-m-d'))
+                            ->where('guardian')
+                            ->count();
+        $inHouseKids = OrderItems::where('ckin', now()->format('Y-m-d'))
+                            ->where('d_code_child')
+                            ->count();
+        $todayReservations = OrderItems::whereNull('ckin')
+                            ->where('created_at', now()->format('Y-m-d'))
+                            ->count();
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
         
         $statusMonitor = [
             'in_house_guardians' => $inHouseGuardians,
             'in_house_kids' => $inHouseKids,
+            'today_reserves' => $todayReservations,
             'total_kids' => $totalKids,
             'total_guardians' => $totalGuardians
         ];
@@ -584,14 +592,22 @@ class PlayHouseController extends Controller
 
         $query = OrderItems::query();
 
-        $inHouseGuardians = OrderItems::where('ckin', Carbon::now())->where('guardian')->count();
-        $inHouseKids = OrderItems::where('ckin', Carbon::now())->where('d_code_child')->count();
+        $inHouseGuardians = OrderItems::where('ckin', now()->format('Y-m-d'))
+                            ->where('guardian')
+                            ->count();
+        $inHouseKids = OrderItems::where('ckin', now()->format('Y-m-d'))
+                            ->where('d_code_child')
+                            ->count();
+        $todayReservations = OrderItems::whereNull('ckin')
+                            ->where('created_at', now()->format('Y-m-d'))
+                            ->count();
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
         
         $statusMonitor = [
             'in_house_guardians' => $inHouseGuardians,
             'in_house_kids' => $inHouseKids,
+            'today_reserves' => $todayReservations,
             'total_kids' => $totalKids,
             'total_guardians' => $totalGuardians
         ];
@@ -653,7 +669,7 @@ class PlayHouseController extends Controller
                     }
                     
                     return $item;
-                });
+                })->withQueryString();
 
         return view('pages.playhouse-bookings', compact('orderItems', 'statusMonitor'));
     }

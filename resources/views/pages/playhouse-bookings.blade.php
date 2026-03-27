@@ -37,6 +37,13 @@
                     <p>{{ $statusMonitor['total_guardians'] }}</p>
                 </span>
             </div>
+            <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
+                <h1 class="text-gray-100 font-medium">Today's Reservations</h1>
+                <span class="text-white text-2xl flex flex-row items-center gap-4">
+                    <i class="fa-solid fa-clipboard-user"></i>
+                    <p>{{ $statusMonitor['today_reserves'] }}</p>
+                </span>
+            </div>
         </div>
     </header>
     @if(Route::is('playhouse.bookings'))
