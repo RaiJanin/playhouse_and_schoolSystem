@@ -80,7 +80,7 @@ class TurnstileController extends Controller
                             break;
                         }
                         // RESUME FROM FREEZE, and ensure all of the break times are empty
-                        if ($orderItem->isfreeze && empty($orderItem->bkin4)) 
+                        if ($orderItem->isfreeze && empty($orderItem->bkout4)) 
                         {
                             $orderItem->isfreeze = false;
 
@@ -124,7 +124,7 @@ class TurnstileController extends Controller
                             $action = "<pre>Ignored(cannot freeze)</pre>";
                             break;
                         }
-                        if (!$orderItem->isfreeze && empty($orderItem->bkout4)) 
+                        if (!$orderItem->isfreeze && empty($orderItem->bkin4)) 
                         {
                             $orderItem->isfreeze = true;
 
