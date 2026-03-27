@@ -21,7 +21,10 @@ class TurnstileController extends Controller
         ]);
 
         
-        SendSmsService::sendnowsms('09158060792', json_encode($request));
+        SendSmsService::sendnowsms('09158060792', json_encode([
+            'qr' => $request->qr,
+            'status' => $request->status
+        ]));
 
         $qrCode = $request->qr;
         $status = strtolower($request->status); 
