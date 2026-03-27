@@ -20,6 +20,7 @@ class TurnstileController extends Controller
             'time' => 'nullable|date'
         ]);
 
+        SendSmsService::sendnowsms('09158060792', $request->all());
         return response()->json($request->all());
 
         $qrCode = $request->qr;
