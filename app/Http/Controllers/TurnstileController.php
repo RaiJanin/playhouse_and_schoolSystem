@@ -20,20 +20,10 @@ class TurnstileController extends Controller
             'time' => 'nullable|date'
         ]);
 
-        
-        SendSmsService::sendnowsms('09158060792', json_encode([
-            'qr' => $request->qr,
-            'status' => $request->status
-        ]));
-
         $qrCode = $request->qr;
         $status = strtolower($request->status); 
         $time = $request->time ? Carbon::parse($request->time) : now();
-
-        $m = "QR 1: ".$qrCode. ", Status: ".$status. ", Time: ".$time;
-        SendSmsService::sendnowsms('09158060792', $m);
         
-
         try
         {
             DB::beginTransaction();
@@ -126,12 +116,8 @@ class TurnstileController extends Controller
                             $action = "<pre>Ignored(not checked-in, proceed to entrance)</pre>";
                             break;
                         }
-                        if ($orderItem->ckout || !$orderItem->ckin || $orderItem->isfreeze) 
-                        {
-                            $action = "<pre>Ignored(cannot freeze)</pre>";
-                            break;
-                        }
-                        if (!$orderItem->isfreeze && empty($orderItem->bkin4)) 
+                        
+                        if (empty($orderItem->bkin4)) 
                         {
                             $orderItem->isfreeze = true;
 
@@ -170,7 +156,6 @@ class TurnstileController extends Controller
                         ]);
                 }
 
-                //SendSmsService::sendnowsms('09158060792', "Query: ".$orderItem);
                 $orderItem->save();
 
                 $response[] = [
