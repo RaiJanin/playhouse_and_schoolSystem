@@ -15,10 +15,12 @@ class TurnstileController extends Controller
     public function turnstileSrchPOST(Request $request)
     {
         $request->validate([
-            'qr' => 'required|string|max:20',
-            'status' => 'required|string|max:10',
+            'qr' => 'string|max:20',
+            'status' => 'string|max:10',
             'time' => 'nullable|date'
         ]);
+
+        return response()->json($request->all());
 
         $qrCode = $request->qr;
         $status = strtolower($request->status); 
