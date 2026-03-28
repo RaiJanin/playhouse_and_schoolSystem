@@ -35,10 +35,13 @@ class Notify10MinutesBeforeTimeOut extends Command
                 $query->orderBy('created_at', 'desc');
             }, 'child.parent'])
             ->where(function ($query) use ($now) {
-                $query->whereBetween('ckout', [
-                    $now->copy()->addMinutes(8),
-                    $now->copy()->addMinutes(10)
-                ])/**->orWhereRaw(
+                $query->whereRaw(
+                    "ckin + (durationhours * interval '1 hour') BETWEEN ? AND ?",
+                    [
+                        $now->copy()->addMinutes(8),
+                        $now->copy()->addMinutes(10),
+                    ]
+                )/**->orWhereRaw(
                     "created_at + (durationhours * interval '1 hour') < ?",
                     [$now]
                 )*/;
