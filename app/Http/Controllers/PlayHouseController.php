@@ -527,17 +527,30 @@ class PlayHouseController extends Controller
             }
         );
 
-        $statusQuery = OrderItems::query()->when($request->filled(['start_date', 'end_date']), 
-           function ($q) use ($startDate, $endDate) 
+        $inHouseGuardians = OrderItems::when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($startDate, $endDate) 
             {
-                $q->whereDate('ckin', '>=', $startDate . ' 00:00:00')
-                ->whereDate('ckin', '<=', $endDate . ' 23:59:59');
+                $q->whereDate('ckin', '>=', $startDate)
+                ->whereDate('ckin', '<=', $endDate);
             }
-        );
+        )->whereNotNull('guardian')->whereNotNull('ckin')->count();
 
-        $inHouseGuardians = $statusQuery->where('guardian')->whereNot('ckin', null)->count();
-        $inHouseKids = $statusQuery->where('d_code_child')->whereNot('ckin', null)->count();
-        $todayReservations = $query->whereNull('ckin')->count();
+        $inHouseKids = OrderItems::when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($startDate, $endDate) 
+            {
+                $q->whereDate('ckin', '>=', $startDate)
+                ->whereDate('ckin', '<=', $endDate);
+            }
+        )->where('d_code_child')->whereNotNull('ckin')->count();
+
+        $todayReservations = OrderItems::when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($startDate, $endDate) 
+            {
+                $q->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate);
+            }
+        )->whereNull('ckin')->count();
+        
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
         
