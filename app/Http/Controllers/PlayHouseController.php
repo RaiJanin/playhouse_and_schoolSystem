@@ -602,17 +602,38 @@ class PlayHouseController extends Controller
             }
         );
 
-        $statusQuery = OrderItems::query()->when($request->filled(['start_date', 'end_date']), 
+        $statusQuery = OrderItems::when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($request) 
+            {
+                $q->whereDate('ckin', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+                ->whereDate('ckin', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+            }
+        );
+
+        $inHouseGuardians = OrderItems::when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($request) 
+            {
+                $q->whereDate('ckin', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+                ->whereDate('ckin', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+            }
+        )->where('guardian')->whereNot('ckin', null)->count();
+
+        $inHouseKids = OrderItems::when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($request) 
+            {
+                $q->whereDate('ckin', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+                ->whereDate('ckin', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+            }
+        )->where('d_code_child')->whereNot('ckin', null)->count();
+
+        $todayReservations = OrderItems::when($request->filled(['start_date', 'end_date']), 
             function ($q) use ($request) 
             {
                 $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
                 ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
             }
-        );
+        )->whereNull('ckin')->count();
 
-        $inHouseGuardians = $statusQuery->where('guardian')->whereNot('ckin', null)->count();
-        $inHouseKids = $statusQuery->where('d_code_child')->whereNot('ckin', null)->count();
-        $todayReservations = $statusQuery->whereNull('ckin')->count();
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
 
