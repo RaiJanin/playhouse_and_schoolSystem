@@ -38,6 +38,13 @@ class Notify10MinutesBeforeTimeOut extends Command
                 $query->whereRaw(
                     "ckin + (durationhours * interval '1 hour') <= ?",
                     [ $now->copy()->addMinutes(10) ]
+                )
+                ->orWhereRaw(
+                    "ckin + (durationhours * interval '1 hour') BETWEEN ? AND ?",
+                    [
+                        $now,
+                        $now->copy()->addMinutes(10)
+                    ]
                 );
             })
             ->where('checked_out', false)
