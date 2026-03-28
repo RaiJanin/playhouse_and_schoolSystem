@@ -608,7 +608,7 @@ class PlayHouseController extends Controller
         $inHouseGuardians = OrderItems::when($request->filled(['start_date', 'end_date']), 
             function ($q) use ($request) 
             {
-                $q->whereDate('ckin', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()-format('Y-m-d H:i:s'))
+                $q->whereDate('ckin', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->format('Y-m-d H:i:s'))
                 ->whereDate('ckin', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->format('Y-m-d H:i:s'));
             }
         )->where('guardian')->whereNot('ckin', null)->count();
