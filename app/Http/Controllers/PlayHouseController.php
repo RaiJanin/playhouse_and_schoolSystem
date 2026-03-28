@@ -594,17 +594,28 @@ class PlayHouseController extends Controller
 
         $query = OrderItems::query();
 
-        $inHouseGuardians = OrderItems::where('ckin', 'like', now()->format('Y-m-d') . '%')
-                            ->where('guardian')
-                            ->count();
-        $inHouseKids = OrderItems::where('ckin', 'like', now()->format('Y-m-d') . '%')
-                            ->where('d_code_child')
-                            ->count();
-        $todayReservations = OrderItems::whereNull('ckin')
-                            ->where('created_at', 'like', now()->format('Y-m-d') . '%')
-                            ->count();
+        $query->when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($request) 
+            {
+                $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+                ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+            }
+        );
+
+        $statusQuery = OrderItems::query()->when($request->filled(['start_date', 'end_date']), 
+            function ($q) use ($request) 
+            {
+                $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
+                ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
+            }
+        );
+
+        $inHouseGuardians = $statusQuery->where('guardian')->whereNot('ckin', null)->count();
+        $inHouseKids = $statusQuery->where('d_code_child')->whereNot('ckin', null)->count();
+        $todayReservations = $statusQuery->whereNull('ckin')->count();
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
+
         
         $statusMonitor = [
             'in_house_guardians' => $inHouseGuardians,
@@ -628,11 +639,6 @@ class PlayHouseController extends Controller
                 $query->where('ckin', null)->where('ckout', null);
                 break;
         }
-        
-        $query->when($request->filled(['start_date', 'end_date']), function ($q) use ($request) {
-            $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->utc())
-            ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->utc());
-        });
 
         $orderItems = $query->select([
                 'id', 'd_code_child', 'ord_code_ph', 'ckin', 'ckout', 'durationhours'
