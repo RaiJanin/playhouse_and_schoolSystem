@@ -105,12 +105,13 @@ class Notify10MinutesBeforeTimeOut extends Command
             // }
 
             $message = mb_convert_encoding($message, 'ASCII', 'UTF-8');
-            $sendNotifications = OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
             
             $this->sendNotification($message, $parentData->mobileno);
             $this->info("Sent notifications: {$sendNotifications}\n\n\n");
             
         }
+        $sendNotifications = OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
+
         return 0;
     }
 

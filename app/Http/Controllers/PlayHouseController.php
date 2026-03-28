@@ -514,21 +514,24 @@ class PlayHouseController extends Controller
             'end_date'   => $request->input('end_date', now()->format('Y-m-d')),
         ]);
 
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
         $query = OrderItems::query();
 
         $query->when($request->filled(['start_date', 'end_date']), 
-            function ($q) use ($request) 
+            function ($q) use ($startDate, $endDate) 
             {
-                $q->whereDate('created_at', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->format('Y-m-d H:i:s'))
-                ->whereDate('created_at', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->format('Y-m-d H:i:s'));
+                $q->whereDate('created_at', '>=', $startDate . ' 00:00:00')
+                ->whereDate('created_at', '<=', $endDate . ' 23:59:59');
             }
         );
 
         $statusQuery = OrderItems::query()->when($request->filled(['start_date', 'end_date']), 
-            function ($q) use ($request) 
+           function ($q) use ($startDate, $endDate) 
             {
-                $q->whereDate('ckin', '>', Carbon::parse($request->start_date, 'Asia/Manila')->startOfDay()->format('Y-m-d H:i:s'))
-                ->whereDate('ckin', '<=', Carbon::parse($request->end_date, 'Asia/Manila')->endOfDay()->format('Y-m-d H:i:s'));
+                $q->whereDate('ckin', '>=', $startDate . ' 00:00:00')
+                ->whereDate('ckin', '<=', $endDate . ' 23:59:59');
             }
         );
 

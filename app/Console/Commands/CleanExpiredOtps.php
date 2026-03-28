@@ -29,9 +29,7 @@ class CleanExpiredOtps extends Command
     {
         $now = Carbon::now();
 
-        $deletedCount = PhoneNumber::where('is_verified', false)
-            ->where('otp_expires_at', '<', $now)
-            ->delete();
+        $deletedCount = PhoneNumber::where('otp_expires_at', '<', $now->copy()->subMinutes(30))->delete();
 
         $this->info("Expired OTPs cleaned: $deletedCount");
     }
