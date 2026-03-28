@@ -36,20 +36,13 @@ class Notify10MinutesBeforeTimeOut extends Command
             }, 'child.parent'])
             ->where(function ($query) use ($now) {
                 $query->whereRaw(
-                    "ckin + (durationhours * interval '1 hour') BETWEEN ? AND ?",
-                    [
-                        $now->copy()->addMinutes(8),
-                        $now->copy()->addMinutes(10),
-                    ]
-                )/**->orWhereRaw(
-                    "created_at + (durationhours * interval '1 hour') < ?",
-                    [$now]
-                )*/;
+                    "ckin + (durationhours * interval '1 hour') <= ?",
+                    [ $now->copy()->addMinutes(10) ]
+                );
             })
             ->where('checked_out', false)
             ->where('notified_timeout', false)
-            ->whereNot('isfreeze', true)
-            ->whereNot('durationhours', 5)
+            ->where('durationhours', '!=', 5)
             ->get();
 
         $notifications = [];
@@ -107,7 +100,6 @@ class Notify10MinutesBeforeTimeOut extends Command
             $message = mb_convert_encoding($message, 'ASCII', 'UTF-8');
             
             $this->sendNotification($message, $parentData->mobileno);
-            $this->info("Sent notifications: {$sendNotifications}\n\n\n");
             
         }
         $sendNotifications = OrderItems::whereIn('id', $items->pluck('id'))->update(['notified_timeout' => true]);
