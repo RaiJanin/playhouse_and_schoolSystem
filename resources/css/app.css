@@ -1,3 +1,4 @@
+@tailwind utilities;
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -6,11 +7,39 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 :root {
+    /* ===== LIGHT MODE ===== */
+    --color-light-mode: #f3f4f6;
+
+    --color-light-text-primary: #111827;
+    --color-light-text-secondary: #374151;
+    --color-light-text-muted: #6b7280;
+
+    --color-light-border: #d1d5db;
+    --color-light-border-soft: #e5e7eb;
+
+    --color-light-surface: #ffffff;
+    --color-light-hover: #e5e7eb;
+
+    /* ===== DARK MODE ===== */
+    --color-dark-mode: #1d1c1c;
+
+    --color-dark-text-primary: #f9fafb;
+    --color-dark-text-secondary: #d1d5db;
+    --color-dark-text-muted: #9ca3af;
+
+    --color-dark-border: #374151;
+    --color-dark-border-soft: #2a2a2a;
+
+    --color-dark-surface: #2a2a2a;
+    --color-dark-hover: #3a3a3a;
+
+    /* ===== COLOR PALLETES ===== */
     --color-primary: #179ea2;
     --color-primary-transparent: rgba(19, 166, 171, 0.3);
     --color-primary-foggy: #a1fcff;

@@ -31,5 +31,7 @@ Route::get('/test-mail', function () {
     return 'Email sent!';
 });
 
-require 'files.php';
-require 'http-reqs.php';
+require __DIR__.'/files.php';
+require __DIR__.'/http-reqs.php';
+require __DIR__.'/admin-panel.php';
+require __DIR__.'/auth.php';

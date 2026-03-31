@@ -1,4 +1,5 @@
 import './bootstrap';
+import './dependencies.js';
 
 import { API_ROUTES } from './config/api.js';
 import { showConsole } from './config/debug.js';
