@@ -2,161 +2,162 @@
 <div class="grid grid-cols-3 gap-8 items-start">
     {{-- Left side --}}
     <div class="col-span-2 flex flex-wrap gap-2 self-start">
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-primary-mid-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">In house kids</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-child-reaching"></i>
-                <p>{{ $statusMonitor['in_house_guardians'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-primary-mid-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">In house guardians</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-users-between-lines"></i>
-                <p>{{ $statusMonitor['in_house_kids'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Total kids</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-children"></i>
-                <p>{{ $statusMonitor['total_kids'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Total guardians</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-users"></i>
-                <p>{{ $statusMonitor['total_guardians'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Today's Reservations</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-clipboard-user"></i>
-                <p>{{ $statusMonitor['today_reserves'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-orange-700 backdrop-blur">
-            <h1 class="text-gray-100 font-medium">For Checkouts</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-person-hiking"></i>
-                <p>{{ $statusMonitor['for_checkouts'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Total Others</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-hand-holding-droplet"></i>
-                <p>{{ $statusMonitor['total_others'] ?? 0 }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Total Logged in</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-user-clock"></i>
-                <p>{{ $statusMonitor['total_lgin'] ?? 0 }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Total Checkouts</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <p>{{ $statusMonitor['total-ckouts'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-primary-full-dark)] backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Party Package Reservation</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-democrat"></i>
-                <p>{{ $statusMonitor['party_pckge_rsrv'] ?? 0 }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-amber-600 backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Number or Items sold</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-cart-plus"></i>
-                <p>{{ $statusMonitor['items_sold'] ?? '0.00' }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-amber-600 backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Number of Socks Sold</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-socks"></i>
-                <p>{{ $statusMonitor['socks_sold'] }}</p>
-            </span>
-        </div>
-        <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-red-800 backdrop-blur">
-            <h1 class="text-gray-100 font-medium">Overdue</h1>
-            <span class="text-white text-2xl flex flex-row items-center gap-4">
-                <i class="fa-solid fa-stopwatch"></i>
-                <p>{{ $statusMonitor['overdue'] ?? 0 }}</p>
-            </span>
-        </div>
+        <x-status-card
+            title="In house kids"
+            :value=" $statusMonitor['in_house_guardians'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-primary-mid-dark)]"
+            icon="fa-solid fa-child-reaching"
+        />
+        <x-status-card
+            title="In house guardians"
+            :value=" $statusMonitor['in_house_kids'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-primary-mid-dark)]"
+            icon="fa-solid fa-users-between-lines"
+        />
+        <x-status-card
+            title="Total kids"
+            :value=" $statusMonitor['total_kids'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-third-full-dark)]"
+            icon="fa-solid fa-children"
+        />
+        <x-status-card
+            title="Total guardians"
+            :value=" $statusMonitor['total_guardians'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-third-full-dark)]"
+            icon="fa-solid fa-users"
+        />
+        <x-status-card
+            title="Today's Reservations"
+            :value=" $statusMonitor['today_reserves'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-third-full-dark)]"
+            icon="fa-solid fa-clipboard-user"
+        />
+        <x-status-card
+            title="For Checkouts"
+            :value=" $statusMonitor['for_checkouts'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-orange-700"
+            icon="fa-solid fa-person-hiking"
+        />
+        <x-status-card
+            title="Total Others"
+            :value=" $statusMonitor['total_others'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-third-full-dark)]"
+            icon="fa-solid fa-hand-holding-droplet"
+        />
+        <x-status-card
+            title="Total Logged in"
+            :value=" $statusMonitor['total_lgin'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-third-full-dark)]"
+            icon="fa-solid fa-user-clock"
+        />
+        <x-status-card
+            title="Total Checkouts"
+            :value=" $statusMonitor['total-ckouts'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-third-full-dark)]"
+            icon="fa-solid fa-right-from-bracket"
+        />
+        <x-status-card
+            title="Party Package Reservation"
+            :value=" $statusMonitor['party_pckge_rsrv'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-[var(--color-primary-full-dark)]"
+            icon="fa-solid fa-democrat"
+        />
+        <x-status-card
+            title="Number or Items sold"
+            :value=" $statusMonitor['items_sold'] ?? '0.00' "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-amber-600"
+            icon="fa-solid fa-cart-plus"
+        />
+        <x-status-card
+            title="Number of Socks Sold"
+            :value=" $statusMonitor['socks_sold'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-amber-600"
+            icon="fa-solid fa-socks"
+        />
+        <x-status-card
+            title="Overdue"
+            :value=" $statusMonitor['overdue'] ?? 0 "
+            width="min-w-[150px] max-w-[200px]"
+            bg="bg-red-800"
+            icon="fa-solid fa-stopwatch"
+        />
         <div class="flex-1 min-w-full grid grid-cols-1 mb-4">
             <div class="flex flex-wrap gap-2">
-                <div class="flex-1 rounded-lg p-2 border border-white bg-cyan-700 backdrop-blur">
-                    <h1 class="text-gray-100 font-medium">Total Playhouse Sales</h1>
-                    <span class="text-white text-2xl flex flex-row items-center gap-4">
-                        <i class="fa-solid fa-coins"></i>
-                        <p>{{ $statusMonitor['playhouse_sales'] ?? '0.00' }}</p>
-                    </span>
-                </div>
-                <div class="flex-1 rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
-                    <h1 class="text-gray-100 font-medium">Total Item Sales</h1>
-                    <span class="text-white text-2xl flex flex-row items-center gap-4">
-                        <i class="fa-solid fa-coins"></i>
-                        <p>{{ $statusMonitor['item_sales'] ?? '0.00' }}</p>
-                    </span>
-                </div>
-                <div class="flex-1 rounded-lg p-2 border border-white bg-red-800 backdrop-blur">
-                    <h1 class="text-gray-100 font-medium">Total unpaid amount</h1>
-                    <span class="text-white text-2xl flex flex-row items-center gap-4">
-                        <i class="fa-solid fa-coins"></i>
-                        <p>{{ $statusMonitor['total_unpaid'] ?? 0 }}</p>
-                    </span>
-                </div>
+                <x-status-card
+                    title="Total Playhouse Sales"
+                    :value=" $statusMonitor['playhouse_sales'] ?? '0.00' "
+                    bg="bg-cyan-700"
+                    icon="fa-solid fa-coins"
+                />
+                <x-status-card
+                    title="Total Item Sales"
+                    :value=" $statusMonitor['item_sales'] ?? '0.00' "
+                    bg="bg-[var(--color-third-full-dark)]"
+                    icon="fa-solid fa-coins"
+                />
+                <x-status-card
+                    title="Total unpaid amount"
+                    :value=" $statusMonitor['total_unpaid'] ?? 0 "
+                    bg="bg-red-800"
+                    icon="fa-solid fa-coins"
+                />
             </div>
         </div>
     </div>
 
     {{-- Right side --}}
     <div class="flex flex-wrap gap-2 text-sm">
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Stock Adjustment Report
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Outlet Sales Report
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Stock Transfer Report
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Cashier's Report
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Stock Issuance Report
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Sales Report by Staff
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Direct Purchase Report
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Sales Report by Hour
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Inventory Valuation
-        </button>
-        <button onclick="goto('#')" class="flex-1 rounded-md py-5 px-8 bg-[var(--color-accent)] shadow hover:bg-[var(--color-accent-mid-dark)] transition-all duration-300">
-            <i class="fa-regular fa-file-lines"></i>Sales Report by Item
-        </button>
+        <x-reports-link-btn
+            title="Stock Adjustment Report"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Outlet Sales Report"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Stock Transfer Report"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Cashier's Report"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Stock Issuance Report"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Sales Report by Staff"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Direct Purchase Report"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Sales Report by Hour"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Inventory Valuation"
+            :link="'#'"
+        />
+        <x-reports-link-btn
+            title="Sales Report by Item"
+            :link="'#'"
+        />
     </div>
-    {{-- Button scripts --}}
-    <script>
-        function goto(uri) {
-            window.location.href = uri
-        }
-    </script>
 </div>
