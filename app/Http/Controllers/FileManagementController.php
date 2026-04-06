@@ -56,7 +56,7 @@ class FileManagementController extends Controller
         
         krsort($paginatedGrouped);
         
-        return view('pages.file-manager', [
+        return view('pages.admin-panel.file-manager', [
             'files' => $paginatedGrouped,
             'paginatedFiles' => $paginatedFiles,
             'perPage' => $perPage,

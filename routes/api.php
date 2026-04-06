@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\PlayHouseController;
 use App\Http\Controllers\TurnstileController;
-//use App\Http\Controllers\FamilyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
