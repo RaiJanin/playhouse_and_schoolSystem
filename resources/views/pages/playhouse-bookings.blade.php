@@ -5,8 +5,8 @@
 @section('contents')
     <header class="mb-6 grid grid-cols-1 sm:grid-cols-2">
         <div>
+            <x-application-logo-2 class="block h-20 w-20 fill-current text-gray-800" />
             <h1 class="text-3xl font-bold text-gray-800">Bookings</h1>
-            <p class="text-gray-600 mt-1">View and manage all playhouse bookings</p>
         </div>
         <div class="flex flex-wrap gap-2">
             <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-primary-mid-dark)] backdrop-blur">
@@ -46,9 +46,7 @@
             </div>
         </div>
     </header>
-    @if(Route::is('playhouse.bookings'))
-        @include('ui.bookings')
-    @elseif(Route::is('playhouse.bookings-full-struct'))
-        @include('ui.order-items')
-    @endif
+
+    @include('ui.bookings')
+    
 @endsection

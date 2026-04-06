@@ -48,7 +48,19 @@
         >
             Today
         </a>
+        <a
+            href="{{ route('dashboard', [
+                            'start_date' => request()->query('start_date') ?? '',
+                            'end_date' => request()->query('end_date') ?? '',
+                            'status' => request()->query('status') ?? ''
+                        ])
+                  }}"
+            class="px-4 py-2 bg-[var(--color-primary-full-dark)] text-white font-semibold rounded-xl hover:bg-[var(--color-primary-mid-dark)] transition-all duration-300 disabled:cursor-not-allowed disabled:bg-gray-400"
+        >
+           <i class="fa-solid fa-rotate"></i> Refresh
+        </a>
     </form>
+    
 </div>
 
 <div class="rounded-lg">
