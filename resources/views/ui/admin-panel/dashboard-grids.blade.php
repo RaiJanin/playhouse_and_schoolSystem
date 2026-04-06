@@ -41,7 +41,7 @@
             <h1 class="text-gray-100 font-medium">For Checkouts</h1>
             <span class="text-white text-2xl flex flex-row items-center gap-4">
                 <i class="fa-solid fa-person-hiking"></i>
-                <p>{{ $statusMonitor['for_checkouts'] ?? 0 }}</p>
+                <p>{{ $statusMonitor['for_checkouts'] }}</p>
             </span>
         </div>
         <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
@@ -62,7 +62,7 @@
             <h1 class="text-gray-100 font-medium">Total Checkouts</h1>
             <span class="text-white text-2xl flex flex-row items-center gap-4">
                 <i class="fa-solid fa-right-from-bracket"></i>
-                <p>{{ $statusMonitor['total-ckouts'] ?? 0 }}</p>
+                <p>{{ $statusMonitor['total-ckouts'] }}</p>
             </span>
         </div>
         <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-[var(--color-primary-full-dark)] backdrop-blur">
@@ -83,7 +83,7 @@
             <h1 class="text-gray-100 font-medium">Number of Socks Sold</h1>
             <span class="text-white text-2xl flex flex-row items-center gap-4">
                 <i class="fa-solid fa-socks"></i>
-                <p>{{ $statusMonitor['socks_sold'] ?? '0.00' }}</p>
+                <p>{{ $statusMonitor['socks_sold'] }}</p>
             </span>
         </div>
         <div class="flex-1 min-w-[150px] max-w-[200px] rounded-lg p-2 border border-white bg-red-800 backdrop-blur">
@@ -99,21 +99,21 @@
                     <h1 class="text-gray-100 font-medium">Total Playhouse Sales</h1>
                     <span class="text-white text-2xl flex flex-row items-center gap-4">
                         <i class="fa-solid fa-coins"></i>
-                        <p>{{ $statusMonitor['items_sold'] ?? '0.00' }}</p>
+                        <p>{{ $statusMonitor['playhouse_sales'] ?? '0.00' }}</p>
                     </span>
                 </div>
                 <div class="flex-1 rounded-lg p-2 border border-white bg-[var(--color-third-full-dark)] backdrop-blur">
                     <h1 class="text-gray-100 font-medium">Total Item Sales</h1>
                     <span class="text-white text-2xl flex flex-row items-center gap-4">
                         <i class="fa-solid fa-coins"></i>
-                        <p>{{ $statusMonitor['socks_sold'] ?? '0.00' }}</p>
+                        <p>{{ $statusMonitor['item_sales'] ?? '0.00' }}</p>
                     </span>
                 </div>
                 <div class="flex-1 rounded-lg p-2 border border-white bg-red-800 backdrop-blur">
                     <h1 class="text-gray-100 font-medium">Total unpaid amount</h1>
                     <span class="text-white text-2xl flex flex-row items-center gap-4">
                         <i class="fa-solid fa-coins"></i>
-                        <p>{{ $statusMonitor['overdue'] ?? 0 }}</p>
+                        <p>{{ $statusMonitor['total_unpaid'] ?? 0 }}</p>
                     </span>
                 </div>
             </div>
