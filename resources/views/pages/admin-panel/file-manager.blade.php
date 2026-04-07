@@ -7,7 +7,7 @@
                 </h2>
             </x-slot>
         </div>
-        <div class="p-6 min-h-screen">
+        <div class="flex items-center justify-center lg:p-6 p-2 min-h-screen">
             @include('ui.admin-panel.file-manager')
         </div>
     </div>
