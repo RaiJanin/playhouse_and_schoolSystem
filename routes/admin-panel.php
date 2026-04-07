@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/admin-panel', function () {
     return view('pages.admin-panel.welcome');
-});
+})->name('admin.panel');
 
 Route::prefix('admin-panel')->group(function () {
     Route::get('/dashboard', [MimoAdminController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
