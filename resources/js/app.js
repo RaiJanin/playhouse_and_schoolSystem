@@ -29,6 +29,7 @@ import {
     requestBirthdayDropdownValidation,
     validateDateInputs
 } from './utilities/birthdayInput.js';
+import { openTermsandcondtion } from './components/openTermsAndCondition.js';
 
 document.addEventListener('DOMContentLoaded', function () {
 //-------variables-----------------------------------------------------------------
@@ -63,19 +64,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let isReadTerms = document.getElementById("isReadTermsAndCond")
 
-        document.getElementById('read-terms-btn').addEventListener('click', () => {
-            isReadTerms.value = "1";
-            nextBtn.disabled = false;
-            window.open(
-                window.masterfile.extras.termsAndAgreementPage,
-                "_blank",
-            );
-        })
-
-        if(isReadTerms.value === "0") {
+        if (isReadTerms && isReadTerms.value === "0") {
             nextBtn.disabled = true;
-            return;
         }
+
+        function handleTermsCheckbox() {
+            const allCheckboxes = document.querySelectorAll('.waiver-checkbox');
+            allCheckboxes.forEach(cb => cb.checked = this.checked);
+            
+            if (isReadTerms) {
+                isReadTerms.value = this.checked ? '1' : '0';
+            }
+            
+            if (this.checked) {
+                nextBtn.disabled = false;
+            }
+        }
+
+        document.getElementById('read-terms-btn').addEventListener('click', () => {
+            openTermsandcondtion();
+            
+            const modalTermsCheckbox = document.getElementById('terms-checkbox');
+            
+            if (modalTermsCheckbox) {
+                modalTermsCheckbox.removeEventListener('change', handleTermsCheckbox);
+                modalTermsCheckbox.addEventListener('change', handleTermsCheckbox);
+            }
+        })
 
         /**
          * Updates the enabled/disabled state of next and submit buttons based on form validity

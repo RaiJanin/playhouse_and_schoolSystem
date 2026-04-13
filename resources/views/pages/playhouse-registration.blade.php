@@ -33,6 +33,7 @@
 
 @section('main-content')
     @include('components.backdrop')
+    @include('ui.terms-and-conditions')
     <div class="container max-w-full mx-auto">
         @include('ui.partials.header')
         @include('ui.partials.progress-bar')
