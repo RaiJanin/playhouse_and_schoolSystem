@@ -61,12 +61,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //----Simple scripts--------------------------------------------------------------
 
-        if (phoneInputEl && nextBtn) {
+        let isReadTerms = document.getElementById("isReadTermsAndCond")
+
+        document.getElementById('read-terms-btn').addEventListener('click', () => {
+            isReadTerms.value = "1";
+            nextBtn.disabled = false;
+            window.open(
+                window.masterfile.extras.termsAndAgreementPage,
+                "_blank",
+            );
+        })
+
+        if(isReadTerms.value === "0") {
             nextBtn.disabled = true;
-        }
-        
-        if (submitBtn) {
-            submitBtn.disabled = true;
+            return;
         }
 
         /**

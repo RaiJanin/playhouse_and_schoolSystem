@@ -36,6 +36,8 @@
                 title="Gmail."
             >
         </div>
+        <button type="button" id="read-terms-btn" class="text-sm text-[var(--color-primary-full-dark)]">To proceed the registration, <span class="underline hover:text-[var(--color-primary)] hover:cursor-pointer">read the terms and conditions</span> here</button>
+        <input type="hidden" id="isReadTermsAndCond" name="isReadTermsAndCond" value="0"></div>
     </div>
 </div>
 
