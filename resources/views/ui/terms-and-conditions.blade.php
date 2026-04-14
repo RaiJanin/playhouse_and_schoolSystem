@@ -86,16 +86,19 @@
 
         <div class="bg-gray-50 p-4 rounded-lg mb-4">
             <div class="space-y-2 text-sm text-gray-700">
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="checkbox" class="mt-1 waiver-checkbox">
+                <label class="flex items-start gap-2">
+                    {{-- <input type="checkbox" class="mt-1 waiver-checkbox"> --}}
+                    <i class="terms-agreement fa-regular fa-square"></i>
                     <span>I agree to supervise my child at all times and take full responsibility for their behavior.</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="checkbox" class="mt-1 waiver-checkbox">
+                <label class="flex items-start gap-2">
+                    {{-- <input type="checkbox" class="mt-1 waiver-checkbox"> --}}
+                    <i class="terms-agreement fa-regular fa-square"></i>
                     <span>I voluntarily choose to allow my child to participate in play area activities with full awareness of these risks. I will not hold Mimo Town liable for injuries or loss of property.</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="checkbox" class="mt-1 waiver-checkbox">
+                <label class="flex items-start gap-2">
+                    {{-- <input type="checkbox" class="mt-1 waiver-checkbox"> --}}
+                    <i class="terms-agreement fa-regular fa-square"></i>
                     <span>I agree not to bring food, drinks, sharp materials/accessories, and/or messy materials (slime, clay, etc.) into the play zones.</span>
                 </label>
             </div>
@@ -104,16 +107,19 @@
         <div class="bg-gray-50 p-4 rounded-lg mb-4">
             <h3 class="font-semibold mb-3">Health Declaration</h3>
             <div class="space-y-2 text-sm text-gray-700">
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="checkbox" class="mt-1 waiver-checkbox">
+                <label class="flex items-start gap-2">
+                    {{-- <input type="checkbox" class="mt-1 waiver-checkbox"> --}}
+                    <i class="terms-agreement fa-regular fa-square"></i>
                     <span>I confirm that the child and guardian are currently free from contagious conditions like flu, fever, or contagious skin/eye conditions.</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="checkbox" class="mt-1 waiver-checkbox">
+                <label class="flex items-start gap-2">
+                    {{-- <input type="checkbox" class="mt-1 waiver-checkbox"> --}}
+                    <i class="terms-agreement fa-regular fa-square"></i>
                     <span>I understand that Mimo Town reserves the right to refuse entry if a guest appears unwell.</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="checkbox" class="mt-1 waiver-checkbox">
+                <label class="flex items-start gap-2">
+                    {{-- <input type="checkbox" class="mt-1 waiver-checkbox"> --}}
+                    <i class="terms-agreement fa-regular fa-square"></i>
                     <span>I agree to the terms and conditions.</span>
                 </label>
             </div>
@@ -132,31 +138,9 @@
             </div>
         </div>
 
-        <div class="flex items-start space-x-3 mt-6 mb-4" style="position: relative; z-index: 100;">
-            <div class="flex h-6 items-center">
-                <input 
-                    id="terms-checkbox"
-                    type="checkbox" 
-                    x-model="isChecked"
-                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                    style="pointer-events: auto;"
-                >
-            </div>
-            <div class="ml-2 text-sm leading-6">
-                <label for="terms-checkbox" class="font-medium text-gray-900">
-                    I have read and agree to the Terms and Conditions
-                </label>
-            </div>
-        </div>
-
-        <input type="hidden" id="isReadTermsAndCond" name="isReadTermsAndCond" x-bind:value="isChecked ? '1' : '0'" @change="$dispatch('terms-updated', $event.target.value)">
-
-        <div class="flex justify-end gap-2">
+        <div class="flex justify-end gap-2 mt-3">
             <x-secondary-button x-on:click="$dispatch('close')">
-                Cancel
-            </x-secondary-button>
-            <x-secondary-button class="bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)]" x-on:click="$dispatch('close')">
-                Done
+                Close
             </x-secondary-button>
         </div>
     </div>

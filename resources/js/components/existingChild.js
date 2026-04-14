@@ -21,14 +21,14 @@ export function attachFields(data, index) {
 
     const guardianAuthorizedChecked = data.guardians[0]?.guardianauthorized
         ? 'fa-solid fa-square-check text-green-500'
-        : 'fa-regular fa-square text-red-500';
+        : 'fa-regular fa-square text-gray-500';
     const guardianAuthorizedValue = data.guardians[0]?.guardianauthorized ? '1' : '0';
 
     const guardianSection = data.guardians.length >= 1 ? `
             <div class="mt-3 p-3 rounded-lg border border-gray-200 shadow-md bg-teal-50/60">
                 <button type="button" id="edit-existing-guardian-checkbox-${index}" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
-                        <i id="edit-existing-guardian-icon-${index}" class="edit-guardian-icon fa-regular fa-square text-red-500 text-xl"></i>
+                        <i id="edit-existing-guardian-icon-${index}" class="edit-guardian-icon fa-regular fa-square text-gray-500 text-xl"></i>
                         <p id="edit-existing-guardian-info-${index}" class="ml-2 font-semibold"></p>
                     </span>
                 </button>
@@ -78,7 +78,7 @@ export function attachFields(data, index) {
             <div class="mt-3 p-3 rounded-lg border border-gray-100 bg-teal-50/60">
                 <button id="add-guardian-checkbox-local-${index}" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
-                        <i id="check-add-guardian-icon-local-${index}" class="fa-regular fa-square text-red-500 text-xl"></i>
+                        <i id="check-add-guardian-icon-local-${index}" class="fa-regular fa-square text-gray-500 text-xl"></i>
                         <p id="check-add-guardian-info-local-${index}" class="ml-2">Add Guardian</p>
                     </span>
                 </button>

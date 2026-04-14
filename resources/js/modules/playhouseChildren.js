@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="mt-3 p-2 rounded-lg border border-cyan-300 bg-cyan-50/60">
                         <button type="button" id="add-guardian-checkbox-local-${childEntries}" class="add-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                             <span class="flex items-center">
-                                <i id="check-add-guardian-icon-local-${childEntries}" class="check-add-guardian-icon-local fa-regular fa-square text-red-500 text-xl"></i>
+                                <i id="check-add-guardian-icon-local-${childEntries}" class="check-add-guardian-icon-local fa-regular fa-square text-gray-500 text-xl"></i>
                                 <p id="check-add-guardian-info-local-${childEntries}" class="check-add-guardian-info-local ml-2"></p>
                             </span>
                         </button>
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <button type="button" id="confirm-guardian-checkbox-local-${childEntries}" class="confirm-guardian-checkbox-local cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
-                                    <i id="confirm-guardian-icon-local-${childEntries}" class="confirm-guardian-icon-local fa-regular fa-square text-red-500 text-xl"></i>
+                                    <i id="confirm-guardian-icon-local-${childEntries}" class="confirm-guardian-icon-local fa-regular fa-square text-gray-500 text-xl"></i>
                                     <p id="confirm-guardian-info-local-${childEntries}" class="ml-2"></p>
                                 </span>
                             </button>

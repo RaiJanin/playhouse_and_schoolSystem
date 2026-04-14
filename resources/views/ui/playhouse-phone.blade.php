@@ -21,7 +21,7 @@
         <div class="flex self-start">
             <button id="sendviaEmail-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                 <span class="flex items-center">
-                    <i id="sendviaEmail-icon" class="fa-regular fa-square text-red-500 text-xl"></i></i>
+                    <i id="sendviaEmail-icon" class="fa-regular fa-square text-gray-500 text-xl"></i></i>
                     <p id="sendviaEmail-info" class="ml-2"></p>
                 </span>
             </button>
@@ -36,7 +36,18 @@
                 title="Gmail."
             >
         </div>
-        <button type="button" id="read-terms-btn" class="text-sm text-[var(--color-primary-full-dark)]">To proceed the registration, <span class="underline hover:text-[var(--color-primary)] hover:cursor-pointer">read the terms and conditions</span> here</button>
+        <span class="mt-4 flex flex-row items-center text-sm text-[var(--color-primary-full-dark)]">
+            <button id="read-terms-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+                <span class="flex items-center">
+                    <i id="read-terms-ckbx-icon" class="fa-regular fa-square text-red-500 text-xl"></i></i>
+                    <p id="read-terms-ckbx-info" class="ml-2"></p>
+                </span>
+            </button>
+            I have read and agree to the 
+            <button type="button" id="read-terms-btn" class="ml-1 underline hover:text-[var(--color-primary)] hover:cursor-pointer">
+                terms and conditions
+            </button>
+        </span>
     </div>
 </div>
 

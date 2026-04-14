@@ -28,7 +28,7 @@
                     <div class="mt-3 p-2 rounded-lg border border-cyan-300 bg-cyan-50/60">
                         <button id="add-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                             <span class="flex items-center">
-                                <i id="check-add-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
+                                <i id="check-add-guardian-icon" class="fa-regular fa-square text-gray-500 text-xl"></i>
                                 <p id="check-add-guardian-info" class="ml-2"></p>
                             </span>
                         </button>
@@ -63,7 +63,7 @@
                             </div>
                             <button id="confirm-guardian-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                                 <span class="flex flex-row">
-                                    <i id="confirm-guardian-icon" class="fa-regular fa-square text-red-500 text-xl"></i>
+                                    <i id="confirm-guardian-icon" class="fa-regular fa-square text-gray-500 text-xl"></i>
                                     <p id="confirm-guardian-info" class="ml-2"></p>
                                 </span>
                             </button>

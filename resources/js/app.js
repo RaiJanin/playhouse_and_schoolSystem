@@ -30,6 +30,7 @@ import {
     validateDateInputs
 } from './utilities/birthdayInput.js';
 import { openTermsandcondtion } from './components/openTermsAndCondition.js';
+import { CustomCheckbox } from './components/customCheckbox.js';
 
 document.addEventListener('DOMContentLoaded', function () {
 //-------variables-----------------------------------------------------------------
@@ -62,35 +63,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //----Simple scripts--------------------------------------------------------------
 
-        let isReadTerms = document.getElementById("isReadTermsAndCond")
-
-        if (isReadTerms && isReadTerms.value === "0") {
-            nextBtn.disabled = true;
-        }
-
-        function handleTermsCheckbox() {
-            const allCheckboxes = document.querySelectorAll('.waiver-checkbox');
-            allCheckboxes.forEach(cb => cb.checked = this.checked);
-            
-            if (isReadTerms) {
-                isReadTerms.value = this.checked ? '1' : '0';
-            }
-            
-            if (this.checked) {
-                nextBtn.disabled = false;
-            }
-        }
-
         document.getElementById('read-terms-btn').addEventListener('click', () => {
             openTermsandcondtion();
-            
-            const modalTermsCheckbox = document.getElementById('terms-checkbox');
-            
-            if (modalTermsCheckbox) {
-                modalTermsCheckbox.removeEventListener('change', handleTermsCheckbox);
-                modalTermsCheckbox.addEventListener('change', handleTermsCheckbox);
-            }
         })
+
+        const readTermsChbx = new CustomCheckbox(
+            "read-terms-checkbox",
+            "read-terms-ckbx-icon",
+            "read-terms-ckbx-info",
+            "text-red-500",
+        );
+        readTermsChbx.setLabel('');
+
+        readTermsChbx.onChange(checked => {
+            nextBtn.disabled = !checked;
+
+            document.querySelectorAll(".terms-agreement").forEach(termAgreement => {
+                termAgreement.classList.toggle("fa-regular", !checked);
+                termAgreement.classList.toggle("fa-square", !checked);
+                termAgreement.classList.toggle("fa-solid", checked);
+                termAgreement.classList.toggle("fa-square-check", checked);
+            })
+        });
 
         /**
          * Updates the enabled/disabled state of next and submit buttons based on form validity
