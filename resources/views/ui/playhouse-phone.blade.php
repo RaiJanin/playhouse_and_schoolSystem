@@ -36,7 +36,7 @@
                 title="Gmail."
             >
         </div>
-        <span class="mt-4 flex flex-row items-center text-sm text-[var(--color-primary-full-dark)]">
+        <span class="mt-4 flex items-center text-sm text-[var(--color-primary-full-dark)]">
             <button id="read-terms-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                 <span class="flex items-center">
                     <i id="read-terms-ckbx-icon" class="fa-regular fa-square text-red-500 text-xl"></i></i>
