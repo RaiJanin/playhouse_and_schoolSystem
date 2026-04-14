@@ -36,11 +36,11 @@
                 title="Gmail."
             >
         </div>
-        <span class="mt-4 flex items-center text-sm text-[var(--color-primary-full-dark)]">
-            <button id="read-terms-checkbox" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
+        <span class="text-sm text-[var(--color-primary-full-dark)]">
+            <button id="read-terms-checkbox" type="button" class="mt-4 cursor-pointer px-2 text-sm hover:text-gray-500">
                 <span class="flex items-center">
                     <i id="read-terms-ckbx-icon" class="fa-regular fa-square text-red-500 text-xl"></i></i>
-                    <p id="read-terms-ckbx-info" class="ml-2"></p>
+                    <p id="read-terms-ckbx-info"></p>
                 </span>
             </button>
             I have read and agree to the 
