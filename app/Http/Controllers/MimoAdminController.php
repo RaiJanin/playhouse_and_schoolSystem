@@ -119,4 +119,21 @@ class MimoAdminController extends Controller
         
         return view('pages.admin-panel.dashboard', compact('orderItems', 'columns', 'labels', 'statusMonitor'));
     }
+
+    public function updateQr(Request $request, $selectedId)
+    {
+        $request->validate([
+            'qr_child' => 'nullable|string|max:20',
+            'qr_guardian' => 'nullable|string|max:20',
+        ]);
+
+        $orderItem = OrderItems::findOrFail($selectedId);
+
+        $orderItem->update([
+            'qr_child' => $request->qr_child,
+            'qr_guardian' => $request->qr_guardian,
+        ]);
+
+        return back()->with('success', 'Updated Successfully');
+    }
 }

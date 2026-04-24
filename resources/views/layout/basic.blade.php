@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('images/mimo_logo_steady.ico') }}">
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     @yield('styles')
 </head>
@@ -15,6 +15,8 @@
     <main class="max-w-full mx-auto overflow-auto backdrop-blur-sm">
         @yield('contents')
     </main>
+    @include('ui.partials.order-item-modal')
+    @include('components.session-success')
     @yield('scripts')
 </body>
 </html>

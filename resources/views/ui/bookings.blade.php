@@ -88,7 +88,12 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
             @forelse($orderItems as $item)
-                <tr>
+                <tr class="data-row cursor-pointer hover:bg-gray-100 transition"
+                    data-id="{{ $item->id }}"
+                    data-child="{{ $item->child->firstname.' '.$item->child->lastname}}"
+                    data-qr-child="{{ $item->qr_child }}"
+                    data-qr-guardian="{{ $item->qr_guardian }}"
+                >
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-white z-10">
                         @if($item->child)
                             {{ $item->child->firstname }} {{ $item->child->lastname }}
@@ -157,3 +162,20 @@
 <div class="mt-5">
     {{ $orderItems->onEachSide(2)->links() }}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.data-row').forEach(row => {
+            row.addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('open-order-modal', { 
+                    detail: {
+                        id: row.dataset.id,
+                        child: row.dataset.child,
+                        qrChild: row.dataset.qrChild,
+                        qrGuardian: row.dataset.qrGuardian
+                    }
+                }))
+            })
+        })
+    })
+</script>

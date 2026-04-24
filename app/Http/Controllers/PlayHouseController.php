@@ -579,7 +579,7 @@ class PlayHouseController extends Controller
         );
 
         $orderItems = $query->select([
-                'id', 'd_code_child', 'ord_code_ph', 'ckin', 'ckout', 'durationhours'
+                'id', 'd_code_child', 'ord_code_ph', 'ckin', 'ckout', 'durationhours', 'qr_child', 'qr_guardian'
             ])->with([
                 'child:d_code_c,firstname,lastname', 
                 'order:ord_code_ph,d_code',

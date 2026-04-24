@@ -23,3 +23,7 @@ Route::prefix('admin-panel')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 });
+
+Route::put('/admin/order-item/{selectedId}', [MimoAdminController::class, 'updateQr'])->name('order.updateQr');
+
+

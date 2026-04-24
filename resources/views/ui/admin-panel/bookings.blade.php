@@ -69,73 +69,74 @@
         <div style="width: 1200px; height: 16px;"></div>
     </div>
     <div class="overflow-x-auto" id="tableContainer">
-    <table class="min-w-full divide-y divide-gray-200" style="min-width: 1200px;">
-        <thead class="bg-[var(--color-accent-mid-dark)]">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-large text-gray-800 uppercase tracking-wider sticky left-0 bg-[var(--color-accent-mid-dark)] z-10">Child Name</th>
-                <th class="px-6 py-3 text-left text-xs font-large text-gray-800 uppercase tracking-wider sticky left-0 bg-[var(--color-accent-mid-dark)] z-10" style="left: 120px;">Parent Name</th>
-                @foreach($columns as $column)
-                    <th class="px-6 py-3 text-left text-xs font-large text-gray-800 uppercase tracking-wider">
-                        {{ $labels[$column] ?? ucfirst($column) }}
-                    </th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody class="bg-[var(--color-accent)] divide-y divide-gray-200">
-            @forelse($orderItems as $item)
+        <table class="min-w-full divide-y divide-gray-200" style="min-width: 1200px;">
+            <thead class="bg-[var(--color-accent-mid-dark)]">
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-[var(--color-accent)] z-10">
-                        @if($item->child)
-                            {{ $item->child->firstname }} {{ $item->child->lastname }}
-                        @else
-                            N/A
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-[var(--color-accent)] z-10" style="left: 120px;">
-                        @if($item->order && $item->order->parentPl)
-                            {{ $item->order->parentPl->d_name ?? $item->order->parentPl->firstname . ' ' . $item->order->parentPl->lastname }}
-                        @else
-                            {{ $item->guardian ?? 'N/A' }}
-                        @endif
-                    </td>
+                    <th class="px-6 py-3 text-left text-xs font-large text-gray-800 uppercase tracking-wider sticky left-0 bg-[var(--color-accent-mid-dark)] z-10">Child Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-large text-gray-800 uppercase tracking-wider sticky left-0 bg-[var(--color-accent-mid-dark)] z-10" style="left: 120px;">Parent Name</th>
                     @foreach($columns as $column)
-                        @php
-                            $value = $item->{$column};
-                            $isBoolean = in_array($column, ['checked_out', 'notified_timeout', 'isfreeze']);
-                            $isCurrency = in_array($column, ['durationsubtotal', 'socksprice', 'subtotal', 'lne_xtra_chrg']);
-                        @endphp
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            @if($isBoolean)
-                                @if($value)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Yes</span>
-                                @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">No</span>
-                                @endif
-                            @elseif($isCurrency)
-                                ₱{{ number_format($value, 2) }}
-                            @elseif(is_null($value))
-                                N/A
-                            @elseif($column === 'durationhours')
-                                {{ $value == '5' ? 'Unlimited' : $value }}
-                            @else
-                                {{ $value }}
-                            @endif
-                        </td>
+                        <th class="px-6 py-3 text-left text-xs font-large text-gray-800 uppercase tracking-wider">
+                            {{ $labels[$column] ?? ucfirst($column) }}
+                        </th>
                     @endforeach
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="{{ count($columns) + 2 }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                        No order items found.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-<div class="mt-5">
-    {{ $orderItems->onEachSide(2)->links() }}
+            </thead>
+            <tbody class="bg-[var(--color-accent)] divide-y divide-gray-200">
+                @forelse($orderItems as $item)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-[var(--color-accent)] z-10">
+                            @if($item->child)
+                                {{ $item->child->firstname }} {{ $item->child->lastname }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-[var(--color-accent)] z-10" style="left: 120px;">
+                            @if($item->order && $item->order->parentPl)
+                                {{ $item->order->parentPl->d_name ?? $item->order->parentPl->firstname . ' ' . $item->order->parentPl->lastname }}
+                            @else
+                                {{ $item->guardian ?? 'N/A' }}
+                            @endif
+                        </td>
+                        @foreach($columns as $column)
+                            @php
+                                $value = $item->{$column};
+                                $isBoolean = in_array($column, ['checked_out', 'notified_timeout', 'isfreeze']);
+                                $isCurrency = in_array($column, ['durationsubtotal', 'socksprice', 'subtotal', 'lne_xtra_chrg']);
+                            @endphp
+                            
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                @if($isBoolean)
+                                    @if($value)
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Yes</span>
+                                    @else
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">No</span>
+                                    @endif
+                                @elseif($isCurrency)
+                                    ₱{{ number_format($value, 2) }}
+                                @elseif(is_null($value))
+                                    N/A
+                                @elseif($column === 'durationhours')
+                                    {{ $value == '5' ? 'Unlimited' : $value }}
+                                @else
+                                    {{ $value }}
+                                @endif
+                            </td>
+                        @endforeach
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="{{ count($columns) + 2 }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            No order items found.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-5">
+        {{ $orderItems->onEachSide(2)->links() }}
+    </div>
 </div>
 
 <script>
