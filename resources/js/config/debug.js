@@ -1,7 +1,7 @@
-const debugMode = import.meta.env.VITE_DEBUG_MODE;
-const allowOverride = import.meta.env.VITE_DEBUG_MODE_OVERRIDE;
+const debugMode = (import.meta.env.VITE_DEBUG_MODE ?? 'false') === 'true' ? true : false;
+const allowOverride = (import.meta.env.VITE_DEBUG_MODE ?? "false") === "true" ? true : false;
 
-
+console.log('Debug Mode: ' + debugMode);
 
 
 /**
