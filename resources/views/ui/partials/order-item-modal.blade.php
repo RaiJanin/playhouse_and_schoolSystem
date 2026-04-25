@@ -6,6 +6,7 @@
                     parent: '',
                     qrChild: '',
                     qrGuardian: '',
+                    bookId: '',
                 }
             }"
 
@@ -14,9 +15,9 @@
                 $dispatch('open-modal', 'order-item-modal');
             "
 >
-    <x-breeze-modal name="order-item-modal" :show="false" maxWidth="4xl" focusable>
+    <x-breeze-modal name="order-item-modal" :show="false" maxWidth="4xl">
         <div class="flex flex-col">
-            <div class="py-2 px-6 mt-2">
+            <div class="py-2 px-6">
                 <h2 class="font-semibold text-gray-900">Register/Edit QR</h2>
             </div>
             <div class="h-px bg-gray-600 w-full"></div>
@@ -29,9 +30,13 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-col gap-1">
                         <p class="flex-1">
                             <span class="text-2xl font-semibold" x-text="selected.child"></span>
+                        </p>
+                        <p class="flex-1">
+                            <h1 class="text-gray-700">Booking ID</h1>
+                            <span class="text-xl px-6 font-semibold" x-text="selected.bookId"></span>
                         </p>
                     </div>
 
@@ -65,15 +70,15 @@
                     </div>
 
                     <!-- Buttons -->
-                    <div class="flex justify-end gap-2">
+                    <div class="flex justify-end gap-2 mb-2">
                         <button type="button" x-on:click="$dispatch('close')"
-                            class="px-4 py-2 bg-gray-300 rounded-lg uppercase hover:opacity-80">
+                            class="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:opacity-80 transition-all duration-300">
                             Cancel
                         </button>
 
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white uppercase rounded-lg hover:opacity-80">
-                            Update
+                            class="px-4 py-2 bg-[var(--color-primary)] font-semibold text-white rounded-lg hover:opacity-80 transition-all duration-300">
+                            Save
                         </button>
                     </div>
                 </form>

@@ -93,6 +93,7 @@
                     data-child="{{ $item->child->firstname.' '.$item->child->lastname}}"
                     data-qr-child="{{ $item->qr_child }}"
                     data-qr-guardian="{{ $item->qr_guardian }}"
+                    data-book-id="{{ $item->ord_code_ph }}"
                 >
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-white z-10">
                         @if($item->child)
@@ -172,7 +173,8 @@
                         id: row.dataset.id,
                         child: row.dataset.child,
                         qrChild: row.dataset.qrChild,
-                        qrGuardian: row.dataset.qrGuardian
+                        qrGuardian: row.dataset.qrGuardian,
+                        bookId: row.dataset.bookId,
                     }
                 }))
             })

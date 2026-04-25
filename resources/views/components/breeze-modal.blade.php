@@ -64,6 +64,7 @@ $maxWidth = [
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
+        x-on:click="$dispatch('close')"
     ></div>
 
     <div
