@@ -1,5 +1,5 @@
 @if (session('success'))
-    <div role="alert" id="success-toast" class="fixed bottom-4 right-1 rounded-md border border-green-500 bg-green-50 p-4 shadow-sm">
+    <div role="alert" id="success-toast" class="fixed top-4 left-1 rounded-md border border-green-500 bg-green-50 p-4 shadow-sm">
         <div class="flex items-start gap-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-mt-0.5 size-6 text-green-700">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>

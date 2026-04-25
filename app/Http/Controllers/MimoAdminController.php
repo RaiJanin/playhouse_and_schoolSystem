@@ -123,7 +123,7 @@ class MimoAdminController extends Controller
     public function updateQr(Request $request, $selectedId)
     {
         $request->validate([
-            'qr_child' => 'nullable|string|max:20',
+            'qr_child' => 'required|string|max:20',
             'qr_guardian' => 'nullable|string|max:20',
         ]);
 

@@ -17,6 +17,7 @@
     </main>
     @include('ui.partials.order-item-modal')
     @include('components.session-success')
+    @include('components.session-error')
     @yield('scripts')
 </body>
 </html>
