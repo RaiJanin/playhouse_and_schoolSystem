@@ -1,5 +1,5 @@
-const debugMode = true; //change this to view console.logs
-const allowOverride = false;
+const debugMode = import.meta.env.VITE_DEBUG_MODE;
+const allowOverride = import.meta.env.VITE_DEBUG_MODE_OVERRIDE;
 
 
 
