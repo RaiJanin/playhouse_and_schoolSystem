@@ -33,6 +33,21 @@
                 value="{{ request('end_date', now()->format('Y-m-d')) }}"
             >
         </div>
+        <div class="flex flex-col">
+            <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-1">Search Item/s</label>
+            <div class="relative group">
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search"
+                    class="bg-white w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"
+                    value="{{ request('search') }}"
+                >
+                <div class="absolute left-0 -top-12 hidden group-hover:block bg-gray-800 text-white text-xs px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">
+                    Search by child's name or QR codes
+                </div>
+            </div>
+        </div>
         <button 
             type="submit" 
             class="px-4 py-2 bg-[var(--color-primary)] text-white font-semibold rounded-xl hover:bg-[var(--color-primary-light)] transition-all duration-300"
@@ -73,6 +88,12 @@
                     Booking Number
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    QR Child
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    QR Guardian
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Duration Hours
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -109,8 +130,14 @@
                             {{ $item->guardian ?? 'N/A' }}
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky left-0 bg-white z-10" style="left: 120px;">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {{ $item->ord_code_ph }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ $item->qr_child ?? 'N/A' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ $item->qr_guardain ?? 'N/A' }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         @if(!$item->durationhours)
@@ -152,7 +179,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                    <td colspan="9" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                         No order items found.
                     </td>
                 </tr>

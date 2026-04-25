@@ -584,7 +584,17 @@ class PlayHouseController extends Controller
                 'child:d_code_c,firstname,lastname', 
                 'order:ord_code_ph,d_code',
                 'order.parentPl:d_code,d_name'
-            ])->orderBy('created_at', 'desc')
+            ])->where(
+                function ($search) use ($request) {
+                    $search->where('qr_child', 'like', '%' . $request->search . '%')
+                        ->orWhere('qr_guardian', 'like', '%' . $request->search . '%')
+                        ->orWhereHas('child', 
+                            function ($childSearch) use ($request) {
+                                $childSearch->where('firstname', 'like', '%' . $request->search . '%');
+                            }
+                        );
+                }
+            )->orderBy('created_at', 'desc')
               ->paginate(20)
               ->through(function ($item){
                     $now = Carbon::now();
