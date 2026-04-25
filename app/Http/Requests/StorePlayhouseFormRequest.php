@@ -43,7 +43,8 @@ class StorePlayhouseFormRequest extends FormRequest
             'child.*.guardianAuthorized' => 'nullable|boolean',
             'discountCode' => 'nullable|string|max:50',
             'fb_pp_url' => 'nullable|url|max:255',
-            'isfollowedFb' => 'nullable|boolean'
+            'isfollowedFb' => 'nullable|boolean',
+            'visitDate' => 'nullable|date',
         ];
     }
 }

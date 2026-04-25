@@ -4,6 +4,7 @@ import './dependencies.js';
 import { API_ROUTES } from './config/api.js';
 import { showConsole } from './config/debug.js';
 import './config/global.js';
+import { features } from './config/features.js';
 
 import './modules/playhouseChildren.js';
 import './modules/playhousePhone.js';
@@ -117,6 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (currentValue !== cleanedValue) {
                     phoneInputEl.value = cleanedValue;
                 }
+
+                if(!readTermsChbx.isChecked()) return;
                 
                 App.dynamicState.updateNextBtnState();
             });
@@ -228,6 +231,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             if(!valid)return;
+
+            showConsole('log', 'Is readterms checked? ' + readTermsChbx.isChecked())
             
             if(currentStep < steps.length - 1) {
                 App.formControl.showSteps(currentStep + 1,'next');
@@ -467,11 +472,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="flex items-start border-b border-[var(--color-primary)] py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Phone:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${data.get('phone')}</span>
+                        <span class="text-gray-900 font-medium">${data.get("phone")}</span>
                     </div>
                     <div class="flex items-center border-b border-[var(--color-primary)] py-2">
                         <span class="font-semibold text-cyan-800 w-fit">Birthdate:&nbsp;</span>
-                        <span class="text-gray-900 font-medium">${data.get('parentBirthday') ? dateToString('shortDate', data.get('parentBirthday')) : hiPVal}</span>
+                        <span class="text-gray-900 font-medium">${data.get("parentBirthday") ? dateToString("shortDate", data.get("parentBirthday")) : hiPVal}</span>
                     </div>
                     <div class="pb-3">
                         <span class="font-semibold text-cyan-800 block mb-3">Children:</span>
@@ -480,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                     <div class="mt-6 pt-4 border-t-2 border-[var(--color-primary)] space-y-4">
-                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4" hidden>
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4" ${features.discountEnabled ? "" : "hidden"}>
                             <p class="text-lg font-bold text-teal-800 mb-2">DISCOUNT CODE</p>
                             <p class="text-xs text-gray-600 mb-3">Got a discount? Enter it below — and come back soon for more offers!</p>
                             <div class="flex flex-col sm:flex-row gap-3">
@@ -488,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <button type="button" id="apply-discount-btn" class="min-h-[44px] px-5 py-3 text-base font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition-colors touch-manipulation">Apply</button>
                             </div>
                         </div>
-                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4" hidden>
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4" ${features.fbEnabled ? "" : "hidden"}>
                             <p class="text-lg font-bold text-teal-800 mb-2">Follow our Facebook page and get 10% off</p>
                             <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg shadow">
                                 <i class="fa-brands fa-facebook-f"></i>
@@ -510,6 +515,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                             <p class="text-xs text-gray-600 mb-3">Already following? Paste your Facebook profile link below to claim your discount.</p>
                             <input type="text" id="fb-pp-url-input" name="fb_pp_url" placeholder="facebook.com/your-profile" class="w-full min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
+                        </div>
+                        <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
+                            <p class="text-lg font-bold text-teal-800 mb-2">Visit Date</p>
+                            <p class="text-xs text-gray-600 mb-3">Set a visit date. Default sets today</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <input type="date" id="visit-date" name="visitDate" value=${dateToString("iso", new Date())} class="flex-1 min-h-[44px] px-4 py-3 text-base border-2 border-teal-300 rounded-lg focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all">
+                            </div>
                         </div>
                         <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-2 sm:p-4">
                             <p class="text-lg font-bold text-teal-800">OVERALL TOTAL: <span class="text-2xl text-cyan-600">₱${overallTotal}</span></p>

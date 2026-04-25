@@ -18,7 +18,12 @@ class Orders extends Model
         'total_amnt',
         'xtra_chrg_amnt',
         'disc_amnt',
-        'fb_pp_url'
+        'fb_pp_url',
+        'visitdate',
+    ];
+
+    protected $casts = [
+        'visitdate' => 'date'
     ];
 
     public function parentPl()

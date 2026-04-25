@@ -150,7 +150,8 @@ class PlayHouseController extends Controller
                 'mkt_code' => $data['mkt_code'],
                 'd_code' => $parent->d_code,
                 'total_amnt' => $totalPrice,
-                'fb_pp_url' => $fbProfileUrl
+                'fb_pp_url' => $fbProfileUrl,
+                'visitdate' => $data['visitDate']
             ]);
 
             if(is_array($data['child']) && $request->has('child'))
