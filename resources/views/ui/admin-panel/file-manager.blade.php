@@ -1,17 +1,3 @@
-@if(session('success'))
-    <div class="mb-6 p-4 rounded-xl border-2 flex items-center gap-3 animate-fade-in bg-green-200 border-green-400">
-        <span class="text-2xl text-[var(--color-primary-mid-dark)]"><i class="fa-regular fa-trash-can"></i></span>
-        <p class="font-semibold text-[var(--color-primary-mid-dark)]">{{ session('success') ?? 'Success! File Deleted' }}</p>
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="mb-6 p-4 rounded-xl border-2 flex items-center gap-3 animate-fade-in bg-red-100 border-red-500">
-        <span class="text-2xl text-red-700"><i class="fa-solid fa-file-circle-xmark"></i></span>
-        <p class="font-semibold text-red-600">{{ session('error') ?? 'Error deleting file' }}</p>
-    </div>
-@endif
-
 <div class="rounded-2xl p-8 bg-gray-50/50 backdrop-blur-sm border-2 border-[var(--color-third-light)]">
     <!-- Pagination Controls -->
     <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -57,7 +43,7 @@
                                 style="border: 2px solid rgba(127, 255, 212, 0.3);"
                             >
                             <p class="text-sm font-medium mb-3 break-all" style="color: #5D4E37;">{{ basename($file) }}</p>
-                            <form method="POST" action="/admin/files/delete/{{ urlencode($file) }}">
+                            <form method="POST" action="/admin-panel/files/delete/{{ urlencode($file) }}">
                                 @csrf
                                 @method('DELETE')
                                 <button 

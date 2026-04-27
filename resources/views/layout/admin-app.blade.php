@@ -39,5 +39,7 @@
                 {{ $slot }}
             </main>
         </div>
+        @include('components.session-success')
+        @include('components.session-error')
     </body>
 </html>
