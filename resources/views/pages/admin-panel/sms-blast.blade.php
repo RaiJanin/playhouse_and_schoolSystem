@@ -8,9 +8,9 @@
             </x-slot>
         </div>
         <div class="flex items-center justify-center lg:p-6 p-2 min-h-screen">
-            @if(!app()->environment('production'))
+            @if(app()->environment('production'))
                 <x-in-development-placeholder />
-            @endif
+            @else
 
             @endif
         </div>
