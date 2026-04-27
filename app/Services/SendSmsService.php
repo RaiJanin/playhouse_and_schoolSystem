@@ -13,9 +13,9 @@ class SendSmsService
         $message = html_entity_decode($message, ENT_QUOTES, 'utf-8');
         $message = urlencode($message);
 
-        $username = urlencode("nlendio");
-        $password = urlencode("noister123$");
-        $sender_id = urlencode("JDEN SMS");
+        $username = urlencode(env('ISMS_USERNAME'));
+        $password = urlencode(env('ISMS_PASSWORD'));
+        $sender_id = urlencode(env('ISMS_SENDER_ID'));
         $type = 1;
 
         $fp = "https://www.isms.com.my/isms_send.php";

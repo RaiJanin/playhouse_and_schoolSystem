@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
-class RunCommandsViaController extends Controller
+class RunCommandsViaHttp extends Controller
 {
     public function index(Request $request)
     {
