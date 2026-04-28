@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MimoAdminController;
 use App\Http\Controllers\FileManagementController;
+use App\Http\Controllers\SmsBlastController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/admin-panel', function () {
@@ -21,13 +22,19 @@ Route::prefix('admin-panel')->middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('/sms_blasts')->group(function () {
-        Route::get('/', function () {
-            return view('pages.admin-panel.sms-blast');
-        })->name('sms_blast.index');
+    // SMS Blasts Routes
+    Route::prefix('/sms-blasts')->name('sms_blast.')->group(function () {
+        Route::get('/', [SmsBlastController::class, 'index'])->name('index');
+        Route::get('/create', [SmsBlastController::class, 'create'])->name('create');
+        Route::post('/', [SmsBlastController::class, 'store'])->name('store');
+        Route::get('/{smsBlast}', [SmsBlastController::class, 'show'])->name('show');
+        Route::get('/{smsBlast}/resend', [SmsBlastController::class, 'resendFailed'])->name('resend-failed');
+        Route::delete('/{smsBlast}', [SmsBlastController::class, 'destroy'])->name('destroy');
+        Route::get('/templates', [SmsBlastController::class, 'templates'])->name('templates');
     });
 });
 
 Route::put('/admin/order-item/{selectedId}', [MimoAdminController::class, 'updateQr'])->name('order.updateQr');
+
 
 

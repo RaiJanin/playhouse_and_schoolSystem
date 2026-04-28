@@ -7,11 +7,15 @@
                 </h2>
             </x-slot>
         </div>
-        <div class="flex items-center justify-center lg:p-6 p-2 min-h-screen">
+        <div class="flex-wrap gap-2 min-h-screen">
             @if(app()->environment('production'))
                 <x-in-development-placeholder />
             @else
-
+                @if(request()->routeIs('sms_blast.index'))
+                    @include('ui.admin-panel.sms-blast.index')
+                @elseif(request()->routeIs('sms_blast.create'))
+                    @include('ui.admin-panel.sms-blast.create')
+                @endif
             @endif
         </div>
     </div>
