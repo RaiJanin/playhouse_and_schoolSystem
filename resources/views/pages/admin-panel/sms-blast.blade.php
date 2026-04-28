@@ -8,7 +8,7 @@
             </x-slot>
         </div>
         <div class="flex-wrap gap-2 min-h-screen">
-            @if(app()->environment('production'))
+            @if(app()->environment('production') || auth()->user()->name !== 'admin')
                 <x-in-development-placeholder />
             @else
                 @if(request()->routeIs('sms_blast.index'))
