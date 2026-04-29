@@ -12,42 +12,45 @@ class InformationsController extends Controller
         try
         {
             $request->validate([
-                'contact_num' => 'nullable|string|max:20'
+                'search' => 'nullable|string|max:20',
+
             ]);
 
             $query = M06::query();
-            $query->select(['mobileno', 'd_name', 'email', 'isparent']);
+            $query->select(['d_code', 'mobileno', 'd_name', 'email', 'isparent']);
 
-            $contactDetails = $query->where('mobileno', $request->contact_num)->first();
+            $data = [];
 
-            if(!$contactDetails)
+            $contactDetails = $query->where(
+                function ($search) use ($request) {
+                    $search->where('mobileno', 'like', '%' . $request->search . '%')
+                        ->orWhere('d_name', 'like', '%' . $request->search . '%');
+                }
+            )->get()->toArray();
+
+            if(empty($contactDetails))
             {
                 return response()->json([
                     'success' => false,
                     'message' => 'Data unavailable',
+                    'contact' => [],
                     'error' => 'Data may not exist or broken'
                 ]);
             }
 
-            if($contactDetails->isparent)
-            {
-                $contactDetails->type = 'parent';
-            } 
-            else
-            {
-                $contactDetails->type = 'guardian';
-            }
-
-            $data = [
-                'name' => $contactDetails->d_name,
-                'email' => $contactDetails->email,
-                'contact_number' => $contactDetails->mobileno,
-                'pgtype' => $contactDetails->type
-            ];
-
+            $data = array_map(function ($contact)
+                {
+                    return [
+                        'id' => $contact['d_code'],
+                        'name' => $contact['d_name'],
+                        'email' => $contact['email'],
+                        'contact_number' => $contact['mobileno'],
+                    ];
+                }, $contactDetails);
+            
             return response()->json([
                 'success' => true,
-                'data' => $data
+                'contact' => $data,
             ]);
 
         } catch (\Exception $e) {

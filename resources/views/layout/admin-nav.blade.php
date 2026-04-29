@@ -18,7 +18,7 @@
                     <x-nav-link :href="route('files.index', ['per_page' => 20])" :active="request()->routeIs('files.index')">
                         {{ __('File Manager') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('sms_blast.index')" :active="request()->routeIs('sms_blast.index')">
+                    <x-nav-link :href="route('sms_blast.index')" :active="request()->routeIs('sms_blast.*')">
                         {{ __('SMS Blast') }}
                     </x-nav-link>
                 </div>

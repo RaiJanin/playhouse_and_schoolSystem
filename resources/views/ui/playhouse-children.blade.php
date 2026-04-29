@@ -15,14 +15,14 @@
         </p>
         <p id="add-child-prompt" class="text-center text-sm text-red-600 mb-5 font-semibold" hidden></p>
     </div>
-    <div id="childrenForm" class="space-y-5 bg-gradient-to-br from-white/50 to-blue-100/40 border border-white/60 rounded-[18px] p-3 shadow-[0_12px_34px_rgba(74,104,139,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-md">
+    <div id="childrenForm" class="space-y-5 bg-gradient-to-br from-white/50 to-blue-100/40 border border-white/60 rounded-[18px] p-1 sm:p-3 shadow-[0_12px_34px_rgba(74,104,139,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-md">
         <div id="exist-children" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-1 sm:p-3" hidden></div>
         <p id="existing-children-add-m" class="text-start text-gray-600 mt-5 font-semibold" hidden>
             Do you have a child to add?
         </p>
         <div id="childrenContainer" class="space-y-6">
-            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-3 border backdrop-blur bg-white/40 border-gray-50 rounded-xl align-content-start">
-                <div class="md:order-1 px-3 mb-3 self-start">
+            <div id="first-child" class="child-entry grid grid-cols-1 md:grid-cols-2 gap-6 p-1 sm:p-3 border backdrop-blur bg-white/40 border-gray-50 rounded-xl align-content-start">
+                <div class="md:order-1 px-1 sm:px-3 mb-3 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-0-photo" data-camera-input data-name="child[0][photo]" class="bg-cyan-50 rounded-lg p-2 overflow-visible"></div>
                     <div class="mt-3 p-2 rounded-lg border border-cyan-300 bg-cyan-50/60">

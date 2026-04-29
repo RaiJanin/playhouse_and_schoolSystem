@@ -2,6 +2,8 @@
     $selectClass = 'border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300'; 
 @endphp
 
+@vite('resources/js/modules/admin-panel-create.js')
+
 <div class="rounded-lg bg-gradient-to-r from-[var(--color-accent-mid-dark)] to-[var(--color-accent)] p-6 lg:p-8 flex flex-col gap-4">
     <div class="flex flex-col gap-4">
         <a href="{{ route('sms_blast.index') }}" class="max-w-52 px-4 text-[var(--color-accent)] py-2 bg-gray-500 rounded-lg hover:opacity-80 transition-all duration-300">
@@ -89,7 +91,7 @@
         </div>
 
         <div class="flex flex-wrap gap-4">
-            <div class="flex-1">
+            <div class="flex-2">
                 <x-input-label value="Recipients" />
                 <select id="recipientMode" class="{{ $selectClass }}">
                     <option value="all">All Contacts</option>
@@ -97,7 +99,7 @@
                 </select>
             </div>
 
-            <div id="searchBox" class="hidden mt-3 space-y-2">
+            <div id="searchBox" class="flex-1 hidden mt-3 space-y-2">
                 <input
                     type="text"
                     id="contactSearch"
@@ -109,7 +111,7 @@
                     <p class="text-xs text-gray-500">Selected:</p>
                     <div id="selectedList" class="flex flex-wrap gap-2"></div>
                 </div>
-                <div id="hiddenInputs"></div>
+                <div id="hiddenRecipients"></div>
             </div>
         </div>
 
@@ -121,123 +123,9 @@
 </div>
 
 <script>
-(() => {
-    const maxChars = 255;
-    const templates = @json($templates);
-
-    let input;
-    let countEl;
-    let templateSelect;
-    let titleInput;
-    let hiddenSlug;
-    let sendMode;
-    let scheduleFields;
-
-    const updateCharCount = () => {
-        if (!input || !countEl) return;
-
-        const length = input.value.length;
-        countEl.textContent = length;
-        countEl.classList.toggle('text-red-600', length >= maxChars);
-    };
-
-    const updateTextareaState = () => {
-        if (!input) return;
-
-        const hasValue = input.value.trim() !== '';
-        input.classList.toggle('text-gray-900', hasValue);
-        input.classList.toggle('text-gray-400', !hasValue);
-    };
-
-    const applyTemplate = (index) => {
-        if (!templates[index]) return;
-
-        const selected = templates[index];
-
-        if (titleInput) titleInput.value = selected.name;
-        if (input) input.value = selected.message;
-        if (hiddenSlug) hiddenSlug.value = selected.slug;
-
-        handleInput();
-    };
-
-    const handleInput = () => {
-        updateCharCount();
-        updateTextareaState();
-    };
-
-    const handleTemplateChange = (e) => {
-        applyTemplate(e.target.value);
-    };
-
-    const dropdownSchedules = () => {
-        const fields = [
-            document.getElementById('schedule-date'),
-            document.getElementById('schedule-time'),
-        ]
-        let requireFields = false
-
-        if(sendMode.value === 'scheduled') {
-            scheduleFields.classList.remove('hidden')
-            requireFields = true
-        } else {
-            scheduleFields.classList.add('hidden') 
-        }
-
-        fields.forEach(field => {
-            field.required = requireFields;
-        });
+    window.adminPanelStates = {
+        templates: @json($templates),
+        maxChars: 255,
     }
-
-    const onMount = () => {
-        input = document.getElementById('messageInput');
-        countEl = document.getElementById('charCount');
-        templateSelect = document.getElementById('templateSelect');
-        titleInput = document.querySelector('input[name="title"]');
-        hiddenSlug = document.getElementById('hidden-slug');
-        sendMode = document.getElementById('send-mode');
-        scheduleFields = document.getElementById('scheduleFields');
-    }
-
-    const nextTick = () => {
-        handleInput();
-        dropdownSchedules();
-    }
-
-    const init = () => {
-        onMount();
-
-        if (input) {
-            input.addEventListener('input', handleInput);
-        }
-
-        if (templateSelect) {
-            templateSelect.addEventListener('change', handleTemplateChange);
-        }
-
-        if(sendMode) {
-            sendMode.addEventListener('change', dropdownSchedules);
-        }
-
-        nextTick();
-    };
-
-    const destroy = () => {
-        if (input) {
-            input.removeEventListener('input', handleInput);
-        }
-
-        if (templateSelect) {
-            templateSelect.removeEventListener('change', handleTemplateChange);
-        }
-
-        if(sendMode) {
-            sendMode.removeEventListener('change', dropdownSchedules);
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', init);
-    window.addEventListener('beforeunload', destroy);
-})();
 </script>
 

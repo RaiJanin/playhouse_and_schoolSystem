@@ -25,7 +25,7 @@ export function attachFields(data, index) {
     const guardianAuthorizedValue = data.guardians[0]?.guardianauthorized ? '1' : '0';
 
     const guardianSection = data.guardians.length >= 1 ? `
-            <div class="mt-3 p-3 rounded-lg border border-gray-200 shadow-md bg-teal-50/60">
+            <div class="mt-3 p-1 sm:p-3 rounded-lg border border-gray-200 shadow-md bg-teal-50/60">
                 <button type="button" id="edit-existing-guardian-checkbox-${index}" class="edit-guardian-toggle cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
                         <i id="edit-existing-guardian-icon-${index}" class="edit-guardian-icon fa-regular fa-square text-gray-500 text-xl"></i>
@@ -75,7 +75,7 @@ export function attachFields(data, index) {
                 </button>
             </div>
     ` : `
-            <div class="mt-3 p-3 rounded-lg border border-gray-100 bg-teal-50/60">
+            <div class="mt-3 p-1 sm:p-3 rounded-lg border border-gray-100 bg-teal-50/60">
                 <button id="add-guardian-checkbox-local-${index}" type="button" class="cursor-pointer p-2 text-sm hover:text-gray-500">
                     <span class="flex items-center">
                         <i id="check-add-guardian-icon-local-${index}" class="fa-regular fa-square text-gray-500 text-xl"></i>

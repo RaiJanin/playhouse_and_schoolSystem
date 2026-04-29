@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const entry = document.createElement('div');
         entry.className = 'child-entry pt-3 border-2 border-gray-50 rounded-xl backdrop-blur bg-white/40 mt-4 align-content-start';
         entry.innerHTML = `
-            <div class="px-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-6 align-content-start">
+            <div class="px-1 sm:px-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-6 align-content-start">
                 <div class="md:order-1 self-start">
                     <label class="block text-base font-semibold text-gray-900 mb-2">Child Photo</label>
                     <div id="child-${childEntries}-photo" data-camera-input data-name="child[${childEntries}][photo]" class="bg-teal-50 rounded-lg p-2 overflow-visible"></div>

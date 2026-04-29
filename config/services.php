@@ -41,4 +41,11 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URI'),
     ],
 
+    'isms' => [
+        'user' => env('ISMS_USERNAME'),
+        'sender_id' => env('ISMS_SENDER_ID'),
+        'password' => env('ISMS_PASSWORD'),
+        'type' => env('ISMS_TYPE', 1)
+    ]
+
 ];

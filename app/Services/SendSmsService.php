@@ -13,10 +13,10 @@ class SendSmsService
         $message = html_entity_decode($message, ENT_QUOTES, 'utf-8');
         $message = urlencode($message);
 
-        $username = urlencode(env('ISMS_USERNAME'));
-        $password = urlencode(env('ISMS_PASSWORD'));
-        $sender_id = urlencode(env('ISMS_SENDER_ID'));
-        $type = 1;
+        $username = urlencode(config('services.isms.user'));
+        $password = urlencode(config('services.isms.password'));
+        $sender_id = urlencode(config('services.isms.sender_id'));
+        $type = config('services.isms.type');
 
         $fp = "https://www.isms.com.my/isms_send.php";
         $fp .= "?un=$username&pwd=$password&dstno=$destination&msg=$message&type=$type&sendid=$sender_id&agreedterm=YES";

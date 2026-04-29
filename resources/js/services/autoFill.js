@@ -85,7 +85,7 @@ export function autoFillChildren(data, parent) {
 
     data.forEach((child, index) => {
         const wrapper = document.createElement('div');
-        wrapper.className = 'exist-child-el flex flex-col p-3 gap-6 border border-gray-50 backdrop-blur shadow-md rounded-lg';
+        wrapper.className = 'exist-child-el flex flex-col p-1 sm:p-3 gap-6 border border-gray-50 backdrop-blur shadow-md rounded-lg';
 
         // Get child name for button label - use firstname which is the correct property
         const childName = child.firstname || child.c_name || child.name || 'this child';

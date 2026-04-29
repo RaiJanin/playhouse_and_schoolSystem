@@ -7,8 +7,10 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css',
                     'resources/js/app.js',
+                    'resources/js/admin-app.js',
                     'resources/js/modules/playhouseCheckout.js',
-                    'resources/js/modules/playhouseCheckinSource.js'],
+                    'resources/js/modules/playhouseCheckinSource.js',
+                    'resources/js/modules/admin-panel-create.js'],
             refresh: true,
         }),
         tailwindcss(),
