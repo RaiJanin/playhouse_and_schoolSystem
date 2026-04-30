@@ -6,11 +6,11 @@
         <img src="/images/mimo-full-logo.png" alt="MIMO Play Cafe Logo" class="h-24 object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
     </div>
     <div class="flex flex-col md:col-span-2 sm:flex-row justify-start items-center gap-4 sm:gap-6 p-4">
-        <div class="flex flex-col items-start text-left">
+        <div class="flex flex-col items-center text-left">
             <h1 class="sm:text-3xl md:text-5xl text-2xl font-extrabold text-[var(--color-accent)] [text-shadow:2px_2px_4px_rgba(0,0,0,0.3)]">
                 Mimo Play Cafe
             </h1>
-            <p class="md:text-xl sm:text-base text-sm text-[var(--color-accent)] [text-shadow:2px_2px_4px_rgba(0,0,0,0.3)]">
+            <p class="md:text-xl sm:text-base text-center text-sm text-[var(--color-accent)] [text-shadow:2px_2px_4px_rgba(0,0,0,0.3)]">
                 Moments in, Memories out
             </h1>
         </div>  
