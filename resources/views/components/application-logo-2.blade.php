@@ -1,3 +1,3 @@
-<div class="h-16 w-16">
-    <img class="w-full h-full object-contain" src="{{ asset('images/mimo_logo_steady.ico') }}" alt="Mimo Cafe">
+<div class="h-50 w-50">
+    <img class="w-full h-full object-contain" src="{{ asset('images/mimo-full-logo.png') }}" alt="Mimo Cafe">
 </div>
