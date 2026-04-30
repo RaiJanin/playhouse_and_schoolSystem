@@ -1,9 +1,9 @@
 <div class="sm:flex md:grid md:grid-cols-2 lg:grid-cols-3 bg-[var(--color-primary)] backdrop-blur rounded-xl mb-3 shadow-sm z-20">
     <div class="hidden md:flex overflow-hidden items-center justify-center rounded-xl">
-        <img src="/images/mimo-logo.gif" alt="MIMO Play Cafe Logo" class="h-full object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
+        <img src="/images/mimo-full-logo.png" alt="MIMO Play Cafe Logo" class="h-24 object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
     </div>
     <div class="sm:hidden overflow-hidden flex items-center justify-center rounded-xl">
-        <img src="/images/mimo-logo.gif" alt="MIMO Play Cafe Logo" class="h-24 object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
+        <img src="/images/mimo-full-logo.png" alt="MIMO Play Cafe Logo" class="h-24 object-cover object-center" onerror="this.onerror=null;this.src='/images/mimo-logo.png';" />
     </div>
     <div class="flex flex-col md:col-span-2 sm:flex-row justify-start items-center gap-4 sm:gap-6 p-4">
         <div class="flex flex-col items-start text-left">
@@ -11,7 +11,7 @@
                 Mimo Play Cafe
             </h1>
             <p class="md:text-xl sm:text-base text-sm text-[var(--color-accent)] [text-shadow:2px_2px_4px_rgba(0,0,0,0.3)]">
-                Where Little Explorers Have Big Fun!
+                Moments in, Memories out
             </h1>
         </div>  
     </div>
