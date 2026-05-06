@@ -145,7 +145,7 @@ class MimoAdminController extends Controller
             $endDate = $request->query('end_date');
             
             $query = OrderItems::query();
-            $query->whereNotNull('ckin');
+            $query->whereNotNull('ckin')->whereNull('ckout');
             $this->dateFilters($query, $request, $startDate, $endDate, 'ckin');
 
             $meta = $query->select([
@@ -179,6 +179,7 @@ class MimoAdminController extends Controller
                     if($item->durationhours === 5)
                     {
                         $item->remainmins = "unlimited";
+                        $item->status = "normal";
                     }
                     else if(!empty($item->ckin) && empty($item->ckout))
                     {
@@ -191,14 +192,24 @@ class MimoAdminController extends Controller
                         $hours = floor($remainingMinutes / 60);
                         $minutes = $remainingMinutes % 60;
                         $item->remainmins = "{$hours}hr {$minutes}min";
-                    }
-                    else if(!empty($item->ckin) && !empty($item->ckout))
-                    {
-                        $item->remainmins = 'done';
+                        $item->status = "normal";
                     }
                     else
                     {
                         $item->remainmins = "0hr 0min";
+                        $item->status = "due";
+                    }
+
+                    if(!$item->ckout)
+                    {
+                        if($now->copy()->subMinutes(60) > $item->ckin)
+                        {
+                            $item->status = "overdue";
+                        }
+                        else if($now->copy() >= $item->ckin && $now->copy()->subMinutes(30) <= $item->ckin)
+                        {
+                            $item->status = "due";
+                        }
                     }
                     
                     return $item;

@@ -1,7 +1,7 @@
 import '../bootstrap.js'
 import '../config/global.js'
 import { showConsole } from '../config/debug.js'
-import { dateToString } from '../utilities/dateString.js'
+import { dateToString, timeAgo } from '../utilities/dateString.js'
 
 let searchIn
 let searchState = ''
@@ -33,8 +33,8 @@ const parseItem = (item) => {
         ? `${item.child.firstname} ${item.child.lastname}`
         : "N/A";
 
-    const parentName = item.order.parentPl
-        ? item.order.parentPl.d_name
+    const parentName = item.order.parent_pl
+        ? item.order.parent_pl.d_name
         : (item.guardian ?? "N/A");
 
     const durationHours = !item.durationhours
@@ -43,8 +43,8 @@ const parseItem = (item) => {
           ? "Unlimited"
           : `${item.durationhours}hr`;
 
-    const checkedIn = item.checkedIn
-        ? `${dateToString("shortDate", item.ckin)} ${dateToString("timeOnly24", item.ckin)}`
+    const checkedIn = item.ckin
+        ? timeAgo(item.ckin)
         : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-200 text-gray-800">Not started</span>';
 
     let checkedOut;
@@ -65,6 +65,15 @@ const parseItem = (item) => {
         remainingTime = item.remainmins;
     }
 
+    let checkStatus;
+    if(item.status === 'overdue') {
+        checkStatus = `<span class="px-2 inline-flex text-xs font-semibold rounded-full bg-red-100 text-red-800">Overdue</span>`;
+    } else if(item.status === 'due') {
+        checkStatus = `<span class="px-2 inline-flex text-xs font-semibold rounded-full bg-orange-100 text-orange-800">Due</span>`;
+    } else if(item.status === 'normal') {
+        checkStatus = `<span class="px-2 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">Due</span>`;
+    }
+
     return {
         childName,
         parentName,
@@ -72,6 +81,7 @@ const parseItem = (item) => {
         checkedIn,
         checkedOut,
         remainingTime,
+        checkStatus,
         orderCode: item.ord_code_ph,
         qrChild: item.qr_child,
         qrGuardian: item.qr_guardian,
@@ -105,6 +115,9 @@ const tableRow = (item) => {
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 ${item.remainingTime}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                ${item.checkStatus}
             </td>
         </tr>
     `;
