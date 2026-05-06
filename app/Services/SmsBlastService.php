@@ -162,6 +162,7 @@ class SmsBlastService
     private function sendToRecipient(SmsBlast $blast, $recipient)
     {
         $message = $this->prepareMessage($blast->message, $recipient);
+        $message = mb_convert_encoding($message, 'ASCII', 'UTF-8');
 
         $result = SendSmsService::sendnowsms($recipient->mobileno, $message);
 

@@ -34,7 +34,7 @@
             >
         </div>
         <div class="flex flex-col">
-            <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-1">Search Item/s</label>
+            <label for="search" class="block text-sm font-semibold text-gray-700 mb-1">Search Item/s</label>
             <div class="relative group">
                 <input 
                     type="text" 

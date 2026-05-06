@@ -1,4 +1,4 @@
-@if ($errors->any())
+@if($errors->any())
     <div role="alert" id="success-toast" class="fixed top-4 left-1 rounded-md border border-red-500 bg-red-50 p-4 shadow-sm">
         <div class="flex items-start gap-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

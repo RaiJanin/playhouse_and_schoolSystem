@@ -36,7 +36,7 @@ class SendSmsService
         ];
     }
 
-    public static function ismscURL($link)
+    private static function ismscURL($link)
     {
         $http = curl_init($link);
 
@@ -51,7 +51,7 @@ class SendSmsService
         ];
     }
 
-    public static function formatPHNumber($number)
+    private static function formatPHNumber($number)
     {
         $number = preg_replace('/[^0-9]/', '', $number);
 

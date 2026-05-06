@@ -11,6 +11,7 @@ let scheduleFields;
 let recipientMode;
 let searchInput;
 let selectedBox;
+let searchBox;
 let hiddenRecipients;
 let searchResults;
 let selectedRecipients = new Map();
@@ -79,7 +80,7 @@ const renderSelected = () => {
     selectedBox.innerHTML = "";
     hiddenRecipients.innerHTML = "";
 
-    selectedRecipients.forEach((c) => {
+    Array.from(selectedRecipients.values()).forEach((c) => {
         const chip = document.createElement("div");
         chip.className =
             "bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs flex items-center gap-2";
@@ -98,7 +99,7 @@ const renderSelected = () => {
 
         const hidden = document.createElement("input");
         hidden.type = "hidden";
-        hidden.name = "recipient_ids[]";
+        hidden.name = `recipient_ids[]`;
         hidden.value = c.id;
 
         hiddenRecipients.appendChild(hidden);
@@ -172,10 +173,9 @@ const toggleRecipientMode = () => {
 
     const isSearch = recipientMode.value === "search";
 
-    if (searchInput)
-        document
-            .getElementById("searchBox")
-            .classList.toggle("hidden", !isSearch);
+    if (searchInput) {
+        searchBox.classList.toggle("hidden", !isSearch);
+    }
 };
 
 const onMount = () => {
@@ -190,6 +190,7 @@ const onMount = () => {
     searchInput = document.getElementById("contactSearch");
     searchResults = document.getElementById("searchResults");
     selectedBox = document.getElementById("selectedList");
+    searchBox = document.getElementById('searchBox');
     hiddenRecipients = document.getElementById("hiddenRecipients");
 };
 

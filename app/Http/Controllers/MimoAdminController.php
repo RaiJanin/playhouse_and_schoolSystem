@@ -136,4 +136,86 @@ class MimoAdminController extends Controller
 
         return back()->with('success', 'Updated Successfully');
     }
+
+    public function monitoring(Request $request)
+    {
+        try{
+            
+            $startDate = $request->query('start_date');
+            $endDate = $request->query('end_date');
+            
+            $query = OrderItems::query();
+            $query->whereNotNull('ckin');
+            $this->dateFilters($query, $request, $startDate, $endDate, 'ckin');
+
+            $meta = $query->select([
+                    'id', 
+                    'd_code_child', 
+                    'ord_code_ph', 
+                    'ckin', 
+                    'ckout', 
+                    'durationhours',
+                    'qr_child',
+                    'qr_guardian',
+                ])->with([
+                    'child:d_code_c,firstname,lastname', 
+                    'order:ord_code_ph,d_code',
+                    'order.parentPl:d_code,d_name'
+                ])->where(
+                    function ($search) use ($request) {
+                        $search->where('qr_child', 'like', '%' . $request->query('search') . '%')
+                            ->orWhere('qr_guardian', 'like', '%' . $request->query('search') . '%')
+                            ->orWhereHas('child', 
+                                function ($childSearch) use ($request) {
+                                    $childSearch->where('firstname', 'like', '%' . $request->query('search') . '%');
+                                }
+                            );
+                    }
+                )->orderBy('ckin', 'desc')
+                ->paginate(20)
+                ->through(function ($item){
+                    $now = Carbon::now();
+
+                    if($item->durationhours === 5)
+                    {
+                        $item->remainmins = "unlimited";
+                    }
+                    else if(!empty($item->ckin) && empty($item->ckout))
+                    {
+                        $ckin = Carbon::parse($item->ckin);
+                        $elapsedMinutes = $ckin->diffInMinutes($now);
+                        $totalMinutes = $item->durationhours * 60;
+
+                        $remainingMinutes = max(0, $totalMinutes - $elapsedMinutes);
+
+                        $hours = floor($remainingMinutes / 60);
+                        $minutes = $remainingMinutes % 60;
+                        $item->remainmins = "{$hours}hr {$minutes}min";
+                    }
+                    else if(!empty($item->ckin) && !empty($item->ckout))
+                    {
+                        $item->remainmins = 'done';
+                    }
+                    else
+                    {
+                        $item->remainmins = "0hr 0min";
+                    }
+                    
+                    return $item;
+                })->withQueryString();
+
+            return response()->json([
+                'success' => true,
+                'meta' => $meta,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: '.$e->getMessage(),
+                'trace' => 'Trace: '.$e->getTraceAsString(),
+            ]);
+        }
+        
+    }
 }

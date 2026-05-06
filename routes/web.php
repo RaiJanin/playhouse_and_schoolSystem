@@ -16,6 +16,7 @@ Route::get('/registration', [PlayHOuseController::class, 'registration'])->name(
 Route::get('/order-info/{order_no}', [PlayHouseController::class, 'orderInfo'])->name('order.info');
 Route::get('/checkout', [PlayHouseController::class, 'checkoutPage'])->name('playhouse.checkout');
 Route::get('/admin', [PlayHouseController::class, 'viewBookingsOnlyNamesTimes'])->name('playhouse.bookings');
+Route::get('/monitoring', function () { return view('pages.playhouse-monitoring'); })->name('playhouse.monitoring');
 
 
 require __DIR__.'/http-reqs.php';

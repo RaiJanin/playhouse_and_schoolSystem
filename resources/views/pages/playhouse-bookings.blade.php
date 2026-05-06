@@ -50,7 +50,9 @@
             </div>
         </div>
     </header>
-
+    <a href="{{ route('playhouse.monitoring') }}" class="underline text-[var(--color-primary-mid-dark)] font-semibold p-1 hover:opacity-80">
+       <i class="fa-solid fa-arrow-right-long mr-3"></i>Go to monitoring
+    </a>
     @include('ui.bookings')
     
 @endsection

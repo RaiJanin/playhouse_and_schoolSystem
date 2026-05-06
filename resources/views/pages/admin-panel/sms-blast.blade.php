@@ -14,6 +14,7 @@
                 @if(request()->routeIs('sms_blast.index'))
                     @include('ui.admin-panel.sms-blast.index')
                 @elseif(request()->routeIs('sms_blast.create'))
+                    @vite('resources/js/modules/admin-panel-create.js')
                     @include('ui.admin-panel.sms-blast.create')
                 @endif
             @endif

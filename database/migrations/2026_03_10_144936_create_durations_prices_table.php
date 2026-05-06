@@ -9,16 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('duration_prices', function (Blueprint $table) {
-            $table->id();
-            $table->string('duration_hour');
-            $table->string('label');
-            $table->decimal('price', 10, 2);
-            $table->timestamps();
-        });
-    }
+    // public function up(): void
+    // {
+    //     Schema::create('duration_prices', function (Blueprint $table) {
+    //         $table->id();
+    //         $table->string('duration_hour');
+    //         $table->string('label');
+    //         $table->decimal('price', 10, 2);
+    //         $table->timestamps();
+    //     });
+    // }
 
     /**
      * Reverse the migrations.

@@ -6,6 +6,7 @@ use App\Models\SmsBlast;
 use App\Models\SmsBlastRecipient;
 use App\Models\M06;
 use App\Services\SmsBlastService;
+use App\Http\Requests\SmsBlastRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,12 @@ use Illuminate\Support\Facades\DB;
 class SmsBlastController extends Controller
 {
     private $page = 'pages.admin-panel.sms-blast';
+    private $smsBlastService;
+
+    public function __construct(SmsBlastService $smsBlastService)
+    {
+        $this->smsBlastService = $smsBlastService;
+    }
 
     /**
      * Display SMS blast history
@@ -25,45 +32,73 @@ class SmsBlastController extends Controller
     /**
      * Show create SMS blast form
      */
-    public function create(SmsBlastService $smsBlastService)
+    public function create()
     {
-        $parents = M06::whereNotNull('mobileno')
-            ->where('isparent', true)
-            ->select('d_code as id', 'firstname', 'lastname', 'd_name as name', 'mobileno as mobile', DB::raw("'true' as isparent"))
-            ->get()
-            ->map(function ($p) {
-                return [
-                    'id' => $p->id,
-                    'name' => $p->firstname . ' ' . $p->lastname,
-                    'mobile' => $p->mobile,
-                    'type' => 'parent'
-                ];
-            });
+        $templates = $this->smsBlastService->getDefaultTemplates();
 
-        $guardians = M06::whereNotNull('mobileno')
-            ->where('isguardian', true)
-            ->select('d_code as id', 'firstname', 'lastname', 'd_name as name', 'mobileno as mobile', DB::raw("'true' as isguardian"))
-            ->get()
-            ->map(function ($g) {
-                return [
-                    'id' => $g->id,
-                    'name' => $g->firstname . ' ' . $g->lastname,
-                    'mobile' => $g->mobile,
-                    'type' => 'guardian'
-                ];
-            });
-
-        $templates = $smsBlastService->getDefaultTemplates();
-
-        return view($this->page, compact('parents', 'guardians', 'templates'));
+        return view($this->page, compact('templates'));
     }
 
     /**
      * Store new SMS blast
      */
-    public function store(Request $request)
+    public function store(SmsBlastRequest $request)
     {
-        dd($request->all());
+        $data = $request->validated();
+
+        DB::beginTransaction();
+
+        try
+        {
+            $dateTimeEx = $data['scheduled_date'] . ' ' . $data['scheduled_time'];
+            $recipients = $request->validated('recipient_ids', []) ? count($data['recipient_ids']) : 0;
+            
+            $blast = SmsBlast::create([
+                'title' => $data['title'],
+                'message' => $data['message'],
+                'status' => SmsBlast::STATUS_DRAFT,
+                'slug' => $data['slug'],
+                'total_recipients' => $recipients,
+                'type' => $data['type'],
+                'send_mode' => $data['send_mode'],
+                'schedule_at' => $dateTimeEx,
+            ]);
+
+            $result = [
+                'success' => false,
+                'message' => 'Unkown error'
+            ];
+
+            switch($blast->send_mode)
+            {
+                case 'scheduled':
+                    $result = $this->smsBlastService->scheduleBlast($blast, $data['recipient_ids'], $dateTimeEx);
+                    break;
+                case 'now':
+                    $result = $this->smsBlastService->sendBlast($blast, $data['recipient_ids']);
+                    break;
+                case 'alltimes':
+                    $result = ['success' => true];
+                    break;
+            }
+
+            if ($result['success']) {
+                DB::commit();
+                return redirect()->route('sms_blast.index')
+                    ->with('success', 'SMS blast ' . ($blast->status === 'scheduled' ? 'scheduled' : 'sent') . ' successfully!');
+            } else {
+                DB::rollBack();
+                return back()->withErrors([
+                    'error' => 'Failed to send SMS blast: ' . ($result['message'] ?? 'Unknown error'),
+                ]);
+            }
+            
+        } catch(\Exception $e) {
+            DB::rollback();
+            return back()->withErrors([
+                'error' => 'Error: '. $e->getMessage(),
+            ]);
+        }
     }
 
     /**

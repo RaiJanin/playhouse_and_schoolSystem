@@ -3,6 +3,7 @@
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PlayHouseController;
 use App\Http\Controllers\TurnstileController;
+use App\Http\Controllers\MimoAdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,4 @@ Route::patch('/order-items/{id}', [PlayHouseController::class, 'updateOrderItem'
 Route::patch('/check-out/{orderNum}', [PlayHouseController::class, 'checkOut']);
 Route::post('/turnstile-srch', [TurnstileController::class, 'turnstileSrchPOST']);
 Route::get('/get-contact', [InformationsController::class, 'getContact']);
+Route::get('/get-inhouse', [MimoAdminController::class, 'monitoring']);

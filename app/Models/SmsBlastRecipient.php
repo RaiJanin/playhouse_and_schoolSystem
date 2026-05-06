@@ -26,8 +26,15 @@ class SmsBlastRecipient extends Model
     const STATUS_SENT = 'sent';
     const STATUS_FAILED = 'failed';
 
+    const DEFAULT_RECIPIENT_TYPE = 'parent';
+
     public function smsBlast(): BelongsTo
     {
         return $this->belongsTo(SmsBlast::class);
+    }
+
+    public function recipient(): BelongsTo
+    {
+        return $this->belongsTo(M06::class, 'recipient_id', 'd_code');
     }
 }

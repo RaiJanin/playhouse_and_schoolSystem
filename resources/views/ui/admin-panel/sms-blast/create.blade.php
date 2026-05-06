@@ -2,8 +2,6 @@
     $selectClass = 'border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300'; 
 @endphp
 
-@vite('resources/js/modules/admin-panel-create.js')
-
 <div class="rounded-lg bg-gradient-to-r from-[var(--color-accent-mid-dark)] to-[var(--color-accent)] p-6 lg:p-8 flex flex-col gap-4">
     <div class="flex flex-col gap-4">
         <a href="{{ route('sms_blast.index') }}" class="max-w-52 px-4 text-[var(--color-accent)] py-2 bg-gray-500 rounded-lg hover:opacity-80 transition-all duration-300">
@@ -18,7 +16,6 @@
         <div class="flex flex-wrap gap-4">
             <div class="flex-1">
                 <x-input-label for="title" value="Title" />
-                <x-input-error class="mt-2" :messages="$errors->get('title')" />
                 <x-text-input id="title" name="title" class="mt-1 w-full"/>
             </div>
             <div class="flex-1">
@@ -34,7 +31,6 @@
 
         <div class="flex flex-col p-3 rounded-lg border border-white backdrop-blur bg-[var(--color-primary)]/10 shadow-md">
             <x-input-label for="message" value="Message Content" />
-            <x-input-error class="mt-2" :messages="$errors->get('message')" />
             <textarea 
                 class="resize-none font-mono text-sm text-gray-400 focus:text-gray-900 border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300" 
                 id="messageInput"
@@ -79,12 +75,12 @@
             <div id="scheduleFields" class="hidden">
                 <div class="flex flex-row gap-2 space-y-3">
                     <div>
-                        <x-input-label for="schedule_date" value="Schedule Date" />
-                        <x-text-input type="date" id="schedule-date" name="schedule_date"/>
+                        <x-input-label for="scheduled_date" value="Schedule Date" />
+                        <x-text-input type="date" id="schedule-date" name="scheduled_date"/>
                     </div>
                     <div>
-                        <x-input-label for="schedule_time" value="Schedule Time" />
-                        <x-text-input type="time" id="schedule-time" name="schedule_time"/>
+                        <x-input-label for="scheduled_time" value="Schedule Time" />
+                        <x-text-input type="time" id="schedule-time" name="scheduled_time"/>
                     </div>
                 </div>
             </div>

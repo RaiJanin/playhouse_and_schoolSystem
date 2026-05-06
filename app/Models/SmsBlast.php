@@ -14,11 +14,12 @@ class SmsBlast extends Model
         'title',
         'message',
         'status',
+        'slug',
         'total_recipients',
         'sent_count',
         'failed_count',
-        'cost_per_sms',
-        'total_cost',
+        'type',
+        'send_mode',
         'scheduled_at',
         'sent_at',
     ];
@@ -29,8 +30,6 @@ class SmsBlast extends Model
         'total_recipients' => 'integer',
         'sent_count' => 'integer',
         'failed_count' => 'integer',
-        'cost_per_sms' => 'decimal:2',
-        'total_cost' => 'decimal:2',
     ];
 
     const STATUS_DRAFT = 'draft';
@@ -40,22 +39,17 @@ class SmsBlast extends Model
     const STATUS_FAILED = 'failed';
     const STATUS_CANCELLED = 'cancelled';
 
+    protected $slugs = [
+        'birthday-greetings',
+        'timeout-reminder',
+        'overtime-reminder',
+        'checkout-reminder',
+        'custom'
+    ];
+
     public function recipients(): HasMany
     {
         return $this->hasMany(SmsBlastRecipient::class);
-    }
-
-    public function getTotalCostAttribute(): float
-    {
-        return $this->total_recipients * $this->cost_per_sms;
-    }
-
-    public function getSuccessRateAttribute(): float
-    {
-        if ($this->total_recipients === 0) {
-            return 0;
-        }
-        return round(($this->sent_count / $this->total_recipients) * 100, 1);
     }
 
     public function scopeScheduled($query)
