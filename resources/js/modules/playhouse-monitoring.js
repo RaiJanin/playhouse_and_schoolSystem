@@ -2,12 +2,16 @@ import '../bootstrap.js'
 import '../config/global.js'
 import { showConsole } from '../config/debug.js'
 import { dateToString, timeAgo } from '../utilities/dateString.js'
+import { renderPagination } from "../utilities/pagination.js";
+import { emptyStateTable, tableSkeleton } from '../components/tablePlaceholders.js'
 
 let searchIn
 let searchState = ''
-let debounceTimer = null
+let searchBtn
 let meta = null
 let dataRowsBody
+let pageState = 1
+let refreshInterval = null
 
 const api = window.axios
 
@@ -15,14 +19,7 @@ const renderTableRows = (items) => {
     dataRowsBody.innerHTML = ''
 
     if(items.length === 0) {
-        dataRowsBody.innerHTML = `
-            <tr>
-                <td colspan="9" class="px-6 py-4 text-sm text-gray-500 text-center">
-                    No order items found.
-                </td>
-            </tr>
-        `;
-        return
+        dataRowsBody.innerHTML = emptyStateTable()
     }
 
     dataRowsBody.innerHTML = items.map(item => tableRow(parseItem(item))).join('')
@@ -123,24 +120,75 @@ const tableRow = (item) => {
     `;
 }
 
-const loop = () => {
-    setInterval(async () => {
-        displayData()
-    }, 5000)
-}
+const startLoop = () => {
+    showConsole("log", "Loop started");
 
-const displayData = async () => {
-    meta = await getData()
+    refreshInterval = setInterval(async () => {
+        showConsole("log", "Loop running");
+        await displayData(pageState);
+    }, 5000);
+};
+
+const stopLoop = () => {
+    showConsole('log', 'Loop stopped')
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
+        refreshInterval = null;
+    }
+};
+
+const displayData = async (page) => {
+    pageState = page
+    meta = await getData(searchState, pageState)
+
     renderTableRows(meta.data)
+
+    renderPagination(
+        meta,
+        async (selectedPage) => {
+
+            dataRowsBody.innerHTML = tableSkeleton();
+            stopLoop();
+            disableButtons(true);
+
+            try {
+                await displayData(selectedPage);
+            } catch (err) {
+                showConsole("error", err);
+                App.component.criticalAlert("Application error");
+            } finally {
+                startLoop();
+                disableButtons(false);
+            }
+        },
+        true,
+    );
 }
 
-const getData = async(search = null) => {
+const handleSearch = async () => {
+    if(!searchState && !searchIn.value.trim()) return
+
+    dataRowsBody.innerHTML = tableSkeleton();
+    stopLoop();
+    disableButtons(true);
+
     try {
-        const response = await api.get('/api/get-inhouse', {
-            params: {
-                search: search
-            }
-        })
+        searchState = searchIn.value.trim()
+        pageState = 1
+        await displayData(pageState)
+    } catch (err) {
+        showConsole('error', err)
+        App.component.criticalAlert('Server error')
+    } finally {
+        startLoop()
+        disableButtons(false)
+    }
+
+}
+
+const getData = async(search = null, page) => {
+    try {
+        const response = await api.get(`/api/get-inhouse?search=${search}&page=${page}`)
 
         if(!response.data.success) {
             App.component.showAlert(response.data.message, 'error')
@@ -155,29 +203,40 @@ const getData = async(search = null) => {
     }
 }
 
+const disableButtons = (disable) => {
+    const btns = document.querySelectorAll('button')
+
+    btns.forEach(btn => {
+        btn.disabled = disable
+    })
+}
+
 const onMount = () => {
     searchIn = document.getElementById('search-it')
+    searchBtn = document.getElementById('filter-btn')
     dataRowsBody = document.getElementById("data-rows");
 }
 
 const attachEventListeners = () => {
-
+    searchBtn.addEventListener('click', handleSearch)
 }
 
 const nextTick = () => {
 
 }
 
-const init = async () => {
+const init = () => {
     onMount()
     attachEventListeners()
-    displayData();
-    loop()
+    displayData()
+    startLoop()
     nextTick()
 }
 
 const destroy = () => {
-
+    if (searchBtn) {
+        searchBtn.removeEventListener('click', handleSearch)
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);

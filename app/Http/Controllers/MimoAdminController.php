@@ -202,7 +202,7 @@ class MimoAdminController extends Controller
 
                     if(!$item->ckout)
                     {
-                        if($now->copy()->subMinutes(60) > $item->ckin)
+                        if($now->copy()->subMinutes(30) > $item->ckin)
                         {
                             $item->status = "overdue";
                         }

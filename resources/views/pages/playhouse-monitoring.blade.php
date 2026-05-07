@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    <div class="overflow-x-auto mt-3 sm:px-8">
+    <div class="overflow-x-auto mt-3 sm:px-8 py-2">
         <table class="min-h-full w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -77,5 +77,9 @@
 
             </tbody>
         </table>
+        <div class="flex flex-row justify-between mt-5 text-xxs sm:text-sm">
+            <div id="pagination-meta" class="mt-2 font-semibold"></div>
+            <nav id="pagination" aria-label="Pagination Navigation" class="inline-flex items-center space-x-2 text-sm font-semibold"></nav>
+        </div>
     </div>
 @endsection

@@ -1,8 +1,6 @@
 const debugMode = (import.meta.env.VITE_DEBUG_MODE ?? 'false') === 'true' ? true : false;
 const allowOverride = (import.meta.env.VITE_DEBUG_MODE ?? "false") === "true" ? true : false;
 
-console.log('Debug Mode: ' + debugMode);
-
 
 /**
  * Enables or disable console logs on the browser's console
