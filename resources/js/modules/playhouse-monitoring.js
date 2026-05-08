@@ -145,24 +145,27 @@ const displayData = async (page) => {
 
     renderPagination(
         meta,
-        async (selectedPage) => {
-
-            dataRowsBody.innerHTML = tableSkeleton();
-            stopLoop();
-            disableButtons(true);
-
-            try {
-                await displayData(selectedPage);
-            } catch (err) {
-                showConsole("error", err);
-                App.component.criticalAlert("Application error");
-            } finally {
-                startLoop();
-                disableButtons(false);
-            }
-        },
+        async (selectedPage) =>
+           await handlePaginationCallback(selectedPage),
         true,
     );
+}
+
+const handlePaginationCallback = async (page) => {
+    dataRowsBody.innerHTML = tableSkeleton();
+
+    stopLoop();
+    disableButtons(true);
+
+    try {
+        await displayData(page);
+    } catch (err) {
+        showConsole("error", err);
+        App.component.criticalAlert("Application error");
+    } finally {
+        startLoop();
+        disableButtons(false);
+    }
 }
 
 const handleSearch = async () => {

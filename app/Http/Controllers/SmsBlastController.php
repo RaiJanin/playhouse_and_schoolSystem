@@ -26,7 +26,27 @@ class SmsBlastController extends Controller
      */
     public function index(Request $request)
     {
-        return view($this->page);
+        $query = SmsBlast::query()->withCount('recipients')->latest();
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        $blasts = $query->paginate(20)->withQueryString();
+
+        $stats = [
+            'total' => SmsBlast::count(),
+            'sent' => SmsBlast::sent()->count(),
+            'scheduled' => SmsBlast::scheduled()->count(),
+            'draft' => SmsBlast::draft()->count(),
+            'failed' => SmsBlast::failed()->count(),
+        ];
+
+        return view($this->page, compact('blasts', 'stats'));
     }
 
     /**
@@ -106,7 +126,19 @@ class SmsBlastController extends Controller
      */
     public function show(SmsBlast $smsBlast)
     {
-       
+        $smsBlast->load(['recipients' => function ($query) {
+            $query->latest()->paginate(50);
+        }]);
+
+        return view($this->page, compact('smsBlast'));
+    }
+
+    /**
+     * Show blast details for editing
+     */
+    public function edit(SmsBlast $smsBlast)
+    {
+        dd($smsBlast);
     }
 
     /**
