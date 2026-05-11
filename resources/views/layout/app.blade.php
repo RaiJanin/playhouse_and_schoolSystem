@@ -7,13 +7,14 @@
     <title>@yield('title')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('images/mimo_logo_steady.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-    @if(Route::is('playhouse.registration'))
+    @if(Route::is('playhouse.registration') || Route::is('playhouse.walk-in'))
         @vite('resources/js/app.js')
     @endif
     @vite('resources/css/app.css')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     @yield('styles')
     @yield('masterFile')
+    @yield('static-scripts')
 </head>
 <body class="min-h-screen">
     <div class="flex h-screen overflow-hidden">

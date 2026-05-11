@@ -7,14 +7,14 @@
             <div id="step-2-num" class="w-8 h-8 rounded-full border-4 border-gray-300 bg-white flex items-center justify-center font-semibold text-gray-500">2</div>
             <div id="step-3-num" class="w-8 h-8 rounded-full border-4 border-gray-300 bg-white flex items-center justify-center font-semibold text-gray-500">3</div>
             <div id="step-4-num" class="w-8 h-8 rounded-full border-4 border-gray-300 bg-white flex items-center justify-center font-semibold text-gray-500">4</div>
-            <div id="step-5-num" class="w-8 h-8 rounded-full border-4 border-gray-300 bg-white flex items-center justify-center font-semibold text-gray-500">5</div>
+            @if(!$walkInRegister)<div id="step-5-num" class="w-8 h-8 rounded-full border-4 border-gray-300 bg-white flex items-center justify-center font-semibold text-gray-500">5</div>@endif
         </div>
     </div>
     <div class="flex justify-between px-0 max-w-full">
         <div id="step-1-text" class="text-sm font-medium text-[var(--color-primary)]">Phone</div>
-        <div id="step-2-text" class="text-sm font-medium text-gray-700">OTP</div>
-        <div id="step-3-text" class="text-sm font-medium text-gray-700">Parent</div>
-        <div id="step-4-text" class="text-sm font-medium text-gray-700">Children</div>
-        <div id="step-5-text" class="text-sm font-medium text-gray-700">Review</div>
+        <div id="step-2-text" class="text-sm font-medium text-gray-700">{{ $walkInRegister ? 'Parent' : 'OTP' }}</div>
+        <div id="step-3-text" class="text-sm font-medium text-gray-700">{{ $walkInRegister ? 'Children' : 'Parent' }}</div>
+        <div id="step-4-text" class="text-sm font-medium text-gray-700">{{ $walkInRegister ? 'Review' : 'Children' }}</div>
+        @if(!$walkInRegister)<div id="step-5-text" class="text-sm font-medium text-gray-700">Review</div>@endif
     </div>
 </div>

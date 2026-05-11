@@ -1,5 +1,5 @@
 const debugMode = (import.meta.env.VITE_DEBUG_MODE ?? 'false') === 'true' ? true : false;
-const allowOverride = (import.meta.env.VITE_DEBUG_MODE ?? "false") === "true" ? true : false;
+const allowOverride = (import.meta.env.VITE_DEBUG_MODE_OVERRIDE ?? "false") === "true" ? true : false;
 
 
 /**
@@ -10,7 +10,7 @@ const allowOverride = (import.meta.env.VITE_DEBUG_MODE ?? "false") === "true" ? 
  */
 export function showConsole(options, message, logs = null, override = null) {
     if (debugMode || (override && allowOverride)) {
-        
+
         const stack = new Error().stack || '';
         const callerLineRaw = stack.split('\n')[2]?.trim() || 'unknown location';
         let location = 'unknown';

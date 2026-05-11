@@ -4,13 +4,13 @@ import { showConsole } from "../config/debug.js";
 
 import { oldUser } from "../services/olduserState.js";
 
-import { 
-    autoFillChildren, 
-    autoFillFields 
+import {
+    autoFillChildren,
+    autoFillFields
 } from '../services/autoFill.js';
 
-import { 
-    getOrDelete, 
+import {
+    getOrDelete,
     submitData
 } from "../services/requestApi.js";
 import { editParentChkBx } from "./playhouseParent.js";
@@ -23,6 +23,7 @@ const messageDiv = document.getElementById('otp-message');
 const otpLoading = document.getElementById('otpLoading');
 const resendBtn = document.getElementById('resend-btn');
 const resendBtnContainer = document.getElementById('resend-btn-container');
+const currentStep = App.dynamicState.getCurrentStep ? App.dynamicState.getCurrentStep() : 0;
 
 let storeEmail = null;
 let otpAttempt = 0;
@@ -44,16 +45,16 @@ function generateOtpChoices(correctOtp, otpId) {
         showConsole('error', 'OTP container not found!')
         return;
     }
-    
+
     container.innerHTML = '';
     messageDiv.textContent = '';
     messageDiv.className = 'text-center min-h-[24px] font-medium';
-    
+
     const decoys = generateDecoys(correctOtp);
-    
+
     let choices = [correctOtp, ...decoys];
     choices = shuffleArray(choices);
-    
+
     choices.forEach(otp => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -64,7 +65,7 @@ function generateOtpChoices(correctOtp, otpId) {
             <span>${otp[2]}</span>
         `;
         button.dataset.otp = otp;
-        
+
         button.addEventListener('click', async () => {
 
             document.querySelectorAll('.otp-choice').forEach(btn => {
@@ -72,7 +73,7 @@ function generateOtpChoices(correctOtp, otpId) {
                 btn.classList.remove('border-green-500', 'border-red-500', 'bg-green-50', 'bg-red-50');
                 btn.classList.add('border-gray-300', 'opacity-70');
             });
-            
+
             try
             {
                 const sendOtpAttempt = await submitData(API_ROUTES.verifyOtpURL, {otp: otp}, "PATCH", App.staticState.storePhone);
@@ -82,7 +83,7 @@ function generateOtpChoices(correctOtp, otpId) {
                     button.classList.add('border-green-500', 'bg-green-50');
                     messageDiv.textContent = '✓ Correct!';
                     messageDiv.className = 'text-center text-green-600 font-medium';
-                    
+
                     App.staticState.correctCode = true;
                     App.inputFieldControl.phoneReadOnly(true);
                     resendBtn.disabled = true;
@@ -90,7 +91,6 @@ function generateOtpChoices(correctOtp, otpId) {
                     if(!oldUser.oldUserLoaded && sendOtpAttempt.isOldUser) {
                         handleOldUser(sendOtpAttempt.isOldUser, sendOtpAttempt.phoneNum);
                     } else {
-                        const currentStep = App.dynamicState.getCurrentStep ? App.dynamicState.getCurrentStep() : 0;
                         App.formControl.showSteps(currentStep + 1, 'next');
                     }
                 } else {
@@ -98,7 +98,7 @@ function generateOtpChoices(correctOtp, otpId) {
                     button.classList.add('border-red-500', 'bg-red-50');
                     messageDiv.textContent = '✗ Incorrect code. Please try again.';
                     messageDiv.className = 'text-center text-red-500 font-medium';
-                    
+
                     setTimeout(() => {
                         document.querySelectorAll('.otp-choice').forEach(btn => {
                             btn.disabled = false;
@@ -112,9 +112,9 @@ function generateOtpChoices(correctOtp, otpId) {
                 messageDiv.textContent = 'Cannot verify OTP';
                 App.component.criticalAlert(`Error: ${error.status}\nMessage: ${error.data?.message || error.statusText || 'Unknown error'}`);
             }
-            
+
         });
-        
+
         container.appendChild(button);
     });
 }
@@ -129,21 +129,21 @@ function generateOtpChoices(correctOtp, otpId) {
 function generateDecoys(realOtp) {
     const digits = realOtp.split('');
     const decoys = [];
-    
+
     const pos1 = Math.floor(Math.random() * 3);
     const modified = [...digits];
     modified[pos1] = String((parseInt(modified[pos1]) + 1) % 10);
     decoys.push(modified.join(''));
-    
+
     const swapped = [...digits];
     const pos2 = Math.floor(Math.random() * 2);
     [swapped[pos2], swapped[pos2 + 1]] = [swapped[pos2 + 1], swapped[pos2]];
     const decoy2 = swapped.join('');
-    
+
     if (decoy2 === realOtp || decoy2 === decoys[0]) {
         return generateDecoys(realOtp);
     }
-    
+
     decoys.push(decoy2);
     return decoys;
 }
@@ -178,7 +178,7 @@ App.utilites.generateOtp = async function (phoneNumber, email = null, resend = f
     showConsole('log', 'generateOtp called with:', phoneNumber);
     showConsole('log', 'and email:', email);
     showConsole('log', 'Current storePhone:', App.staticState.storePhone);
-    
+
     if((App.staticState.storePhone !== 0 && App.staticState.storePhone === phoneNumber) && email === storeEmail && !resend) {
         showConsole('log', 'Same phone number or email, skipping OTP generation');
         return;
@@ -189,8 +189,8 @@ App.utilites.generateOtp = async function (phoneNumber, email = null, resend = f
     otpAttempt = 0;
 
     resendBtnContainer.classList.add('hidden');
-    
-    const phoneIntoJson = { 
+
+    const phoneIntoJson = {
         phone: phoneNumber,
         email: email ?? null
     };
@@ -204,7 +204,7 @@ App.utilites.generateOtp = async function (phoneNumber, email = null, resend = f
         const otp = await submitData(API_ROUTES.makeOtpURL, phoneIntoJson);
         showConsole('log', 'OTP response:', otp, true);
         otpLoading.classList.add('hidden');
-        
+
         if (otp.code && !otp.error) {
             generateOtpChoices(otp.code, otp.id, phoneNumber);
             resendBtnContainer.classList.remove('hidden');
@@ -227,9 +227,11 @@ App.utilites.generateOtp = async function (phoneNumber, email = null, resend = f
     }
 }
 
-resendBtn.addEventListener('click', () => {
-    App.utilites.generateOtp(App.staticState.storePhone, storeEmail, true); 
-});
+if(!window.registration.walkIn) {
+    resendBtn.addEventListener('click', () => {
+        App.utilites.generateOtp(App.staticState.storePhone, storeEmail, true);
+    });
+}
 
 /**
  * Track OTP verification attempts and terminate the form after multiple failures.
@@ -240,11 +242,11 @@ resendBtn.addEventListener('click', () => {
  */
 function readAttempts(otpId) {
     otpAttempt++;
-    
+
     if(otpAttempt == 2) {
         messageDiv.textContent = 'Multiple Attempts. Terminating form';
         messageDiv.className = 'text-center text-red-500 font-medium';
-        
+
         document.querySelectorAll('.otp-choice').forEach(btn => {
             btn.disabled = true;
             btn.classList.remove('border-green-500', 'border-red-500', 'bg-green-50', 'bg-red-50');
@@ -298,12 +300,12 @@ function handleOldUser(flag, apiParam) {
 
         App.formControl.showSteps(2, 'next');
         await new Promise(resolve => setTimeout(resolve, 300));
-        
+
         if(foundSuccessfully) {
             App.formControl.showSteps(3, 'next');
             await new Promise(resolve => setTimeout(resolve, 300));
         }
-        
+
     }, 500);
 }
 

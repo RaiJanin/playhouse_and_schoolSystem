@@ -26,7 +26,7 @@ import { generateQR } from './components/qrCode.js';
 import { validateSelectedChild } from './components/existingChild.js';
 import './components/alertBlade.js';
 
-import { 
+import {
     requestBirthdayDropdownValidation,
     validateDateInputs
 } from './utilities/birthdayInput.js';
@@ -41,20 +41,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const nextBtn = document.getElementById('next-btn');
         const submitBtn = document.getElementById('submit-btn');
         const filledLine = document.getElementById('filled-line');
-        const stepNums = [
+        const stepNums = window.registration.walkIn ? [
             document.getElementById('step-1-num'),
             document.getElementById('step-2-num'),
             document.getElementById('step-3-num'),
             document.getElementById('step-4-num'),
-            document.getElementById('step-5-num')
-        ];
-        const stepTexts = [
+        ] : [
+            document.getElementById('step-1-num'),
+            document.getElementById('step-2-num'),
+            document.getElementById('step-3-num'),
+            document.getElementById('step-4-num'),
+            document.getElementById('step-5-num'),
+        ]
+        const stepTexts = window.registration.walkIn ? [
+            document.getElementById('step-1-text'),
+            document.getElementById('step-2-text'),
+            document.getElementById('step-3-text'),
+            document.getElementById('step-4-text'),
+        ] : [
             document.getElementById('step-1-text'),
             document.getElementById('step-2-text'),
             document.getElementById('step-3-text'),
             document.getElementById('step-4-text'),
             document.getElementById('step-5-text')
-        ];
+        ]
 
         const phoneInputEl = document.getElementById('phone');
         const emailInputEl = document.getElementById('gmail');
@@ -95,14 +105,14 @@ document.addEventListener('DOMContentLoaded', function () {
          */
         App.dynamicState.updateNextBtnState = function() {
             const current = App.dynamicState.getCurrentStepName();
-            
-            if (current === 'otp') {
+
+            if (current === 'otp' && !window.registration.walkIn) {
                 nextBtn.disabled = false;
             } else {
                 const phoneValid = phoneInputEl ? phoneInputEl.checkValidity() : false;
                 nextBtn.disabled = !phoneValid;
             }
-            
+
             if (currentStep === steps.length - 1) {
                 const formValid = form ? form.checkValidity() : false;
                 submitBtn.disabled = !formValid;
@@ -120,12 +130,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 if(!readTermsChbx.isChecked()) return;
-                
+
                 App.dynamicState.updateNextBtnState();
             });
         }
 
-        
+
 //--------Event listeners outside functions--------------------------------------------------
 
         nextBtn.addEventListener('click', async () => {
@@ -195,9 +205,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     phoneInputEl.classList.add('border-red-500');
                     valid = false;
                 } else {
-                    showConsole('log', 'Phone validation passed, calling generateOtp');
+                    if(window.registration?.walkIn) {
+                        App.formControl.showSteps(currentStep + 1,'next');
+                        return
+                    }
                     phoneInputEl.classList.remove('border-red-500');
-                    nextBtn.classList.remove('hidden');
+                    showConsole('log', 'Phone validation passed, calling generateOtp');
                     App.utilites.generateOtp(phoneInputEl.value, emailInputEl.value);
                 }
             }
@@ -211,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     //Return to avoid conflicts with the auto scroll
                     return;
                 }
+
             }
 
             if(App.dynamicState.getCurrentStepName() === 'parent') {
@@ -229,17 +243,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     valid = validateSelectedChild();
                 }
             }
-            
+
             if(!valid)return;
 
             showConsole('log', 'Is readterms checked? ' + readTermsChbx.isChecked())
-            
+
             if(currentStep < steps.length - 1) {
                 App.formControl.showSteps(currentStep + 1,'next');
                 if (currentStep + 1 === steps.length -1) App.component.populateSummary();
             }
         });
-    
+
         prevBtn.addEventListener('click', () => {
             if(App.dynamicState.getCurrentStepName() === 'children') {
                 disableBirthdayonSubmit(false);
@@ -248,8 +262,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if(App.dynamicState.getCurrentStepName() === 'parent') return;
             App.formControl.showSteps(currentStep - 1,'prev');
         });
-        
-        
+
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -304,9 +318,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.classList.add('bg-[var(--color-third)]');
                 submitBtn.textContent = 'Submit';
             }
-            
+
         });
-        
+
         // Extra safeguard: prevent submit button click if disabled
         if (submitBtn) {
             submitBtn.addEventListener('click', (e) => {
@@ -317,9 +331,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
-        
-        
-        
+
+
+
 
 //--------Functions section-------------------------------------------------------------
 
@@ -371,10 +385,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (direction === 'next' && currentStep < steps.length - 1) {
                 nextStepIndex = override ? currentStep + override : currentStep + 1;
-            } 
+            }
             else if (direction === 'prev' && currentStep > 0) {
                 nextStepIndex = override ? currentStep - override : currentStep - 1;
-            } 
+            }
             else {
                 return;
             }
@@ -407,9 +421,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 prevBtn.classList.toggle('hidden', currentStep === 0);
                 // Hide Next button on OTP step (step 1) since it auto-advances after verification
-                nextBtn.classList.toggle('hidden', currentStep === steps.length - 1 || currentStep === 1);
+                if(!window.registration.walkIn) nextBtn.classList.toggle('hidden', currentStep === steps.length - 1 || currentStep === 1);
                 submitBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
-                
+
                 App.dynamicState.updateNextBtnState();
             }, 300);
 
@@ -443,14 +457,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const socksBool = addedSocksEl ? (addedSocksEl.value === '1' ? 'Socks Added' : '') : '';
 
                 const durationDefs = window.masterfile.durationMap[duration] || duration;
-                
+
                 if (window.masterfile.durationPriceMap[duration]) {
                     childrenTotalCost += window.masterfile.durationPriceMap[duration];
                 }
 
                 childrenItems += `
                         <div class="backdrop-blur-xl border-2 border-gray-50 shadow-md rounded-lg p-3">
-                            <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name}</span></p> 
+                            <p class="text-sm text-gray-600">Name: <span class="font-bold text-gray-900">${name}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Birthday: <span class="font-medium text-gray-900">${dateToString('shortDate', birthday)}</span></p>
 							<p class="text-sm text-gray-600 mt-1">Duration: <span class="font-medium text-gray-900">${durationDefs}</span></p>
                             <p class="text-sm text-gray-900 font-bold mt-1">${socksBool}</p>
@@ -460,11 +474,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const socksTotalCost = App.dynamicState.countSelectedSocks();
             const overallTotal = childrenTotalCost + socksTotalCost;
-            
+
             const parentName = data.get('parentName') || '';
             const parentLastName = data.get('parentLastName') || '';
             const parentFullName = [parentName, parentLastName].filter(n => n).join(' ') || '-';
-            
+
             summary.innerHTML = `
                     <div class="flex items-center border-b border-[var(--color-primary)] py-2 max-w-full overflow-auto">
                         <span class="font-semibold text-cyan-800 w-fit">Parent:&nbsp;</span>

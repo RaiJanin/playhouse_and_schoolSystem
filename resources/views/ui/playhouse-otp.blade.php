@@ -3,7 +3,7 @@
     <p class="text-center text-gray-600 mb-5 font-semibold">
         Select the 3-digit code shown on your trusted device
     </p>
-    
+
     <div class="flex items-center justify-center mb-6 rounded-xl border-2 border-gray-100 shadow-md backdrop-blur-xl bg-white/50 p-2 sm:p-4">
         <div id="otp-choices" class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <!-- OTP choices will be generated here -->
@@ -11,9 +11,9 @@
         <div id="otpLoading" class="mt-8 text-center inset-0">
             <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#0d9984] border-t-transparent"></div>
             <p class="text-gray-600 mt-2">Please wait...</p>
-        </div>  
+        </div>
     </div>
-    
+
     <div id="otp-message" class="text-center min-h-[24px] font-medium"></div>
     <div id="resend-btn-container" class="flex flex-col mt-2 hidden">
         <button type="button" id="resend-btn" class="bg-[var(--color-third-mid-dark)] text-white px-4 py-2 rounded-md font-semibold text-lg cursor-pointer shadow hover:bg-[var(--color-third)] focus:ring-2 focus:ring-offset-2 ring-[var(--color-third)] disabled:cursor-not-allowed disabled:[var(--color-third-light)] disabled:shadow-none transition-all duration-300">Resend</button>

@@ -2,6 +2,14 @@
 
 @section('title', 'Playhouse Registration')
 
+@section('static-scripts')
+    <script>
+        window.registration = {
+            walkIn: @json($walkInRegister)
+        };
+    </script>
+@endsection
+
 @section('styles')
 <style>
     .step {
@@ -44,9 +52,11 @@
                         <div class="step" id="step1" data-step='phone'>
                             @include('ui.playhouse-phone')
                         </div>
+                        @if(!$walkInRegister)
                         <div class="step hidden" id="step2" data-step='otp'>
                             @include('ui.playhouse-otp')
                         </div>
+                        @endif
                         <div class="step hidden" id="step3" data-step='parent'>
                             @include('ui.playhouse-parent')
                         </div>
@@ -54,7 +64,7 @@
                             @include('ui.playhouse-children')
                         </div>
                         <div class="step hidden" id="step5" data-step='done'>
-                            @include('ui.playhouse-done-prompt')     
+                            @include('ui.playhouse-done-prompt')
                         </div>
                     </div>
                     <input type="hidden" name="mkt_code" value="{{ request()->query('source') }}">
@@ -79,7 +89,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const durationFirstChild = document.getElementById('duration-first-child');
             durationFirstChild.innerHTML = '';
-            durationFirstChild.innerHTML =  Object.entries(window.masterfile.durationMap).map(([key, duration]) => 
+            durationFirstChild.innerHTML =  Object.entries(window.masterfile.durationMap).map(([key, duration]) =>
                                                 `<option value="${key}">${duration}</option>`
                                             ).join('');
         });

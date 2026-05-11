@@ -12,7 +12,8 @@ Route::get('/', function () {
 })->name('playhouse.start');
 
 Route::get('/check-in-source', [PlayHouseController::class, 'checkInSource'])->name('playhouse.checkin.source');
-Route::get('/registration', [PlayHOuseController::class, 'registration'])->name('playhouse.registration');
+Route::get('/registration', [PlayHouseController::class, 'registration'])->name('playhouse.registration');
+Route::get('/registration/walk-in', [PlayHouseController::class, 'walkRegister'])->name('playhouse.walk-in');
 Route::get('/order-info/{order_no}', [PlayHouseController::class, 'orderInfo'])->name('order.info');
 Route::get('/checkout', [PlayHouseController::class, 'checkoutPage'])->name('playhouse.checkout');
 Route::get('/admin', [PlayHouseController::class, 'viewBookingsOnlyNamesTimes'])->name('playhouse.bookings');

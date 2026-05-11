@@ -28,8 +28,18 @@ class PlayHouseController extends Controller
     {
         $durations = DurationPrices::all();
         $items = ItemsPrices::pluck('price', 'item');
+        $walkInRegister = false;
 
-        return view('pages.playhouse-registration', compact('durations', 'items')); 
+        return view('pages.playhouse-registration', compact('durations', 'items', 'walkInRegister'));
+    }
+
+    public function walkRegister()
+    {
+        $durations = DurationPrices::all();
+        $items = ItemsPrices::pluck('price', 'item');
+        $walkInRegister = true;
+
+        return view('pages.playhouse-registration', compact('durations', 'items', 'walkInRegister'));
     }
 
     public function checkInSource()
@@ -44,7 +54,7 @@ class PlayHouseController extends Controller
         $durations = DurationPrices::all();
         $items = ItemsPrices::pluck('price', 'item');
 
-        return view('pages.playhouse-checkout', compact('durations', 'items')); 
+        return view('pages.playhouse-checkout', compact('durations', 'items'));
     }
 
     public function store(StorePlayhouseFormRequest $request)
@@ -85,7 +95,7 @@ class PlayHouseController extends Controller
 
             if($request->has('child'))
             {
-                foreach($data['child'] as $child) 
+                foreach($data['child'] as $child)
                 {
                     $childM = M06Child::updateOrCreate(
                         [
@@ -105,7 +115,7 @@ class PlayHouseController extends Controller
                     $filename = 'child_' . $childM->d_code_c . '_';
                     $folder = 'children_photos';
 
-                    if (!empty($child['photo']) && !$childM->photo &&$childM) 
+                    if (!empty($child['photo']) && !$childM->photo &&$childM)
                     {
                         $photoPath = DecodeBase64File::makeFile($child['photo'], $folder, $filename);
                         $childM->photo = $photoPath;
@@ -115,7 +125,7 @@ class PlayHouseController extends Controller
                     if($child['guardianName'] || $child['guardianLastName'])
                     {
                         $guardianFullname = $child['guardianName'] . ' ' . $child['guardianLastName'] ?? null;
-                
+
                         M06Guardian::updateOrCreate(
                             [
                                 'd_code' => $parent->d_code,
@@ -198,7 +208,7 @@ class PlayHouseController extends Controller
                 'trace' => $e->getTraceAsString(),
             ], 500);
         }
-        
+
     }
 
     public function makeOtp(Request $request)
@@ -218,7 +228,7 @@ class PlayHouseController extends Controller
                 'otp_code' => $OTP,
                 'otp_expires_at' => Carbon::now()->addMinutes(5)
             ]);
-            
+
             if($phoneRecord)
             {
                 $message = 'JDEN SMS: Your OTP code is '.$OTP.', It is valid for 5 minutes, dont share your code with anyone, thank you.';
@@ -228,7 +238,7 @@ class PlayHouseController extends Controller
                 {
                     Mail::to($request->email)->queue(new SendOtpMail($OTP));
                 }
-                
+
                 if(!$smsStatus['success'])
                 {
                     return response()->json([
@@ -256,7 +266,7 @@ class PlayHouseController extends Controller
             ], 500);
         }
     }
-    
+
     public function verifyOTP(Request $request, $phoneNum)
     {
         $parsedPhone = $this->formatPhone09($phoneNum);
@@ -269,7 +279,7 @@ class PlayHouseController extends Controller
                                     ->where('otp_expires_at', '>', Carbon::now())
                                     ->first();
 
-            if(!$phoneVerified) 
+            if(!$phoneVerified)
             {
                 return response()->json([
                     'isCorrectOtp' => false,
@@ -280,7 +290,7 @@ class PlayHouseController extends Controller
                 'is_verified' => true,
                 'otp_verified_at' => Carbon::now()
             ]);
-            
+
             $oldUserData = M06::where('mobileno', $parsedPhone)->first();
 
             if(!$oldUserData)
@@ -308,7 +318,7 @@ class PlayHouseController extends Controller
     public function deleteOtp($otpId)
     {
         $OtpToDelete = PhoneNumber::find($otpId);
-                            
+
         if(!$OtpToDelete)
         {
             return response()->json([
@@ -335,7 +345,7 @@ class PlayHouseController extends Controller
         foreach ($oldUserData->children as $child) {
             $child->makeVisible('photo');
         }
-        
+
         return response()->json([
             'oldUserData' => new M06Resource($oldUserData),
             'userLoaded' => true,
@@ -358,7 +368,7 @@ class PlayHouseController extends Controller
         $phoneNum = $request->query('ph_num') ?? null;
         $guardian = $request->query('grdian_name') ?? null;
         $orderCode = $request->query('ord_code') ?? null;
-        
+
         $query = Orders::query();
         $d_code_query = null;
 
@@ -428,7 +438,7 @@ class PlayHouseController extends Controller
 
     public function checkOut($orderItemId)
     {
-        try 
+        try
         {
             DB::beginTransaction();
 
@@ -438,7 +448,7 @@ class PlayHouseController extends Controller
                 ->where('id', $orderItemId)
                 ->first();
 
-            if (!$orderItem) 
+            if (!$orderItem)
             {
                 return response()->json([
                     'checked_out' => false,
@@ -446,7 +456,7 @@ class PlayHouseController extends Controller
                 ]);
             }
 
-            if ($orderItem->checked_out) 
+            if ($orderItem->checked_out)
             {
                 return response()->json([
                     'checked_out' => false,
@@ -469,7 +479,7 @@ class PlayHouseController extends Controller
 
             $extraCharge = 0;
 
-            if (($actualMinutes > $paidMinutes) && ($orderItem->durationhours !== 5)) 
+            if (($actualMinutes > $paidMinutes) && ($orderItem->durationhours !== 5))
             {
                 $extraMinutes = $actualMinutes - $paidMinutes;
                 $chargeUnits = ceil($extraMinutes / $items['minutes_per_charge']);
@@ -520,24 +530,24 @@ class PlayHouseController extends Controller
 
         $query = OrderItems::query();
 
-        $inHouseGuardians = OrderItems::when($request->filled(['start_date', 'end_date']), 
-            function ($q) use ($startDate, $endDate) 
+        $inHouseGuardians = OrderItems::when($request->filled(['start_date', 'end_date']),
+            function ($q) use ($startDate, $endDate)
             {
                 $q->whereDate('ckin', '>=', $startDate)
                 ->whereDate('ckin', '<=', $endDate);
             }
         )->whereNotNull('guardian')->whereNotNull('ckin')->count();
 
-        $inHouseKids = OrderItems::when($request->filled(['start_date', 'end_date']), 
-            function ($q) use ($startDate, $endDate) 
+        $inHouseKids = OrderItems::when($request->filled(['start_date', 'end_date']),
+            function ($q) use ($startDate, $endDate)
             {
                 $q->whereDate('ckin', '>=', $startDate)
                 ->whereDate('ckin', '<=', $endDate);
             }
         )->where('d_code_child')->whereNotNull('ckin')->count();
 
-        $todayReservations = OrderItems::when($request->filled(['start_date', 'end_date']), 
-            function ($q) use ($startDate, $endDate) 
+        $todayReservations = OrderItems::when($request->filled(['start_date', 'end_date']),
+            function ($q) use ($startDate, $endDate)
             {
                 $q->whereDate('created_at', '>=', $startDate)
                 ->whereDate('created_at', '<=', $endDate);
@@ -547,7 +557,7 @@ class PlayHouseController extends Controller
         $totalKids = M06Child::count();
         $totalGuardians = M06Guardian::count();
 
-        
+
         $statusMonitor = [
             'in_house_guardians' => $inHouseGuardians,
             'in_house_kids' => $inHouseKids,
@@ -571,8 +581,8 @@ class PlayHouseController extends Controller
                 break;
         }
 
-        $query->when($request->filled(['start_date', 'end_date']), 
-            function ($q) use ($startDate, $endDate) 
+        $query->when($request->filled(['start_date', 'end_date']),
+            function ($q) use ($startDate, $endDate)
             {
                 $q->whereDate('created_at', '>=', $startDate . ' 00:00:00')
                 ->whereDate('created_at', '<=', $endDate . ' 23:59:59');
@@ -582,14 +592,14 @@ class PlayHouseController extends Controller
         $orderItems = $query->select([
                 'id', 'd_code_child', 'ord_code_ph', 'ckin', 'ckout', 'durationhours', 'qr_child', 'qr_guardian'
             ])->with([
-                'child:d_code_c,firstname,lastname', 
+                'child:d_code_c,firstname,lastname',
                 'order:ord_code_ph,d_code',
                 'order.parentPl:d_code,d_name'
             ])->where(
                 function ($search) use ($request) {
                     $search->where('qr_child', 'like', '%' . $request->search . '%')
                         ->orWhere('qr_guardian', 'like', '%' . $request->search . '%')
-                        ->orWhereHas('child', 
+                        ->orWhereHas('child',
                             function ($childSearch) use ($request) {
                                 $childSearch->where('firstname', 'like', '%' . $request->search . '%');
                             }
@@ -624,14 +634,14 @@ class PlayHouseController extends Controller
                     {
                         $item->remainmins = "0hr 0min";
                     }
-                    
+
                     return $item;
                 })->withQueryString();
 
         return view('pages.playhouse-bookings', compact('orderItems', 'statusMonitor'));
     }
 
-    
+
 
     private function formatPhone09($phonenum)
     {
@@ -641,7 +651,7 @@ class PlayHouseController extends Controller
         {
             $finalNum = '0' . substr($phoneInput, 2);
         }
-        if (strlen($phoneInput) === 10 && substr($phoneInput, 0, 1) === '9') 
+        if (strlen($phoneInput) === 10 && substr($phoneInput, 0, 1) === '9')
         {
             $finalNum = '0' . $phoneInput;
         }
