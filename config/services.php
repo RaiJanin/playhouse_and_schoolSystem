@@ -42,6 +42,7 @@ return [
     ],
 
     'isms' => [
+        'api' => env('ISMS_API_URL', 'https://www.isms.com.my/isms_send.php'),
         'user' => env('ISMS_USERNAME'),
         'sender_id' => env('ISMS_SENDER_ID'),
         'password' => env('ISMS_PASSWORD'),

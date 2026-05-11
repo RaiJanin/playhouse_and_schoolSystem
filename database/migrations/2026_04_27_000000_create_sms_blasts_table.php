@@ -32,7 +32,7 @@ return new class extends Migration
     }
 
     protected $sqlCreateTables = "
-        CREATE TABLE sms_blasts (
+        CREATE TABLE rssys.sms_blasts (
             id BIGSERIAL PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             message TEXT NOT NULL,
@@ -52,13 +52,13 @@ return new class extends Migration
         );
 
         CREATE INDEX sms_blasts_status_scheduled_at_idx
-            ON sms_blasts (status, scheduled_at);
+            ON rssys.sms_blasts (status, scheduled_at);
 
         CREATE INDEX sms_blasts_send_mode_idx
-            ON sms_blasts (send_mode);
+            ON rssys.sms_blasts (send_mode);
 
         CREATE INDEX sms_blasts_type_idx
-            ON sms_blasts (type);
+            ON rssys.sms_blasts (type);
     ";
 
     /**

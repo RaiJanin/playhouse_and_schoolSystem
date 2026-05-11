@@ -18,8 +18,7 @@ class SendSmsService
         $sender_id = urlencode(config('services.isms.sender_id'));
         $type = config('services.isms.type');
 
-        $fp = "https://www.isms.com.my/isms_send.php";
-        $fp .= "?un=$username&pwd=$password&dstno=$destination&msg=$message&type=$type&sendid=$sender_id&agreedterm=YES";
+        $fp = self::makeUrl($username, $password, $destination, $message, $type, $sender_id);
         $response = self::ismscURL($fp);
 
         if ($response['status'] == 200) {
@@ -34,6 +33,14 @@ class SendSmsService
             'status' => $response['status'],
             'response' => $response['result']
         ];
+    }
+
+    private static function makeUrl($u, $pwd, $des, $msg, $t, $s_id)
+    {
+        $url = config('services.isms.api');
+        $url .= "?un=$u&pwd=$pwd&dstno=$des&msg=$msg&type=$t&sendid=$s_id&agreedterm=YES";
+
+        return $url;
     }
 
     private static function ismscURL($link)

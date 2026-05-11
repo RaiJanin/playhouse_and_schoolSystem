@@ -28,7 +28,7 @@ return new class extends Migration
     }
 
     protected $sqlCreateTables = "
-        CREATE TABLE sms_blast_recipients (
+        CREATE TABLE rssys.sms_blast_recipients (
             id BIGSERIAL PRIMARY KEY,
             sms_blast_id BIGINT NOT NULL,
             recipient_type VARCHAR(255) NOT NULL, -- parent, guardian
@@ -48,10 +48,10 @@ return new class extends Migration
         );
 
         CREATE INDEX sms_blast_recipients_sms_blast_id_status_idx
-            ON sms_blast_recipients (sms_blast_id, status);
+            ON rssys.sms_blast_recipients (sms_blast_id, status);
 
         CREATE INDEX sms_blast_recipients_mobile_number_idx
-            ON sms_blast_recipients (mobile_number);
+            ON rssys.sms_blast_recipients (mobile_number);
     ";
     /**
      * Reverse the migrations.
