@@ -15,9 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function (Schedule $schedule): void {
-        $schedule->command('otp:clean-expired')->everyThirtySeconds();
-        $schedule->command('sms:timeout-reminder')->everyThirtySeconds();
-        $schedule->command('sms:checkout-reminder')->everyThirtySeconds();
+        $schedule->command('otp:clean-expired')->everyMinute();
+        $schedule->command('sms:timeout-reminder')->everyMinute();
+        $schedule->command('sms:checkout-reminder')->everyMinute();
+        $schedule->command('sms:overtime-reminder')->everyMinute();
+        $schedule->command('sms:process-scheduled-blasts')->everyMinute();
+        $schedule->command('sms:birthday-greetings')->dailyAt('09:00')->timezone('Asia/Manila');
     })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([

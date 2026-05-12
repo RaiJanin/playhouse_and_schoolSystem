@@ -13,7 +13,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('otp:clean-expired')->everyTenSeconds();
-        $schedule->command('app:check-timeouts')->everyTenSeconds();
+        $schedule->command('sms:timeout-reminder')->everyTenSeconds();
+        $schedule->command('sms:checkout-reminder')->everyTenSeconds();
+        $schedule->command('sms:overtime-reminder')->everyTenSeconds();
+        $schedule->command('sms:process-scheduled-blasts')->everyTenSeconds();
+        $schedule->command('sms:birthday-greetings')->dailyAt('09:00')->timezone('Asia/Manila');
     }
 
     /**

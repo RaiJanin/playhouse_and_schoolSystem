@@ -233,7 +233,7 @@ class SmsBlastController extends Controller
      */
     public function templates()
     {
-
+        abort(403, 'Forbidden');
     }
 
     /**
@@ -304,6 +304,9 @@ class SmsBlastController extends Controller
      */
     public function destroy(SmsBlast $smsBlast)
     {
+        $smsBlast->recipients()->delete();
+        $smsBlast->delete();
 
+        return back()->with('success', 'SMS blast deleted successfully.');
     }
 }
