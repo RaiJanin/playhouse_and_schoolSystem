@@ -8,9 +8,22 @@ use Illuminate\Support\Facades\Log;
 
 class RunCommandsViaHttp extends Controller
 {
-    public function index(Request $request)
+    private function commandCall($command, &$logs)
     {
-        if ($request->query('key') !== env('SCHEDULER_KEY')) 
+        try {
+            Artisan::call($command);
+
+            $logs[] = "✔ {$command} executed";
+            $logs[] = trim(Artisan::output()) ?: '(no output)';
+
+        } catch (\Throwable $e) {
+
+            $logs[] = "✖ {$command} failed: " . $e->getMessage();
+        }
+    }
+    private function initiateScheduler($request, callable $callback)
+    {
+        if ($request->query('key') !== env('SCHEDULER_KEY'))
         {
             abort(403, 'Unauthorized');
         }
@@ -21,23 +34,9 @@ class RunCommandsViaHttp extends Controller
         $logs[] = "Scheduler started at: " . $start;
 
         try {
-            $this->commandCall(
-                'otp:clean-expired', 
-                "otp:clean-expired executed"
-            );
-
-            $this->commandCall(
-                'sms:process-scheduled-blasts', 
-                "sms:process-scheduled-blasts executed"
-            );
-
-            $this->commandCall(
-                'sms:timeout-reminder', 
-                "sms:timeout-reminder executed"
-            );
-
+            $callback($logs);
         } catch (\Exception $e) {
-            $logs[] = "Error: " . $e->getMessage();
+            $logs[] = "Scheduler Fatal Error: " . $e->getMessage();
         }
 
         $end = now();
@@ -49,11 +48,30 @@ class RunCommandsViaHttp extends Controller
         return response("<pre>" . implode("\n", $logs) . "</pre>");
     }
 
-    private function commandCall($command, $log)
+    public function recurring(Request $request)
     {
-        Artisan::call($command);
-        $logs[] = $log;
+        return $this->initiateScheduler($request, function (&$logs) {
+            $this->commandCall('otp:clean-expired', $logs);
 
-        $logs[] = Artisan::output();
+            $this->commandCall('sms:timeout-reminder',$logs);
+
+            $this->commandCall('sms:checkout-reminder',$logs);
+
+            $this->commandCall('sms:overtime-reminder',$logs);
+        });
+    }
+
+    public function scheduled(Request $request)
+    {
+        return $this->initiateScheduler($request, function (&$logs) {
+            $this->commandCall('sms:process-scheduled-blasts',$logs);
+        });
+    }
+
+    public function timeBased(Request $request)
+    {
+        return $this->initiateScheduler($request, function (&$logs) {
+            $this->commandCall('sms:birthday-greetings',$logs);
+        });
     }
 }
