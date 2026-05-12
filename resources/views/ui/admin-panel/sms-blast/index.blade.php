@@ -141,7 +141,7 @@
                             <a href="{{ route('sms_blast.edit', $blast) }}" class="text-yellow-600 hover:text-yellow-900 mr-3" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form method="POST" action="{{ route('sms_blast.destroy', $blast) }}" class="inline" onsubmit="return confirm('Delete this blast?')">
+                            <form method="POST" action="{{ route('sms_blast.destroy', $blast) }}" class="inline" onsubmit="confirmDelete(event, this)">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Delete">
@@ -175,8 +175,18 @@
 </div>
 
 <script>
-    function resendFailed(blastId) {
-        if (!confirm('Resend to all failed recipients?')) return;
+    async function resendFailed(blastId) {
+        const result = await Swal.fire({
+            title: "Resend?",
+            text: "Resend to all failed recipients?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Resend"
+        });
+
+        if (!result.isConfirmed) return;
 
         window.axios.post(`/admin-panel/sms-blasts/${blastId}/resend`, {}, {
             headers: {
@@ -185,8 +195,8 @@
                 'Accept': 'application/json'
             }
         })
-        .then(response => {
-            const data = response.data;
+        .then(async response => {
+            const data = await response.data;
             console.log(data);
 
             if (data.success) {
@@ -211,6 +221,27 @@
                 text: 'something went wrong',
             });
             console.error(error);
+        });
+    }
+
+    function confirmDelete(event, form)
+    {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "Delete Blast?",
+            text: "This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, delete it"
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                form.submit();
+            }
+
         });
     }
 </script>
