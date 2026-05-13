@@ -1,5 +1,5 @@
-@php 
-    $selectClass = 'border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300'; 
+@php
+    $selectClass = 'border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300';
 @endphp
 
 <div class="rounded-lg bg-gradient-to-r from-[var(--color-accent-mid-dark)] to-[var(--color-accent)] p-6 lg:p-8 flex flex-col gap-4">
@@ -11,7 +11,12 @@
         <p class="text-gray-100 dark:text-gray-600 text-sm">Send bulk SMS to parents and guardians</p>
     </div>
 
-    <form action="{{ route('sms_blast.store') }}" method="POST" class="mx-auto flex flex-col w-full shadow-md space-y-4 rounded-lg border border-white bg-white/60 backdrop-blur-xl p-6">
+    <form
+        action="{{ route('sms_blast.store') }}"
+        method="POST"
+        onsubmit="this.querySelector('button[type=submit]').disabled = true;"
+        class="mx-auto flex flex-col w-full shadow-md space-y-4 rounded-lg border border-white bg-white/60 backdrop-blur-xl p-6"
+    >
         @csrf
         <div class="flex flex-wrap gap-4">
             <div class="flex-1">
@@ -31,8 +36,8 @@
 
         <div class="flex flex-col p-3 rounded-lg border border-white backdrop-blur bg-[var(--color-primary)]/10 shadow-md">
             <x-input-label for="message" value="Message Content" />
-            <textarea 
-                class="resize-none font-mono text-sm text-gray-400 focus:text-gray-900 border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300" 
+            <textarea
+                class="resize-none font-mono text-sm text-gray-400 focus:text-gray-900 border border-[var(--color-primary)] px-4 py-2 focus:ring-[var(--color-primary)] rounded-md shadow transition-all duration-300"
                 id="messageInput"
                 name="message"
                 rows="4"
@@ -111,11 +116,11 @@
             </div>
         </div>
 
-        <button class="block w-full rounded-lg border border-[var(--color-primary)] bg-[var(--color-primary)] px-12 py-3 text-sm font-medium text-white transition-opacity hover:opacity-75" type="submit">
+        <button class="block w-full rounded-lg border border-[var(--color-primary)] bg-[var(--color-primary)] px-12 py-3 text-sm font-medium text-white transition-opacity hover:opacity-75 disabled:opacity-20 disabled:cursor-not-allowed" type="submit">
             Save Blast
         </button>
     </form>
-    
+
 </div>
 
 <script>

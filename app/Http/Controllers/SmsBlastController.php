@@ -11,6 +11,7 @@ use App\Http\Requests\SmsBlastRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SmsBlastController extends Controller
 {
@@ -35,6 +36,10 @@ class SmsBlastController extends Controller
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
         }
 
         $blasts = $query->paginate(20)->withQueryString();
@@ -62,6 +67,7 @@ class SmsBlastController extends Controller
 
     /**
      * Store new SMS blast
+     * @throws \Throwable
      */
     public function store(SmsBlastRequest $request)
     {
@@ -72,14 +78,14 @@ class SmsBlastController extends Controller
         try
         {
             $dateTimeEx = $data['scheduled_date'] . ' ' . $data['scheduled_time'];
-            $recipients = $request->validated('recipient_ids', []) ? count($data['recipient_ids']) : 0;
+            $recipients = $request->input('recipient_ids', []);
 
             $castRequests = [
                 'title' => $data['title'],
                 'message' => $data['message'],
                 'status' => SmsBlast::STATUS_DRAFT,
-                'slug' => $data['slug'],
-                'total_recipients' => $recipients,
+                'slug' => !empty($data['slug']) ?? Str::slug($data['title']),
+                'total_recipients' => count($recipients),
                 'type' => $data['type'],
                 'send_mode' => $data['send_mode'],
             ];
@@ -102,10 +108,10 @@ class SmsBlastController extends Controller
             switch($blast->send_mode)
             {
                 case 'scheduled':
-                    $result = $this->smsBlastService->scheduleBlast($blast, $data['recipient_ids'], $dateTimeEx);
+                    $result = $this->smsBlastService->scheduleBlast($blast, $request->input('recipient_ids', []), $dateTimeEx);
                     break;
                 case 'now':
-                    $result = $this->smsBlastService->sendBlast($blast, $data['recipient_ids']);
+                    $result = $this->smsBlastService->sendBlast($blast, $request->input('recipient_ids', []));
                     break;
                 case 'alltimes':
                     $result = ['success' => true];
@@ -152,7 +158,6 @@ class SmsBlastController extends Controller
         $parents = M06::where('isparent', true)->whereNotNull('mobileno')->get();
         $guardians = M06::where('isguardian', true)->whereNotNull('mobileno')->get();
 
-        // Get selected recipient IDs from the blast's recipients
         $selectedIds = $smsBlast->recipients()->pluck('recipient_id')->toArray();
 
         return view($this->page, compact('smsBlast', 'templates', 'parents', 'guardians', 'selectedIds'));
@@ -170,25 +175,23 @@ class SmsBlastController extends Controller
         try
         {
             $dateTimeEx = $data['scheduled_date'] . ' ' . $data['scheduled_time'];
-            $recipients = $request->validated('recipient_ids', []) ? count($data['recipient_ids']) : 0;
+            $recipients = $request->input('recipient_ids', []);
 
             $castRequests = [
                 'title' => $data['title'],
                 'message' => $data['message'],
-                'slug' => $data['slug'],
-                'total_recipients' => $recipients,
+                'slug' => !empty($data['slug']) ?? Str::slug($data['title']),
+                'total_recipients' => count($recipients),
                 'type' => $data['type'],
                 'send_mode' => $data['send_mode'],
             ];
 
-            // Reset status to draft on edit
             if ($smsBlast->status !== 'draft') {
                 $castRequests['status'] = SmsBlast::STATUS_DRAFT;
             }
 
             $smsBlast->update($castRequests);
 
-            // Detach existing recipients
             $smsBlast->recipients()->delete();
 
             $result = [
@@ -199,10 +202,10 @@ class SmsBlastController extends Controller
             switch($smsBlast->send_mode)
             {
                 case 'scheduled':
-                    $result = $this->smsBlastService->scheduleBlast($smsBlast, $data['recipient_ids'], $dateTimeEx);
+                    $result = $this->smsBlastService->scheduleBlast($smsBlast, $request->input('recipient_ids', []), $dateTimeEx);
                     break;
                 case 'now':
-                    $result = $this->smsBlastService->sendBlast($smsBlast, $data['recipient_ids']);
+                    $result = $this->smsBlastService->sendBlast($smsBlast, $request->input('recipient_ids', []));
                     break;
                 case 'alltimes':
                     $result = ['success' => true];

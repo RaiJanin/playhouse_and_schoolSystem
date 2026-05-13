@@ -7,7 +7,7 @@ use App\Models\SmsBlastRecipient;
 use App\Models\M06;
 use App\Models\M06Child;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 
 class SmsBlastService
 {
@@ -17,7 +17,7 @@ class SmsBlastService
     public function sendBlast(SmsBlast $blast, $recipientIds = [])
     {
         try {
-            if(!$blast->status === SmsBlast::STATUS_SENDING)
+            if ($blast->status !== SmsBlast::STATUS_SENDING)
             {
                 $blast->update(['status' => SmsBlast::STATUS_SENDING]);
             }
@@ -35,13 +35,21 @@ class SmsBlastService
             $failed = 0;
 
             foreach ($recipients as $recipient) {
-                $result = $this->sendToRecipient($blast, $recipient);
+                RateLimiter::attempt(
+                    key: "sms-blast:{$blast->id}",
+                    maxAttempts: 50,
+                    callback: function () use ($blast, $recipient, &$sent, &$failed) {
 
-                if ($result['success']) {
-                    $sent++;
-                } else {
-                    $failed++;
-                }
+                        $result = $this->sendToRecipient($blast, $recipient);
+
+                        if ($result['success']) {
+                            $sent++;
+                        } else {
+                            $failed++;
+                        }
+                    },
+                    decaySeconds: 0.5
+                );
             }
 
             $blast->update([
@@ -128,8 +136,7 @@ class SmsBlastService
                 ->get();
         }
 
-        // If no specific recipients, use all from blast recipients table
-        $recipientIds = $blast->recipients()->pluck('recipient_id')->toArray();
+        $recipientIds = M06::pluck('d_code')->all();
 
         if (empty($recipientIds)) {
             return collect();

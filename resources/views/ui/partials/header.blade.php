@@ -12,8 +12,8 @@
             </h1>
             <p class="md:text-xl sm:text-base text-center text-sm text-[var(--color-accent)] [text-shadow:2px_2px_4px_rgba(0,0,0,0.3)]">
                 Moments in, Memories out
-            </h1>
-        </div>  
+            </p>
+        </div>
     </div>
     <div class="lg:col-span-3 md:col-span-2 p-4">
         <div class="flex items-end justify-end">
@@ -22,6 +22,9 @@
             @endif
             @if(Route::is('playhouse.checkin.source') || Route::is('playhouse.registration'))
                 <a class="text-sm sm:text-base text-[var(--color-accent)] font-semibold underline decoration-2 underline-offset-2 decoration-white" href="{{ route('playhouse.checkout')}}">Go to check out</a>
+            @endif
+            @if(Route::is('playhouse.walk-in'))
+                <p class="text-sm sm:text-base text-[var(--color-accent)] font-semibold">Walk-in Registrations</p>
             @endif
         </div>
     </div>

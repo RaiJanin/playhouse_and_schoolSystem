@@ -71,7 +71,12 @@
                 <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                 <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
             </select>
-            <button class="btn-primary">
+            <select name="type" class="px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">All Types</option>
+                <option value="automation" {{ request('type') == 'automation' ? 'selected' : '' }}>Automation</option>
+                <option value="campaign" {{ request('type') == 'campaign' ? 'selected' : '' }}>Campaign</option>
+            </select>
+            <button class="text-[var(--color-primary-full-dark)] hover:opacity-75">
                 <i class="fas fa-search mr-2"></i>Filter
             </button>
         </form>
@@ -81,6 +86,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Id</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Title</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Message Preview</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Recipients</th>
@@ -94,6 +100,9 @@
                 @forelse ($blasts as $blast)
                 <tr class="table-row hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-800">{{ $blast->id }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-medium">{{ Str::limit($blast->title, 30) }}</div>
                         <div class="text-xs text-gray-500">Created {{ $blast->created_at->diffForHumans() }}</div>
                     </td>
@@ -101,13 +110,17 @@
                         <div class="text-sm max-w-xs truncate">{{ Str::limit($blast->message, 50) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <div>{{ $blast->total_recipients }}</div>
+                        <div>{{ $blast->type === 'automation' ? 'Automated' : $blast->total_recipients }}</div>
                         @if ($blast->status === 'sent' || $blast->status === 'failed')
                             <div class="text-xs text-gray-500">Sent: {{ $blast->sent_count }} | Failed: {{ $blast->failed_count }}</div>
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        @include('pages.admin-panel.sms-blast.partials.status-badge', ['blast' => $blast])
+                        @if($blast->type === 'automation')
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-[var(--color-primary)]/20 text-[var(--color-primary-full-dark)]">Running</span>
+                        @else
+                            @include('components.sms-blasts.status-badge', ['blast' => $blast])
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                         @if ($blast->sent_at)
@@ -120,24 +133,27 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <div class="progress-bar w-20">
-                                <div class="progress-fill @if($blast->success_rate >= 90) bg-green-500 @elseif($blast->success_rate >= 50) bg-yellow-500 @else bg-red-500 @endif"
-                                    style="width: {{ min($blast->success_rate, 100) }}%"></div>
-                            </div>
-                            <span class="text-xs font-medium">{{ $blast->success_rate }}%</span>
+                            @if($blast->type === 'automation')
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-[var(--color-primary)]/20 text-[var(--color-primary-full-dark)]">Automated</span>
+                            @else
+                            <x-sms-blasts.success-rate-progress
+                                :sent="$blast->sent_count"
+                                :failed="$blast->failed_count"
+                            />
+                            @endif
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                         <a href="{{ route('sms_blast.show', $blast) }}" class="text-blue-600 hover:text-blue-900 mr-3">
                             <i class="fas fa-eye"></i>
                         </a>
-                        @if ($blast->status === 'sent' || $blast->status === 'failed')
+                        @if (($blast->status === 'sent' || $blast->status === 'failed') && $blast->type === 'campaign')
                             <button class="text-green-600 hover:text-green-900 mr-3"
                                 onclick="resendFailed({{ $blast->id }})" title="Resend to failed">
                                 <i class="fas fa-redo"></i>
                             </button>
                         @endif
-                        @if ($blast->status === 'draft')
+                        @if ($blast->status === 'draft' || $blast->type === 'automation')
                             <a href="{{ route('sms_blast.edit', $blast) }}" class="text-yellow-600 hover:text-yellow-900 mr-3" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
