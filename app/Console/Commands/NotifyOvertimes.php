@@ -33,13 +33,13 @@ class NotifyOvertimes extends Command
         {
             $this->error('Overtime reminder blast not found.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $items = $this->querySessions();
         if (!$items)
         {
-            return 0;
+            return Command::SUCCESS;
         }
 
         $recipientIds = [];
@@ -61,7 +61,7 @@ class NotifyOvertimes extends Command
         {
             $this->info('No valid recipients.');
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $result = $smsBlastService->sendBlast(
@@ -78,7 +78,7 @@ class NotifyOvertimes extends Command
         $this->info("Sent: {$result['sent']}");
         $this->info("Failed: {$result['failed']}");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function querySessions()

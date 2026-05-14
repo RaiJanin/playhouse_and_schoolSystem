@@ -35,13 +35,13 @@ class NotifyBirthdays extends Command
         {
             $this->error('Birthday greeting blast not found.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $items = $this->querySessions();
         if (!$items)
         {
-            return 0;
+            return Command::SUCCESS;
         }
 
         $recipientIds = [];
@@ -63,7 +63,7 @@ class NotifyBirthdays extends Command
         {
             $this->info('No valid recipients.');
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $result = $smsBlastService->sendBlast(
@@ -75,7 +75,7 @@ class NotifyBirthdays extends Command
         $this->info("Sent: {$result['sent']}");
         $this->info("Failed: {$result['failed']}");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function querySessions()

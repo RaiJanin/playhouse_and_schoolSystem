@@ -38,13 +38,13 @@ class Notify10MinutesBeforeTimeOut extends Command
         {
             $this->error('Timeout reminder blast not found.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $items = $this->querySessions();
         if (!$items)
         {
-            return 0;
+            return Command::SUCCESS;
         }
 
         $recipientIds = [];
@@ -66,7 +66,7 @@ class Notify10MinutesBeforeTimeOut extends Command
         {
             $this->info('No valid recipients.');
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $result = $smsBlastService->sendBlast(
@@ -83,7 +83,7 @@ class Notify10MinutesBeforeTimeOut extends Command
         $this->info("Sent: {$result['sent']}");
         $this->info("Failed: {$result['failed']}");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function querySessions()

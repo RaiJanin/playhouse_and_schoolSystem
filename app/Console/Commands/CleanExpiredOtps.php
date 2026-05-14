@@ -25,12 +25,14 @@ class CleanExpiredOtps extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle()
     {
         $now = Carbon::now();
 
         $deletedCount = PhoneNumber::where('otp_expires_at', '<', $now->copy()->subMinutes(30))->delete();
 
         $this->info("Expired OTPs cleaned: $deletedCount");
+
+        return Command::SUCCESS;
     }
 }
