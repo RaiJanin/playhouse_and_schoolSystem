@@ -1,13 +1,16 @@
 <div class="mb-2">
     <h1 class="text-3xl font-bold text-gray-800">Bookings</h1>
+    <a href="{{ route('playhouse.bookings') }}" target="_blank" class="text-sm underline text-gray-800 font-semibold p-1 hover:opacity-80">
+        <i class="fa-solid fa-arrow-right-long mr-3"></i>Visit bookings and monitoring
+    </a>
 </div>
 <div class="p-4">
     <form class="mb-4 flex flex-col sm:flex-row items-end gap-4" method="GET">
         <div class="flex flex-col">
             <label for="status" class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
-            <select 
-                id="status" 
-                name="status" 
+            <select
+                id="status"
+                name="status"
                 class="bg-white w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"
             >
                 <option value="">All</option>
@@ -18,26 +21,26 @@
         </div>
         <div class="flex flex-col">
             <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-1">From Date</label>
-            <input 
-                type="date" 
-                id="start_date" 
-                name="start_date" 
+            <input
+                type="date"
+                id="start_date"
+                name="start_date"
                 class="bg-white w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"
                 value="{{ request('start_date', now()->format('Y-m-d')) }}"
             >
         </div>
         <div class="flex flex-col">
             <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-1">To Date</label>
-            <input 
-                type="date" 
-                id="end_date" 
-                name="end_date" 
+            <input
+                type="date"
+                id="end_date"
+                name="end_date"
                 class="bg-white w-full px-4 py-2 border border-[var(--color-primary)] shadow rounded-xl font-semibold focus:outline-none focus:border-[var(--color-primary-lighter)] focus:shadow-none transition-all duration-300"
                 value="{{ request('end_date', now()->format('Y-m-d')) }}"
             >
         </div>
-        <button 
-            type="submit" 
+        <button
+            type="submit"
             class="px-4 py-2 bg-[var(--color-primary)] text-white font-semibold rounded-xl hover:bg-[var(--color-primary-light)] transition-all duration-300"
         >
             Filter
@@ -60,7 +63,7 @@
            <i class="fa-solid fa-rotate"></i> Refresh
         </a>
     </form>
-    
+
 </div>
 
 <div class="rounded-lg">
@@ -104,7 +107,7 @@
                                 $isBoolean = in_array($column, ['checked_out', 'notified_timeout', 'isfreeze']);
                                 $isCurrency = in_array($column, ['durationsubtotal', 'socksprice', 'subtotal', 'lne_xtra_chrg']);
                             @endphp
-                            
+
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 @if($isBoolean)
                                     @if($value)
@@ -143,13 +146,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         const topScrollbar = document.getElementById('topScrollbar');
         const tableContainer = document.getElementById('tableContainer');
-        
+
         if (topScrollbar && tableContainer) {
             let isSyncing = false;
             let isDragging = false;
             let startX = 0;
             let scrollLeft = 0;
-            
+
             // Drag to scroll functionality
             topScrollbar.addEventListener('mousedown', function(e) {
                 isDragging = true;
@@ -157,12 +160,12 @@
                 startX = e.pageX - topScrollbar.offsetLeft;
                 scrollLeft = topScrollbar.scrollLeft;
             });
-            
+
             document.addEventListener('mouseup', function() {
                 isDragging = false;
                 topScrollbar.style.cursor = 'grab';
             });
-            
+
             document.addEventListener('mousemove', function(e) {
                 if (!isDragging) return;
                 e.preventDefault();
@@ -170,7 +173,7 @@
                 const walk = (x - startX) * 2;
                 topScrollbar.scrollLeft = scrollLeft - walk;
             });
-            
+
             // Sync scroll position from top to table
             topScrollbar.addEventListener('scroll', function() {
                 if (!isSyncing) {
@@ -180,7 +183,7 @@
                     setTimeout(() => { isSyncing = false; }, 10);
                 }
             });
-            
+
             // Sync scroll position from table to top
             tableContainer.addEventListener('scroll', function() {
                 if (!isSyncing) {
@@ -189,7 +192,7 @@
                     setTimeout(() => { isSyncing = false; }, 10);
                 }
             });
-            
+
             // Sync initial widths
             const table = tableContainer.querySelector('table');
             if (table) {

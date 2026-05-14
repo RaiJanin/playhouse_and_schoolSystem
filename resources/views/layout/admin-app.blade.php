@@ -20,7 +20,7 @@
         </script>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-[var(--color-primary-transparent)]">
+        <div class="min-h-screen flex flex-col bg-[var(--color-primary-transparent)]">
             @include('layout.admin-nav')
 
             <!-- Page Heading -->
@@ -33,9 +33,10 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="sm:p-4 bg-[var(--color-primary-transparent)]">
+            <main class="flex-1 sm:p-4 bg-[var(--color-primary-transparent)]">
                 {{ $slot }}
             </main>
+            <x-sticky-footer/>
         </div>
         @include('components.session-success')
         @include('components.session-error')
