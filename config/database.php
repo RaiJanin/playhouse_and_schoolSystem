@@ -88,10 +88,10 @@ return [
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'live_mimo'),
+            'database' => env('DB_DATABASE', 'laravel'),
             'username' => env('DB_USERNAME', 'postgres'),
-            'password' => env('DB_PASSWORD', 'Rightech777'),
-            'schema' => env('DB_SCHEMA', 'rssys'),
+            'password' => env('DB_PASSWORD', ''),
+            'schema' => env('DB_SCHEMA', 'laravel'),
             'charset' => env('DB_CHARSET', 'utf8'),
 
             'prefix' => '',
