@@ -13,6 +13,10 @@
 }
 
 :root {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+
     /* ===== LIGHT MODE ===== */
     --color-light-mode: #f3f4f6;
 

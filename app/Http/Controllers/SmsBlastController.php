@@ -143,7 +143,7 @@ class SmsBlastController extends Controller
     public function show(SmsBlast $smsBlast)
     {
         $smsBlast->load(['recipients' => function ($query) {
-            $query->latest()->paginate(50);
+            $query->latest()->paginate(20);
         }]);
 
         return view($this->page, compact('smsBlast'));

@@ -19,7 +19,7 @@
             </style>
         @endif
     </head>
-    <body class="bg-[var(--color-primary-transparent)] dark:bg-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="bg-[var(--color-primary-transparent)] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <div class="flex items-center justify-center w-full">
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 @yield('admin-welcome')

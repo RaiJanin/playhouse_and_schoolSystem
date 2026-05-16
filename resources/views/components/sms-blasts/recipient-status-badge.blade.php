@@ -1,9 +1,9 @@
 @php
     $status = $recipient->status;
     $statusMap = [
-        'pending' => ['label' => 'Pending', 'class' => 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'],
-        'sent' => ['label' => 'Sent', 'class' => 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'],
-        'failed' => ['label' => 'Failed', 'class' => 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300'],
+        'pending' => ['label' => 'Pending', 'class' => 'bg-gray-100 text-gray-600'],
+        'sent' => ['label' => 'Sent', 'class' => 'bg-green-100 text-green-700'],
+        'failed' => ['label' => 'Failed', 'class' => 'bg-red-100 text-red-700'],
     ];
     $s = $statusMap[$status] ?? $statusMap['pending'];
 @endphp

@@ -8,7 +8,7 @@
             <div>
                 <div class="flex items-center text-[var(--color-primary-full-dark)] gap-3">
                     <h1 class="text-3xl font-bold">Blast #{{ $smsBlast->id }}</h1>
-                    @include('pages.admin-panel.sms-blast.partials.status-badge', ['blast' => $smsBlast])
+                    @include('components.sms-blasts.status-badge', ['blast' => $smsBlast])
                 </div>
                 <p class="text-gray-500 mt-1">{{ $smsBlast->title }} - {{ $smsBlast->created_at->format('M d, Y \a\t g:i A') }}</p>
             </div>
@@ -111,7 +111,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @include('pages.admin-panel.sms-blast.partials.recipient-status', ['recipient' => $recipient])
+                                    @include('components.sms-blasts.recipient-status-badge', ['recipient' => $recipient])
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     @if ($recipient->sent_at)
@@ -134,7 +134,12 @@
                 </div>
 
                 <div class="px-6 py-4 border-t border-gray-200">
-                    {{ $smsBlast->recipients()->paginate(50)->appends(request()->except('page')) }}
+                    {{ $smsBlast->recipients()
+                            ->paginate(20)
+                            ->appends(request()->except('page'))
+                            ->onEachSide(2)
+                            ->links()
+                    }}
                 </div>
             </div>
         </div>
@@ -151,7 +156,7 @@
                     <div class="flex justify-between border-b border-gray-100 pb-2">
                         <dt class="text-sm text-gray-500">Status</dt>
                         <dd>
-                            @include('pages.admin-panel.sms-blast.partials.status-badge', ['blast' => $smsBlast])
+                            @include('components.sms-blasts.status-badge', ['blast' => $smsBlast])
                         </dd>
                     </div>
                     <div class="flex justify-between border-b border-gray-100 pb-2">
@@ -229,8 +234,18 @@ function filterRecipients(status, btn) {
     if (btn) btn.classList.add('bg-blue-50');
 }
 
-function resendFailed(blastId) {
-    if (!confirm('Resend SMS to all failed recipients?')) return;
+async function resendFailed(blastId) {
+    const result = await Swal.fire({
+        title: "Resend?",
+        text: "Resend to all failed recipients?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Resend"
+    });
+
+    if (!result.isConfirmed) return;
 
     fetch(`/admin/sms-blasts/${blastId}/resend`, {
         method: 'POST',
@@ -239,15 +254,29 @@ function resendFailed(blastId) {
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    .then(r => r.json())
+    .then(async r => await r.json())
     .then(d => {
-        alert('Resend complete: ' + d.sent + ' sent, ' + d.failed + ' failed');
+        Swal.fire({
+            title: "Complete",
+            text: `Resend complete: ${d?.sent || 0} sent, ${d?.failed || 0} failed`,
+            icon: "success"
+        });
         if (d.sent > 0) location.reload();
     })
-    .catch(() => alert('Error resending'));
+    .catch(() => {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: 'Error resending',
+        });
+    });
 }
 
 function duplicateBlast(blastId) {
-    alert('Duplicate blast feature (mockup) - ID: ' + blastId);
+    Swal.fire({
+        icon: "info",
+        title: "Duplicate blast",
+        text: `Duplicate blast feature (mockup) - ID: ${blastId}`,
+    });
 }
 </script>

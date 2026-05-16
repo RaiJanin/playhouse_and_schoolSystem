@@ -213,7 +213,6 @@
         })
         .then(async response => {
             const data = await response.data;
-            console.log(data);
 
             if (data.success) {
                 Swal.fire({
